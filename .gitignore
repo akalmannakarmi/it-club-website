@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+
+# Django
+*.log
+*.db
+*.sqlite3
+local_settings.py
+db.sqlite3
+media/
+staticfiles/
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs / Editors
+.vscode/
+.idea/
+*.swp
+
+# Coverage / test artifacts
+htmlcov/
+.coverage
+.pytest_cache/
+
+# Migrations (optional – comment out if you want them tracked)
+# **DO NOT ignore migrations if collaborating**
+# */migrations/
+# */migrations/*.py
+# !*/migrations/__init__.py
+
+# Docker
+.env
