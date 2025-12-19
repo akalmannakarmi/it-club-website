@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}IT Club | Home{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<section class="hero section-padding text-center">
+    <div class="container">
+        <h1 class="display-5 fw-bold">Welcome to the IT Club</h1>
+        <p class="lead mt-3">
+            A student-driven community for technology, learning, and innovation.
+        </p>
+        <div class="mt-4">
+            <a href="" class="btn btn-light btn-lg me-2">Explore Events</a>
+            <a href="" class="btn btn-outline-light btn-lg">View Resources</a>
+        </div>
+    </div>
+</section>
+
+<!-- Quick Links Section -->
+<section class="section-padding">
+    <div class="container">
+        <div class="row text-center mb-4">
+            <h2 class="fw-bold">What We Offer</h2>
+            <p class="text-muted">Everything in one place for IT Club members</p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">📢 Announcements</h5>
+                        <p class="card-text">
+                            Internal club updates, meetings, and important notices.
+                        </p>
+                        <a href="" class="btn btn-primary btn-sm">
+                            View Announcements
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">🎯 Events</h5>
+                        <p class="card-text">
+                            Hackathons, meetups, and tech events inside and outside college.
+                        </p>
+                        <a href="" class="btn btn-primary btn-sm">
+                            Browse Events
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">📚 Resources</h5>
+                        <p class="card-text">
+                            Learning materials, recorded sessions, and useful links.
+                        </p>
+                        <a href="" class="btn btn-primary btn-sm">
+                            Open Resources
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

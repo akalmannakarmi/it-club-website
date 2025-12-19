@@ -1,0 +1,69 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}IT Club{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    >
+
+    <style>
+        body {
+            scroll-behavior: smooth;
+        }
+        .hero {
+            background: linear-gradient(135deg, #0d6efd, #6610f2);
+            color: white;
+        }
+        .section-padding {
+            padding: 60px 0;
+        }
+    </style>
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="">IT Club</a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="">Announcements</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">Events</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="">Resources</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+
+{% block content %}{% endblock %}
+
+<!-- Footer -->
+<footer class="bg-dark text-light text-center py-3">
+    <small>© {{ year|default:"2025" }} IT Club • Built by Students</small>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>
