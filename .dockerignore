@@ -33,7 +33,7 @@ Thumbs.db
 # Test / coverage
 htmlcov/
 .coverage
-.pytest_cacheu/
+.pytest_cache/
 
 # Docker files
 .dockerignore
