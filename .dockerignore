@@ -15,6 +15,7 @@ env/
 ENV/
 
 # Local dev artifacts
+*.env
 *.db
 *.sqlite3
 db.sqlite3
@@ -32,4 +33,9 @@ Thumbs.db
 # Test / coverage
 htmlcov/
 .coverage
-.pytest_cache/
+.pytest_cacheu/
+
+# Docker files
+.dockerignore
+Dockerfile
+docker-compose.yml
