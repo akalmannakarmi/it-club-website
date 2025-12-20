@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>User List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background: #f5f5f5;
+        }
+        .pagination {
+            margin-top: 20px;
+            display: flex;
+            gap: 6px;
+        }
+        .pagination a,
+        .pagination span {
+            padding: 6px 10px;
+            border: 1px solid #ccc;
+            text-decoration: none;
+        }
+        .pagination .current {
+            background: #007bff;
+            color: white;
+            border-color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+<h2>Users</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Groups</th>
+            <th>Active</th>
+            <th>Date Joined</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+            <tr>
+                <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
+                <td>{{ user.username }}</td>
+                <td>{{ user.email|default:"—" }}</td>
+                <td>
+                    {% for group in user.groups.all %}
+                        {{ group.name }}{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        —
+                    {% endfor %}
+                </td>
+                <td>{{ user.is_active|yesno:"Yes,No" }}</td>
+                <td>{{ user.date_joined|date:"Y-m-d" }}</td>
+            </tr>
+        {% empty %}
+            <tr>
+                <td colspan="6">No users found.</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if is_paginated %}
+<div class="pagination">
+    {% if page_obj.has_previous %}
+        <a href="?page=1">&laquo; First</a>
+        <a href="?page={{ page_obj.previous_page_number }}">Previous</a>
+    {% endif %}
+
+    <span class="current">
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}">Next</a>
+        <a href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+    {% endif %}
+</div>
+{% endif %}
+
+</body>
+</html>
