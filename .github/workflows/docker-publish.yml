@@ -51,4 +51,4 @@ jobs:
             kubectl set image deployment/it-club-website \
               it-club-website=${{ secrets.DOCKERHUB_USERNAME }}/it-club-website:${{ github.sha }} \
               -n it-club-website
-          kubectl rollout status deployment/it-club-website -n it-club-website
+            kubectl rollout status deployment/it-club-website -n it-club-website
