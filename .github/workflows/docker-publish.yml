@@ -1,0 +1,55 @@
+name: Build and Push Docker Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/it-club-website:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/it-club-website:${{ github.sha }}
+
+  deploy:
+      needs: build-and-push
+      runs-on: ubuntu-latest
+
+      steps:
+        - name: Checkout code
+          uses: actions/checkout@v4
+
+        - name: Set up kubectl
+          uses: azure/setup-kubectl@v3
+          with:
+            version: 'v1.30.0'
+
+        - name: Configure kubeconfig
+          run: |
+            mkdir -p $HOME/.kube
+            echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > $HOME/.kube/config
+            chmod 600 $HOME/.kube/config
+
+        - name: Deploy to Kubernetes
+          run: |
+            kubectl set image deployment/it-club-website \
+              it-club-website=${{ secrets.DOCKERHUB_USERNAME }}/it-club-website:${{ github.sha }} \
+              -n it-club-website
+            kubectl rollout status deployment/it-club-website -n it-club-website
