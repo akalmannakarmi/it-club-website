@@ -19,7 +19,7 @@ load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+STATIC_DIR=BASE_DIR/'static'
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
@@ -29,8 +29,8 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "secret_key_here")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "TRUE") == "TRUE"
 
-ALLOWED_HOSTS = [] + os.environ.get("ALLOWED_HOSTS", "").split(",")
-
+#ALLOWED_HOSTS = [] + os.environ.get("ALLOWED_HOSTS", "").split(",")
+ALLOWED_HOSTS = []
 
 # Application definition
 
@@ -132,3 +132,5 @@ USE_TZ = True
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_URL = 'static/'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
+
+STATICFILES_DIRS=[STATIC_DIR,]

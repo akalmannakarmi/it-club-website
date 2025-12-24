@@ -31,7 +31,7 @@
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <div class="container">
-        <a class="navbar-brand fw-bold" href="">IT Club</a>
+        <a class="navbar-brand fw-bold" href="{%url 'index'%}">IT Club</a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#navbarNav">
@@ -41,13 +41,13 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ms-auto">
                 <li class="nav-item">
-                    <a class="nav-link" href="">Announcements</a>
+                    <a class="nav-link" href="{%url 'announcemetn'%}">Announcements</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Events</a>
+                <a class="nav-link" href="{%url 'events'%}">Events</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="">Resources</a>
+                    <a class="nav-link" href="{%url 'resources'%}">Resources</a>
                 </li>
             </ul>
         </div>
@@ -56,6 +56,10 @@
 
 
 {% block content %}{% endblock %}
+
+{% block announcement %}
+
+{% endblock %}
 
 <!-- Footer -->
 <footer class="bg-dark text-light text-center py-3">
