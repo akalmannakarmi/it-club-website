@@ -44,11 +44,12 @@ jobs:
         - name: Configure kubeconfig
           run: |
             mkdir -p $HOME/.kube
-            echo "${{ secrets.KUBECONFIG_DATA }}" > $HOME/.kube/config
+            echo "${{ secrets.KUBECONFIG_BASE64 }}" | base64 --decode > $HOME/.kube/config
+            chmod 600 $HOME/.kube/config
 
         - name: Deploy to Kubernetes
           run: |
             kubectl set image deployment/it-club-website \
               it-club-website=${{ secrets.DOCKERHUB_USERNAME }}/it-club-website:${{ github.sha }} \
               -n it-club-website
-          kubectl rollout status deployment/it-club-website -n it-club-website
+            kubectl rollout status deployment/it-club-website -n it-club-website

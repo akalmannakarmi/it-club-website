@@ -1,5 +1,33 @@
 from django.db import models
+from django.core.validators import FileExtensionValidator
 
+
+
+
+
+
+#ALLOWED DOCUMENT TYPES
+DOCUMENT_EXTENSIONS = FileExtensionValidator(
+    allowed_extensions=[
+         "pdf",
+         "doc",
+         "docx",
+         "txt",
+         "ppt",
+         "pptx"
+        
+    ]
+)
+
+
+#ALLOWED VIDEO TYPES
+VIDEO_EXTENSIONS = FileExtensionValidator(
+    allowed_extensions= [
+        "mp4",
+        "mkv",
+        "webm"
+    ]
+)
 
 
 
@@ -7,7 +35,7 @@ from django.db import models
 class Topic(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)    
-    recorded_video = models.FileField(upload_to='topics/',blank = True , null = True) 
+    recorded_video = models.FileField(upload_to='topics/',blank = True , null = True,validators=[VIDEO_EXTENSIONS]) 
     youtube_url = models.URLField(blank = True , null = True)
 
     """
@@ -33,7 +61,7 @@ class ResourceExtra(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.CASCADE, related_name="extras") # references the above topic field 
     title = models.CharField(max_length=200, blank=True)
     url = models.URLField(blank=True, null=True)                                 #for youtube videos
-    file = models.FileField(upload_to='topics_extra/',blank=True, null=True)  #for books,notes,pdf's
+    file = models.FileField(upload_to='topics_extra/',blank=True, null=True,validators=[DOCUMENT_EXTENSIONS])  #for books,notes,pdf's
     description = models.TextField(blank=True)  
 
     def __str__(self):
