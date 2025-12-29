@@ -1,31 +1,31 @@
 from django.shortcuts import render
 from django.views import View
 
-# Create your views here.
 
-class indexView(View):
+class IndexView(View):
     template = "pages/index.html"
 
     def get(self, request):
         return render(request, self.template)
-    
 
-class announcementsView(View):
+
+class AnnouncementsView(View):
     template = "pages/Announcements.html"
 
     def get(self, request):
         return render(request, self.template)
 
 
-class eventsView(View):
+class EventsView(View):
     template = "pages/Events.html"
 
     def get(self, request):
         return render(request, self.template)
-    
 
-class resourceView(View):
+
+class ResourceView(View):
     template = "pages/Resources.html"
 
     def get(self, request):
         return render(request, self.template)
+
