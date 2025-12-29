@@ -6,4 +6,5 @@ urlpatterns = [
     path('Announcement/', announcementsView.as_view(), name='announcemetn'),
     path('Events/',eventsView.as_view(), name='events'),
     path('Resource/',resourceView.as_view(), name='resources'),
+   
 ]

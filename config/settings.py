@@ -29,9 +29,10 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "secret_key_here")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", "TRUE") == "TRUE"
 
-#ALLOWED_HOSTS = [] + os.environ.get("ALLOWED_HOSTS", "").split(",")
-ALLOWED_HOSTS = []
-
+ALLOWED_HOSTS = [] + os.environ.get("ALLOWED_HOSTS", "").split(",")
+CSRF_TRUSTED_ORIGINS = [] + \
+    os.environ.get("CSRF_TRUSTED_ORIGINS", "").split(",")
+# ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
 
     # Custom apps
     'user',
-    'pages',
+    'resources',
 ]
 
 MIDDLEWARE = [
@@ -131,6 +132,11 @@ USE_TZ = True
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_URL = 'static/'
+
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 
 STATICFILES_DIRS=[STATIC_DIR,]
