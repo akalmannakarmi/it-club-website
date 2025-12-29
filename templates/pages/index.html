@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}IT Club | Home{% endblock %}
+
+{% block content %}
+
+{% load static %}
+
+<!-- Hero Section -->
+
+<section class="hero section-padding text-center">
+    <div class="container">
+        <h1 class="display-5 fw-bold">Welcome to the IT Club</h1>
+        <p class="lead mt-3">
+            A student-driven community for technology, learning, and innovation.
+        </p>
+        <div class="mt-4">
+            <a href="{% url 'events' %}" class="btn btn-light btn-lg me-2">Explore Events</a>
+            <a href="{% url 'resources' %}" class="btn btn-outline-light btn-lg">View Resources</a>
+        </div>
+    </div>
+</section>
+
+
+<!-- Announcement Section -->
+
+{% include "pages/homeannouncement.html" %}
+
+
+<!-- Events section -->
+
+{% include "pages/homeevent.html" %}
+
+
+<!-- Resources Card -->
+
+{% include "pages/homeresource.html" %}
+
+
+{% endblock %}
