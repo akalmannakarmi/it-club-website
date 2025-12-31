@@ -2,10 +2,6 @@ from django.db import models
 from django.core.validators import FileExtensionValidator
 
 
-
-
-
-
 #ALLOWED DOCUMENT TYPES
 DOCUMENT_EXTENSIONS = FileExtensionValidator(
     allowed_extensions=[
