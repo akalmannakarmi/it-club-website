@@ -39,3 +39,7 @@ htmlcov/
 .dockerignore
 Dockerfile
 docker-compose.yml
+
+# Docs
+docs/
+*.md
