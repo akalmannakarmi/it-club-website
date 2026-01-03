@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     'user',
     'resources',
     'events',
-    'pages'
+    'pages',
+    'projects',
 ]
 
 MIDDLEWARE = [
@@ -157,7 +158,7 @@ CELERY_TIMEZONE = 'Asia/Kathmandu'
 
 CELERY_BEAT_SCHEDULE = {
     'daily-announcement-task': {
-        'task': 'announcements.tasks.daily_announcement_task',
+        'task': '',
         'schedule': crontab(minute = '*/1'),  
     },
 }
