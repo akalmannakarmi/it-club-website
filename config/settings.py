@@ -158,7 +158,7 @@ CELERY_TIMEZONE = 'Asia/Kathmandu'
 CELERY_BEAT_SCHEDULE = {
     'daily-announcement-task': {
         'task': 'announcements.tasks.daily_announcement_task',
-        'schedule': crontab(minute = '*/1'),  # every day at 9 AM
+        'schedule': crontab(minute = '*/1'),  
     },
 }
 STATICFILES_DIRS = [STATIC_DIR,]
