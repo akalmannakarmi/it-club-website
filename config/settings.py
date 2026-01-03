@@ -20,7 +20,7 @@ load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
+STATIC_DIR = BASE_DIR/'static'
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'user',
     'resources',
     'events',
+    'pages'
 ]
 
 MIDDLEWARE = [
@@ -137,7 +138,6 @@ STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 STATIC_URL = 'static/'
 
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
@@ -161,3 +161,4 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': crontab(minute = '*/1'),  # every day at 9 AM
     },
 }
+STATICFILES_DIRS = [STATIC_DIR,]
