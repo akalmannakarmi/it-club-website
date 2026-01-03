@@ -24,7 +24,5 @@ RUN chown -R 1000:1000 /app
 # Switch to UID 1000
 USER 1000:1000
 
-ENTRYPOINT ["/entrypoint.sh"]
-
-CMD ["gunicorn", "config.wsgi:application", "--bind", "0.0.0.0:8000"]
+CMD ["bash", "entrypoint.sh"]
 
