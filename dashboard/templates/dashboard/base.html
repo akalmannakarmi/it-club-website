@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Dashboard - IT Club{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'dashboard/css/dashboard.css' %}">
+</head>
+<body>
+    <div class="dashboard-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>IT Club Portal</h2>
+                <p>Admin Dashboard</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="{% url 'dashboard:home' %}" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+                     Dashboard
+                </a>
+                <a href="/" class="nav-item">
+                     Back to Site
+                </a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="topbar">
+                <h1>{% block page_title %}Dashboard{% endblock %}</h1>
+                <div class="user-info">
+                    <span>👤 {{ user.username }}</span>
+                    <a href="/admin/logout/" class="btn btn-danger btn-sm">Logout</a>
+                </div>
+            </div>
+            
+            <div class="content-area">
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
+</body>
+</html>
