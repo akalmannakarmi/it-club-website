@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'projects',
     'events',
     'dashboard',
+    'membership',
 ]
 
 MIDDLEWARE = [
