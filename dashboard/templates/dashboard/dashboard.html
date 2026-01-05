@@ -1,0 +1,41 @@
+{% extends 'dashboard/base.html' %}
+
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Welcome Card -->
+<div class="card">
+    <h2>Welcome to Admin Dashboard</h2>
+    <p>Manage your IT Club portal from here.</p>
+</div>
+
+<!-- Stats Grid -->
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Users</h3>
+        <div class="stat-value">0</div>
+    </div>
+    <div class="stat-card success">
+        <h3>Active Events</h3>
+        <div class="stat-value">0</div>
+    </div>
+    <div class="stat-card warning">
+        <h3>Announcements</h3>
+        <div class="stat-value">0</div>
+    </div>
+    <div class = "stat-card success">
+        <h3>Resources</h3>
+        <div class = "stat-value">0</div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="card">
+    <h2>Quick Actions</h2>
+    <div class="quick-actions">
+        <button class="btn btn-primary">Add User</button>
+        <button class="btn btn-success">Create Event</button>
+        <button class="btn btn-warning">New Announcement</button>
+    </div>
+</div>
+{% endblock %}
