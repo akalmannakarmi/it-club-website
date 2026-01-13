@@ -11,4 +11,4 @@ echo "Running add groups"
 python manage.py add_groups
 
 echo "Starting server..."
-exec "$@"
+gunicorn config.wsgi:application --bind 0.0.0.0:8000

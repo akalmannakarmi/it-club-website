@@ -1,0 +1,48 @@
+{% extends 'dashboard/base.html' %}
+
+{% block page_title %}Member Form{% endblock %}
+
+{% block content %}
+<style>
+.form-box{
+  max-width:500px;
+  margin:30px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:10px;
+  box-shadow:0 4px 10px rgba(0,0,0,.08);
+}
+h2{
+  text-align:center;
+  margin-bottom:15px;
+}
+form p{
+  margin-bottom:10px;
+}
+input, select, textarea{
+  width:100%;
+  padding:6px;
+  border:1px solid #ccc;
+  border-radius:5px;
+}
+button{
+  width:100%;
+  background:#2563eb;
+  color:#fff;
+  padding:8px;
+  border:none;
+  border-radius:6px;
+  font-weight:600;
+}
+</style>
+
+<div class="form-box">
+  <h2>{% if object %}Edit{% else %}Create{% endif %} Member</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">{% if object %}Update{% else %}Create{% endif %}</button>
+  </form>
+</div>
+{% endblock %}
