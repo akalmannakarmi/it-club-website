@@ -17,7 +17,7 @@ class Member(models.Model):
     phone = models.CharField(max_length=15)
     faculty = models.CharField(max_length=10, choices=FACULTY_CHOICES)
     interested_topics = models.TextField(help_text="Comma separated topics")
-    join_date = models.DateField(default=timezone.now)
+    
     
     is_active = models.BooleanField(default=True)
     is_deactive = models.BooleanField(default=False)
