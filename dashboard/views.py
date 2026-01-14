@@ -9,16 +9,19 @@ from django.contrib import messages
 from dashboard.models import Member
 from .forms import MemberForm
 
+
+
 # Create your views here.
 
 
-class DashboardView( AdminRequiredMixin, TemplateView):
+class DashboardView(AdminRequiredMixin, TemplateView):
     template_name = 'dashboard/dashboard.html'
     login_url = '/admin/login/' 
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['active_page'] = 'dashboard'
+        context['total_members'] = Member.objects.count()
         return context
 
 
@@ -34,18 +37,7 @@ class MemberListView(ListView):
         # Sort members by name alphabetically
      return Member.objects.all().order_by('name')
 
-#---------sent total member in dashboard------
 
-class DashboardView(AdminRequiredMixin, TemplateView):
-    template_name = 'dashboard/dashboard.html'
-    
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['active_page'] = 'dashboard'
-        context['total_members'] = Member.objects.count()
-        return context 
-    
 
 #Create user
 
@@ -94,3 +86,4 @@ def member_toggle_active(request, pk):
     member.is_active = not member.is_active
     member.save()
     return redirect('dashboard:member_list')
+

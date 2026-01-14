@@ -4,13 +4,13 @@ from dashboard.models import Member
 class MemberForm(forms.ModelForm):
     class Meta:
         model = Member
-        fields = ['name', 'semester', 'phone', 'faculty', 'interested_topics']
+        fields = ['name','faculty', 'batch', 'phone', 'interested_topics']
         widgets = {
             'name': forms.TextInput(attrs={
                 'placeholder': 'Enter your name',
             }),
-             'semester': forms.TextInput(attrs={
-                'placeholder':'semester',  
+             'batch': forms.TextInput(attrs={
+                'placeholder':'e.g. "2025"',  
             }),
              'phone': forms.TextInput(attrs={
                 'placeholder': ' phone No.',

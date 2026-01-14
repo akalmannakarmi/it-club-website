@@ -41,9 +41,9 @@ a{
       <tr>
         <th>ID</th>
         <th>Name</th>
-        <th>Semester</th>
-        <th>Phone</th>
         <th>Faculty</th>
+        <th>Batch</th>
+        <th>Phone</th>
         <th>Interested Topics</th>
         <th>Status</th>
         <th>Actions</th>
@@ -54,9 +54,9 @@ a{
       <tr>
         <td data-label="ID">{{ member.id }}</td>
         <td data-label="Name">{{ member.name }}</td>
-        <td data-label="Semester">{{ member.semester }}</td>
-        <td data-label="Phone">{{ member.phone }}</td>
         <td data-label="Faculty">{{ member.get_faculty_display }}</td>
+        <td data-label="Semester">{{ member.batch }}</td>
+        <td data-label="Phone">{{ member.phone }}</td>
         <td data-label="Topics">{{ member.interested_topics }}</td>
         <td data-label="Status">
           {% if member.is_active %}
