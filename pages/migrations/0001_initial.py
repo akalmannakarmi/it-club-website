@@ -3,22 +3,39 @@
 from django.db import migrations, models
 
 
-class Migration(migrations.Migration):
+def create_default_visibility(apps, schema_editor):
+    PageVisibility = apps.get_model("pages", "PageVisibility")
+    PageVisibility.objects.create(
+        show_home=True,
+        show_resource=True,
+        show_event=True,
+        show_announcement=True,
+    )
 
+
+class Migration(migrations.Migration):
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='PageVisibility',
+            name="PageVisibility",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('show_home', models.BooleanField(default=True)),
-                ('show_resource', models.BooleanField(default=True)),
-                ('show_event', models.BooleanField(default=True)),
-                ('show_announcement', models.BooleanField(default=True)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("show_home", models.BooleanField(default=True)),
+                ("show_resource", models.BooleanField(default=True)),
+                ("show_event", models.BooleanField(default=True)),
+                ("show_announcement", models.BooleanField(default=True)),
             ],
         ),
+        migrations.RunPython(create_default_visibility),
     ]

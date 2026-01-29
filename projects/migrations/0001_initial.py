@@ -4,23 +4,34 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Project',
+            name="Project",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200)),
-                ('description', models.TextField()),
-                ('technology_stack', models.TextField()),
-                ('image', models.ImageField(blank=True, null=True, upload_to='projects_image/')),
-                ('link', models.URLField(blank=True, null=True)),
-                ('members_info', models.CharField(max_length=200)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=200)),
+                ("description", models.TextField()),
+                ("technology_stack", models.TextField()),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True, null=True, upload_to="projects_image/"
+                    ),
+                ),
+                ("link", models.URLField(blank=True, null=True)),
+                ("members_info", models.CharField(max_length=200)),
             ],
         ),
     ]

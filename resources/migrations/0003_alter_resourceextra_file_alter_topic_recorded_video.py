@@ -5,20 +5,37 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('resources', '0002_alter_resourceextra_file_alter_topic_recorded_video'),
+        ("resources", "0002_alter_resourceextra_file_alter_topic_recorded_video"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='resourceextra',
-            name='file',
-            field=models.FileField(blank=True, null=True, upload_to='topics_extra/', validators=[django.core.validators.FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'txt', 'ppt', 'pptx'])]),
+            model_name="resourceextra",
+            name="file",
+            field=models.FileField(
+                blank=True,
+                null=True,
+                upload_to="topics_extra/",
+                validators=[
+                    django.core.validators.FileExtensionValidator(
+                        allowed_extensions=["pdf", "doc", "docx", "txt", "ppt", "pptx"]
+                    )
+                ],
+            ),
         ),
         migrations.AlterField(
-            model_name='topic',
-            name='recorded_video',
-            field=models.FileField(blank=True, null=True, upload_to='topics/', validators=[django.core.validators.FileExtensionValidator(allowed_extensions=['mp4', 'mkv', 'webm'])]),
+            model_name="topic",
+            name="recorded_video",
+            field=models.FileField(
+                blank=True,
+                null=True,
+                upload_to="topics/",
+                validators=[
+                    django.core.validators.FileExtensionValidator(
+                        allowed_extensions=["mp4", "mkv", "webm"]
+                    )
+                ],
+            ),
         ),
     ]

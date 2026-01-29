@@ -7,7 +7,7 @@ def create_scrape_task(apps, schema_editor):
 
     crontab, _ = CrontabSchedule.objects.get_or_create(
         minute="0",
-        hour="2",           # runs at 02:00 UTC
+        hour="2",  # runs at 02:00 UTC
         day_of_week="*",
         day_of_month="*",
         month_of_year="*",
@@ -25,7 +25,6 @@ def create_scrape_task(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("django_celery_beat", "0019_alter_periodictasks_options"),
     ]

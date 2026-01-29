@@ -25,20 +25,19 @@
 
 
 <!-- Announcement Section -->
-
+{% if visibility.show_announcement %}
    {% include "pages/homeannouncement.html" %}
-
-
+{% endif %}
 
 <!-- Events section -->
-
+{% if visibility.show_event %}
   {% include "pages/homeevent.html" %}
-
+{% endif %}
 
 <!-- Resources Card -->
-
+{% if visibility.show_resource %}
   {% include "pages/homeresource.html" %}
-
+{% endif %}
 
 {% endblock %}
 

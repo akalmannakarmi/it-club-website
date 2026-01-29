@@ -1,13 +1,15 @@
 from django.shortcuts import render
 from django.views import View
+from pages.models import PageVisibility
 
 
 class IndexView(View):
     template = "pages/index.html"
-     
+
     def get(self, request):
-        return render(request, self.template)
-    
+        visibility = PageVisibility.objects.first()
+
+        return render(request, self.template, {"visibility": visibility})
 
 
 class AnnouncementsView(View):
@@ -15,14 +17,13 @@ class AnnouncementsView(View):
 
     def get(self, request):
         return render(request, self.template)
-    
+
 
 class EventsView(View):
     template = "pages/Events.html"
 
     def get(self, request):
         return render(request, self.template)
-   
 
 
 class ResourceView(View):
@@ -30,5 +31,3 @@ class ResourceView(View):
 
     def get(self, request):
         return render(request, self.template)
-  
-

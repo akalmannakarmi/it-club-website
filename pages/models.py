@@ -2,6 +2,7 @@ from django.db import models
 
 # Create your models here.
 
+
 class PageVisibility(models.Model):
     show_home = models.BooleanField(default=True)
     show_resource = models.BooleanField(default=True)
@@ -10,3 +11,7 @@ class PageVisibility(models.Model):
 
     def __str__(self):
         return "Page Visibility Settings"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1  # force singleton
+        super().save(*args, **kwargs)
