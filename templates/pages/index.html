@@ -1,3 +1,5 @@
+
+
 {% extends 'base.html' %}
 
 {% block title %}IT Club | Home{% endblock %}
@@ -23,18 +25,19 @@
 
 
 <!-- Announcement Section -->
-
-{% include "pages/homeannouncement.html" %}
-
+{% if visibility.show_announcement %}
+   {% include "pages/homeannouncement.html" %}
+{% endif %}
 
 <!-- Events section -->
-
-{% include "pages/homeevent.html" %}
-
+{% if visibility.show_event %}
+  {% include "pages/homeevent.html" %}
+{% endif %}
 
 <!-- Resources Card -->
-
-{% include "pages/homeresource.html" %}
-
+{% if visibility.show_resource %}
+  {% include "pages/homeresource.html" %}
+{% endif %}
 
 {% endblock %}
+

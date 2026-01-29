@@ -4,20 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('resources', '0001_initial'),
+        ("resources", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='resourceextra',
-            name='file',
-            field=models.FileField(blank=True, null=True, upload_to='topics_extra/'),
+            model_name="resourceextra",
+            name="file",
+            field=models.FileField(blank=True, null=True, upload_to="topics_extra/"),
         ),
         migrations.AlterField(
-            model_name='topic',
-            name='recorded_video',
-            field=models.FileField(blank=True, null=True, upload_to='topics/'),
+            model_name="topic",
+            name="recorded_video",
+            field=models.FileField(blank=True, null=True, upload_to="topics/"),
         ),
     ]

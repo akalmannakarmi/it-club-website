@@ -47,8 +47,4 @@ class UsersListView(AdminRequiredMixin, ListView):
     ordering = ["-date_joined"]
 
     def get_queryset(self):
-        return (
-            User.objects
-            .select_related()
-            .prefetch_related("groups")
-        )
+        return User.objects.select_related().prefetch_related("groups")
