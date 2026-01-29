@@ -6,8 +6,8 @@ from .views import (
     MemberCreateView,
     MemberUpdateView,
     MemberDeleteView,
-    member_toggle_active,
-   
+    MemberActivateView,
+    MemberDeactivateView,
 )
 
 app_name = 'dashboard'
@@ -20,7 +20,7 @@ urlpatterns = [
     path('members/create/', MemberCreateView.as_view(), name='member_create'),
     path('members/edit/<int:member_id>/', MemberUpdateView.as_view(), name='member_edit'),
     path('members/delete/<int:member_id>/', MemberDeleteView.as_view(), name='member_delete'),
-    path('members/toggle/<int:pk>/', member_toggle_active, name='member_toggle'),
-
+    path('members/activate/<int:member_id>/', MemberActivateView.as_view(), name='member_activate'),
+    path('members/deactivate/<int:member_id>/', MemberDeactivateView.as_view(), name='member_deactivate'),
 ]
 

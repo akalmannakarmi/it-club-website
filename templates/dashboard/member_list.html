@@ -53,7 +53,7 @@ a{
     {% for member in members %}
       <tr>
         <td data-label="ID">{{ member.id }}</td>
-        <td data-label="Name">{{ member.name }}</td>
+        <td data-label="Name">{{ member.username }}</td>
         <td data-label="Faculty">{{ member.get_faculty_display }}</td>
         <td data-label="Semester">{{ member.batch }}</td>
         <td data-label="Phone">{{ member.phone }}</td>
@@ -68,10 +68,21 @@ a{
         <td data-label="Actions" class="actions">
           <a href="{% url 'dashboard:member_edit' member.id %}" class="btn-edit">Edit</a>
           <a href="{% url 'dashboard:member_delete' member.id %}" class="btn-delete">Delete</a>
-          <a href="{% url 'dashboard:member_toggle' member.id %}" 
-              class="btn-toggle {% if not member.is_active %}inactive{% endif %}">
-            {% if member.is_active %}Deactivate{% else %}Activate{% endif %}
-          </a>
+          {% if member.is_active %}
+            <form method="POST" action="{% url 'dashboard:member_deactivate' member.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-toggle">
+                Deactivate
+              </button>
+            </form>
+          {% else %}
+            <form method="POST" action="{% url 'dashboard:member_activate' member.id %}" style="display:inline;">
+              {% csrf_token %}
+              <button type="submit" class="btn-toggle inactive">
+                Activate
+              </button>
+            </form>
+          {% endif %}
         </td>
       </tr>
     {% empty %}
