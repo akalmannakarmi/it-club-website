@@ -1,36 +1,45 @@
 from django import forms
 from user.models import User
 
+BASE_INPUT_CLASS = (
+    "w-full bg-slate-950 border border-slate-800 rounded-xl "
+    "px-4 py-2 text-slate-200 placeholder-slate-500 "
+    "focus:outline-none focus:ring-2 focus:ring-indigo-500"
+)
 
 class MemberForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ["username", "faculty", "batch", "phone", "interested_topics"]
-        widgets = {
-            "username": forms.TextInput(
-                attrs={
-                    "placeholder": "Enter your name",
-                }
-            ),
-            "batch": forms.TextInput(
-                attrs={
-                    "placeholder": 'e.g. "2025"',
-                }
-            ),
-            "phone": forms.TextInput(
-                attrs={
-                    "placeholder": " phone No.",
-                }
-            ),
-            "interested_topics": forms.Textarea(attrs={"rows": 3}),
-        }
+        fields = [
+            "username",
+            "email",
+            "phone",
+            "faculty",
+            "batch",
+            "is_active",
+        ]
 
-    def clean_phone(self):
-        phone = (self.cleaned_data.get("phone") or "").strip()
-        if (
-            not phone.isdigit()
-            or len(phone) != 10
-            or not phone.startswith(("98", "97"))
-        ):
-            raise forms.ValidationError(" Please Enter your correct phone number.")
-        return phone
+        widgets = {
+            "username": forms.TextInput(attrs={
+                "class": BASE_INPUT_CLASS,
+                "placeholder": "Username"
+            }),
+            "email": forms.EmailInput(attrs={
+                "class": BASE_INPUT_CLASS,
+                "placeholder": "Email address"
+            }),
+            "phone": forms.TextInput(attrs={
+                "class": BASE_INPUT_CLASS,
+                "placeholder": "Phone number"
+            }),
+            "faculty": forms.Select(attrs={
+                "class": BASE_INPUT_CLASS
+            }),
+            "batch": forms.TextInput(attrs={
+                "class": BASE_INPUT_CLASS,
+                "placeholder": "Batch"
+            }),
+            "is_active": forms.CheckboxInput(attrs={
+                "class": "h-4 w-4 rounded border-slate-700 bg-slate-900 text-indigo-600"
+            }),
+        }

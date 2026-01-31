@@ -21,7 +21,26 @@
         {% if visibility.show_events %}
           <a href="#events" class="py-2 hover:text-indigo-600 transition">Events</a>
         {% endif %}
-        <a href="{% url 'user:login' %}" class="bg-indigo-600 text-white px-5 py-2 rounded-xl hover:bg-indigo-700 transition">Login</a>
+
+        {% if user.is_authenticated %}
+          {% if user.is_admin_group %}
+            <a href="{% url 'dashboard:home' %}" class="py-2 hover:text-indigo-600 transition">
+              Dashboard
+            </a>
+          {% endif %}
+
+          <form method="POST" action="{% url 'user:logout' %}" class="inline">
+            {% csrf_token %}
+            <button type="submit" class="py-2 px-5 rounded-xl bg-red-500 text-white hover:bg-red-600 transition">
+              Logout
+            </button>
+          </form>
+
+        {% else %}
+          <a href="{% url 'user:login' %}" class="py-2 px-5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition">
+            Login
+          </a>
+        {% endif %}
       </div>
 
       <!-- Mobile menu toggle -->
@@ -37,9 +56,10 @@
     </div>
   </div>
 
-  <!-- Mobile menu (hidden by default) -->
+  <!-- Mobile menu -->
   <div id="mobile-menu" class="hidden md:hidden bg-white/95 shadow-lg">
     <div class="flex flex-col px-6 py-4 gap-4">
+
       {% if visibility.show_hero %}
         <a href="#home" class="hover:text-indigo-600 transition">Home</a>
       {% endif %}
@@ -55,7 +75,26 @@
       {% if visibility.show_events %}
         <a href="#events" class="hover:text-indigo-600 transition">Events</a>
       {% endif %}
-      <a href="{% url 'user:login' %}" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition">Login</a>
+
+      {% if user.is_authenticated %}
+        {% if user.is_admin_group %}
+          <a href="{% url 'dashboard:home' %}" class="hover:text-indigo-600 transition">
+            Dashboard
+          </a>
+        {% endif %}
+
+        <form method="POST" action="{% url 'user:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition">
+            Logout
+          </button>
+        </form>
+
+      {% else %}
+        <a href="{% url 'user:login' %}" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition">
+          Login
+        </a>
+      {% endif %}
     </div>
   </div>
 

@@ -19,3 +19,7 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    @property
+    def is_admin_group(self):
+        return self.groups.filter(name="Admin").exists()

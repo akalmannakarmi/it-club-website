@@ -1,41 +1,111 @@
-{% extends 'dashboard/base.html' %}
+{% extends "dashboard/base.html" %}
 
+{% block title %}Dashboard · IT Club{% endblock %}
 {% block page_title %}Dashboard{% endblock %}
 
-{% block content %}
-<!-- Welcome Card -->
-<div class="card">
-    <h2>Welcome to Admin Dashboard</h2>
-    <p>Manage your IT Club portal from here.</p>
+{% block subcontent %}
+
+<!-- Welcome / Overview -->
+<div class="mb-8">
+  <h1 class="text-2xl font-semibold text-slate-100">
+    Welcome back, {{ user.username }}
+  </h1>
+  <p class="text-slate-400 mt-1">
+    Manage members, events, attendance, and resources from here.
+  </p>
 </div>
 
-<!-- Stats Grid -->
-<div class="stats-grid">
-    <div class="stat-card">
-        <h3>Total Member</h3>
-        <div class="stat-value">{{total_members}}</div>
-    </div>
-    <div class="stat-card success">
-        <h3>Active Events</h3>
-        <div class="stat-value">0</div>
-    </div>
-    <div class="stat-card warning">
-        <h3>Announcements</h3>
-        <div class="stat-value">0</div>
-    </div>
-    <div class = "stat-card success">
-        <h3>Resources</h3>
-        <div class = "stat-value">0</div>
-    </div>
+<!-- Stats -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 mb-10">
+
+  <!-- Total Members -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+    <p class="text-sm text-slate-400">Total Members</p>
+    <h3 class="text-3xl font-bold text-indigo-400 mt-3">
+      {{ total_members }}
+    </h3>
+  </div>
+
+  <!-- Active Events -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+    <p class="text-sm text-slate-400">Active Events</p>
+    <h3 class="text-3xl font-bold text-emerald-400 mt-3">
+      0
+    </h3>
+  </div>
+
+  <!-- Announcements -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+    <p class="text-sm text-slate-400">Announcements</p>
+    <h3 class="text-3xl font-bold text-amber-400 mt-3">
+      0
+    </h3>
+  </div>
+
+  <!-- Resources -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+    <p class="text-sm text-slate-400">Resources</p>
+    <h3 class="text-3xl font-bold text-sky-400 mt-3">
+      0
+    </h3>
+  </div>
+
 </div>
 
-<!-- Quick Actions -->
-<div class="card">
-    <h2>Quick Actions</h2>
-    <div class="quick-actions">
-       <a href="{% url 'dashboard:member_create'%}"><button class="btn btn-primary">Add Member</button></a>
-        <button class="btn btn-success">Create Event</button>
-        <button class="btn btn-warning">New Announcement</button>
+<!-- Main Grid -->
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+
+  <!-- Quick Actions -->
+  <div class="xl:col-span-2 bg-slate-900 border border-slate-800 rounded-2xl p-6">
+    <h2 class="text-lg font-semibold text-slate-100 mb-4">
+      Quick Actions
+    </h2>
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+      <a href="{% url 'dashboard:member_create' %}"
+         class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl
+                bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
+        ➕ Add Member
+      </a>
+
+      <a href="#"
+         class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl
+                bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition">
+        📅 Create Event
+      </a>
+
+      <a href="#"
+         class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl
+                bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition">
+        📢 New Announcement
+      </a>
+
     </div>
+  </div>
+
+  <!-- System Status / Info -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+    <h2 class="text-lg font-semibold text-slate-100 mb-4">
+      System Overview
+    </h2>
+
+    <ul class="space-y-3 text-sm text-slate-400">
+      <li class="flex justify-between">
+        <span>Attendance Module</span>
+        <span class="text-emerald-400">Active</span>
+      </li>
+      <li class="flex justify-between">
+        <span>Events Module</span>
+        <span class="text-slate-500">Not Configured</span>
+      </li>
+      <li class="flex justify-between">
+        <span>Resources Module</span>
+        <span class="text-slate-500">Not Configured</span>
+      </li>
+    </ul>
+  </div>
+
 </div>
+
 {% endblock %}

@@ -1,96 +1,165 @@
-{% extends 'dashboard/base.html' %}
+{% extends "dashboard/base.html" %}
 
-{% block page_title %}Dashboard{% endblock %}
+{% block title %}Members · IT Club{% endblock %}
+{% block page_title %}Members{% endblock %}
 
-{% block content %}
-<style>
- table{
-  width:100%;
-  border-collapse:collapse;
-}
-th, td{
-  border:1px solid #ddd;
-  padding:6px;
-}
-th{
-  background:#f3f3f3;
-}
-a{
-  text-decoration:none;
-  margin-right:4px;
-}
-.active{
-  color:green;
-}
-.inactive{
-  color:red;
-}
-</style>
+{% block subcontent %}
 
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+  <div>
+    <h1 class="text-2xl font-semibold text-slate-100">Member List</h1>
+    <p class="text-slate-400 text-sm">Manage IT Club members</p>
+  </div>
 
-
-<div class="card">
-  <div class="page-header">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-  <h2>Member List</h2>
-  <a href="{% url 'dashboard:member_create' %}" style="background:#2563eb;color:#fff;padding:6px 10px;border-radius:5px;font-weight:600;">+ Add Member</a>
+  <a href="{% url 'dashboard:member_create' %}" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
+            bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
+    ➕ Add Member
+  </a>
 </div>
 
-<table>
-    <thead>
+<!-- Filters -->
+<form method="GET" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6
+             grid grid-cols-1 md:grid-cols-4 gap-4">
+
+  <!-- Search -->
+  <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Search username or email" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2
+                text-slate-200 placeholder:text-slate-500 focus:outline-none
+                focus:ring-2 focus:ring-indigo-500">
+
+  <!-- Faculty -->
+  <select name="faculty" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2
+                 text-slate-200 focus:outline-none">
+    <option value="">All Faculties</option>
+    {% for value, label in faculty_choices %}
+    <option value="{{ value }}" {% if request.GET.faculty == value %}selected{% endif %}>
+      {{ label }}
+    </option>
+    {% endfor %}
+  </select>
+
+  <!-- Batch -->
+  <input type="text" name="batch" value="{{ request.GET.batch }}" placeholder="Batch (e.g. 2023)" class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2
+                text-slate-200 placeholder:text-slate-500 focus:outline-none">
+
+  <!-- Submit -->
+  <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 transition rounded-xl px-4 py-2 font-semibold">
+    Filter
+  </button>
+</form>
+
+<!-- Table -->
+<div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+
+  <table class="w-full text-sm">
+    <thead class="bg-slate-800 text-slate-300">
       <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Faculty</th>
-        <th>Batch</th>
-        <th>Phone</th>
-        <th>Interested Topics</th>
-        <th>Status</th>
-        <th>Actions</th>
+        <th class="px-4 py-3 text-left">Name</th>
+        <th class="px-4 py-3">Faculty</th>
+        <th class="px-4 py-3">Batch</th>
+        <th class="px-4 py-3">Phone</th>
+        <th class="px-4 py-3">Status</th>
+        <th class="px-4 py-3 text-right">Actions</th>
       </tr>
     </thead>
-    <tbody>
-    {% for member in members %}
-      <tr>
-        <td data-label="ID">{{ member.id }}</td>
-        <td data-label="Name">{{ member.username }}</td>
-        <td data-label="Faculty">{{ member.get_faculty_display }}</td>
-        <td data-label="Semester">{{ member.batch }}</td>
-        <td data-label="Phone">{{ member.phone }}</td>
-        <td data-label="Topics">{{ member.interested_topics }}</td>
-        <td data-label="Status">
+
+    <tbody class="divide-y divide-slate-800">
+      {% for member in members %}
+      <tr class="hover:bg-slate-800/40 transition">
+        <td class="px-4 py-3">
+          <div class="font-medium text-slate-100">{{ member.username }}</div>
+          <div class="text-xs text-slate-400">{{ member.email }}</div>
+        </td>
+
+        <td class="px-4 py-3 text-center">{{ member.get_faculty_display }}</td>
+        <td class="px-4 py-3 text-center">{{ member.batch }}</td>
+        <td class="px-4 py-3 text-center">{{ member.phone }}</td>
+
+        <td class="px-4 py-3 text-center">
           {% if member.is_active %}
-            <span class="status status-active">Active</span>
+          <span class="px-3 py-1 rounded-full text-xs
+                         bg-emerald-500/10 text-emerald-400">
+            Active
+          </span>
           {% else %}
-            <span class="status status-inactive">Inactive</span>
+          <span class="px-3 py-1 rounded-full text-xs
+                         bg-red-500/10 text-red-400">
+            Inactive
+          </span>
           {% endif %}
         </td>
-        <td data-label="Actions" class="actions">
-          <a href="{% url 'dashboard:member_edit' member.id %}" class="btn-edit">Edit</a>
-          <a href="{% url 'dashboard:member_delete' member.id %}" class="btn-delete">Delete</a>
-          {% if member.is_active %}
-            <form method="POST" action="{% url 'dashboard:member_deactivate' member.id %}" style="display:inline;">
+
+        <td class="px-4 py-3 text-right">
+          <div class="flex items-center justify-end gap-3">
+
+            <!-- Edit -->
+            <a href="{% url 'dashboard:member_edit' member.id %}"
+              class="p-2 rounded-lg hover:bg-indigo-500/10 text-indigo-400 transition" title="Edit member">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M16.862 3.487a2.121 2.121 0 113 3L7.5 18.75l-4.5 1.5 1.5-4.5L16.862 3.487z" />
+              </svg>
+            </a>
+
+            {% if member.is_active %}
+            <!-- Deactivate -->
+            <form method="POST" action="{% url 'dashboard:member_deactivate' member.id %}">
               {% csrf_token %}
-              <button type="submit" class="btn-toggle">
-                Deactivate
+              <button type="submit" class="p-2 rounded-lg hover:bg-red-500/10 text-red-400 transition"
+                title="Deactivate member">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M18.364 5.636l-12.728 12.728M5.636 5.636l12.728 12.728" />
+                </svg>
               </button>
             </form>
-          {% else %}
-            <form method="POST" action="{% url 'dashboard:member_activate' member.id %}" style="display:inline;">
+            {% else %}
+            <!-- Activate -->
+            <form method="POST" action="{% url 'dashboard:member_activate' member.id %}">
               {% csrf_token %}
-              <button type="submit" class="btn-toggle inactive">
-                Activate
+              <button type="submit" class="p-2 rounded-lg hover:bg-emerald-500/10 text-emerald-400 transition"
+                title="Activate member">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
+                  stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M9 12l2 2 4-4M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z" />
+                </svg>
               </button>
             </form>
-          {% endif %}
+            {% endif %}
+
+          </div>
+        </td>
+
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6" class="text-center text-slate-500 py-6">
+          No members found.
         </td>
       </tr>
-    {% empty %}
-      <tr>
-        <td colspan="8">No members found.</td>
-      </tr>
-    {% endfor %}
+      {% endfor %}
     </tbody>
   </table>
 </div>
+
+<!-- Pagination -->
+{% if is_paginated %}
+<div class="flex justify-center gap-2 mt-6 text-sm">
+  {% if page_obj.has_previous %}
+  <a href="?page={{ page_obj.previous_page_number }}" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700">Prev</a>
+  {% endif %}
+
+  <span class="px-3 py-1 text-slate-400">
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+  </span>
+
+  {% if page_obj.has_next %}
+  <a href="?page={{ page_obj.next_page_number }}" class="px-3 py-1 rounded bg-slate-800 hover:bg-slate-700">Next</a>
+  {% endif %}
+</div>
+{% endif %}
+
 {% endblock %}

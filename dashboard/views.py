@@ -4,6 +4,7 @@ from user.mixins import AdminRequiredMixin
 
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.shortcuts import redirect, get_object_or_404
+from django.db.models import Q
 from django.urls import reverse_lazy
 from django.contrib import messages
 from user.models import User
@@ -25,11 +26,34 @@ class MemberListView(AdminRequiredMixin, ListView):
     model = User
     template_name = "dashboard/member_list.html"
     context_object_name = "members"
+    paginate_by = 10
 
     def get_queryset(self):
-        # Sort members by name alphabetically
-        return User.objects.all().order_by("username")
+        qs = User.objects.all().order_by("username")
 
+        search = self.request.GET.get("search")
+        faculty = self.request.GET.get("faculty")
+        batch = self.request.GET.get("batch")
+
+        if search:
+            qs = qs.filter(
+                Q(username__icontains=search) |
+                Q(email__icontains=search)
+            )
+
+        if faculty:
+            qs = qs.filter(faculty=faculty)
+
+        if batch:
+            qs = qs.filter(batch=batch)
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["faculty_choices"] = User.FACULTY_CHOICES
+        context["active_page"] = "members"
+        return context
 
 class MemberCreateView(AdminRequiredMixin, CreateView):
     model = User
@@ -40,6 +64,12 @@ class MemberCreateView(AdminRequiredMixin, CreateView):
     def form_valid(self, form):
         messages.success(self.request, "Member created successfully")
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Add Member"
+        context["active_page"] = "members"
+        return context
 
 
 class MemberUpdateView(AdminRequiredMixin, UpdateView):
@@ -52,6 +82,12 @@ class MemberUpdateView(AdminRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, "Member updated successfully")
         return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Edit Member"
+        context["active_page"] = "members"
+        return context
 
 
 class MemberDeleteView(AdminRequiredMixin, DeleteView):

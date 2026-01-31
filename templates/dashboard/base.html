@@ -1,47 +1,69 @@
-{% load static %}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Dashboard - IT Club{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
-</head>
-<body>
-    <div class="dashboard-container">
-        <!-- Sidebar -->
-        <aside class="sidebar">
-            <div class="sidebar-header">
-                <h2>IT Club Portal</h2>
-                <p>Admin Dashboard</p>
-            </div>
-            <nav class="sidebar-nav">
-                <a href="{% url 'dashboard:home' %}" class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
-                     Dashboard
-                </a>
-                <a href="/" class="nav-item">
-                     Back to Site
-                </a>
-                 <a href="{% url 'dashboard:member_list'%}" class="nav-item">
-                     Member of IT Club
-                </a>
-            </nav>
-        </aside>
-        
-        <!-- Main Content -->
-        <main class="main-content">
-            <div class="topbar">
-                <h1>{% block page_title %}Dashboard{% endblock %}</h1>
-                <div class="user-info">
-                    <span>👤 {{ user.username }}</span>
-                    <a href="/admin/logout/" class="btn btn-danger btn-sm">Logout</a>
-                </div>
-            </div>
-            
-            <div class="content-area">
-                {% block content %}{% endblock %}
-            </div>
-        </main>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="flex min-h-screen bg-slate-950 text-slate-100">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-slate-900 border-r border-slate-800">
+    <div class="h-16 flex items-center px-6 border-b border-slate-800">
+      <div>
+        <h1 class="text-xl font-bold text-indigo-400">IT Club</h1>
+        <p class="text-xs text-slate-400">Dashboard</p>
+      </div>
     </div>
-</body>
-</html>
+
+    <nav class="px-4 py-6 space-y-1 text-sm">
+
+      <a href="{% url 'dashboard:home' %}"
+         class="block px-4 py-3 rounded-xl transition
+         {% if active_page == 'dashboard' %}
+           bg-indigo-500/10 text-indigo-400
+         {% else %}
+           hover:bg-slate-800 text-slate-300
+         {% endif %}">
+        📊 Dashboard
+      </a>
+
+      <a href="{% url 'dashboard:member_list' %}"
+         class="block px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 transition">
+        👥 Members
+      </a>
+
+      <a href="/" class="block px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 transition">
+        🌐 Back to Site
+      </a>
+
+    </nav>
+  </aside>
+
+  <!-- Main Area -->
+  <div class="flex-1 flex flex-col">
+
+    <!-- Topbar -->
+    <header class="h-16 bg-slate-900 border-b border-slate-800 flex items-center justify-between px-6">
+      <h2 class="text-xl font-semibold text-slate-100">
+        {% block page_title %}Dashboard{% endblock %}
+      </h2>
+
+      <div class="flex items-center gap-4 text-sm text-slate-300">
+        <span>{{ user.username }}</span>
+
+        <form method="POST" action="{% url 'user:logout' %}">
+            {% csrf_token %}
+            <button type="submit"
+                    class="px-3 py-1.5 rounded-lg bg-red-500/10 text-red-400
+                        hover:bg-red-500/20 transition">
+            Logout
+            </button>
+        </form>
+        </div>
+    </header>
+
+    <!-- Subcontent -->
+    <main class="flex-1 p-6 bg-slate-950">
+      {% block subcontent %}{% endblock %}
+    </main>
+
+  </div>
+</div>
+{% endblock %}

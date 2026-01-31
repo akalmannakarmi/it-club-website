@@ -1,48 +1,89 @@
-{% extends 'dashboard/base.html' %}
+{% extends "dashboard/base.html" %}
 
-{% block page_title %}Member Form{% endblock %}
+{% block title %}{{ page_title }} · IT Club{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
 
-{% block content %}
-<style>
-.form-box{
-  max-width:500px;
-  margin:30px auto;
-  background:#fff;
-  padding:20px;
-  border-radius:10px;
-  box-shadow:0 4px 10px rgba(0,0,0,.08);
-}
-h2{
-  text-align:center;
-  margin-bottom:15px;
-}
-form p{
-  margin-bottom:10px;
-}
-input, select, textarea{
-  width:100%;
-  padding:6px;
-  border:1px solid #ccc;
-  border-radius:5px;
-}
-button{
-  width:100%;
-  background:#2563eb;
-  color:#fff;
-  padding:8px;
-  border:none;
-  border-radius:6px;
-  font-weight:600;
-}
-</style>
+{% block subcontent %}
 
-<div class="form-box">
-  <h2>{% if object %}Edit{% else %}Create{% endif %} Member</h2>
+<div class="max-w-5xl mx-auto">
 
-  <form method="POST">
+  <!-- Form Card -->
+  <form method="POST"
+        class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-lg space-y-6">
     {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">{% if object %}Update{% else %}Create{% endif %}</button>
+
+    <h2 class="text-2xl font-semibold text-slate-100 mb-4">{{ page_title }}</h2>
+    <p class="text-slate-400 mb-6">
+      Fill in member details below. All fields are required unless stated otherwise.
+    </p>
+
+    <!-- Grid Layout -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+      <!-- Username -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">Username</label>
+        {{ form.username }}
+        {% if form.username.errors %}
+          <p class="text-sm text-red-400 mt-1">{{ form.username.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Email -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">Email</label>
+        {{ form.email }}
+        {% if form.email.errors %}
+          <p class="text-sm text-red-400 mt-1">{{ form.email.errors.0 }}</p>
+        {% endif %}
+      </div>
+
+      <!-- Phone -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">Phone</label>
+        {{ form.phone }}
+      </div>
+
+      <!-- Faculty -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">Faculty</label>
+        {{ form.faculty }}
+      </div>
+
+      <!-- Batch -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">Batch</label>
+        {{ form.batch }}
+      </div>
+
+      <!-- Active -->
+      <div class="flex items-center gap-3 mt-6 lg:mt-0">
+        {{ form.is_active }}
+        <label class="text-sm text-slate-300">Active Member</label>
+      </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-between items-center pt-6 border-t border-slate-800 mt-6">
+      <a href="{% url 'dashboard:member_list' %}"
+         class="text-slate-400 hover:text-slate-200 transition">
+        ← Back to Members
+      </a>
+
+      <div class="flex items-center gap-4">
+        <button type="submit"
+                class="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 transition font-semibold">
+          Save
+        </button>
+
+        <a href="{% url 'dashboard:member_list' %}"
+           class="px-6 py-2 rounded-xl border border-slate-700 hover:bg-slate-800 transition">
+          Cancel
+        </a>
+      </div>
+    </div>
+
   </form>
 </div>
+
 {% endblock %}
