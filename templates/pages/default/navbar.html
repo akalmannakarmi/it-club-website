@@ -1,0 +1,49 @@
+<nav class="fixed w-full z-50 bg-white/90 backdrop-blur shadow-sm">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="flex justify-between items-center h-16">
+      <!-- Logo / Brand -->
+      <a href="#home" class="text-2xl font-bold text-indigo-700">IT Club</a>
+
+      <!-- Navigation links -->
+      <div class="hidden md:flex items-center gap-8 font-medium">
+        <a href="#home" class="py-2 hover:text-indigo-600 transition">Home</a>
+        <a href="#about" class="py-2 hover:text-indigo-600 transition">About</a>
+        <a href="#projects" class="py-2 hover:text-indigo-600 transition">Projects</a>
+        <a href="#resources" class="py-2 hover:text-indigo-600 transition">Resources</a>
+        <a href="#events" class="py-2 hover:text-indigo-600 transition">Events</a>
+        <a href="#" class="bg-indigo-600 text-white px-5 py-2 rounded-xl hover:bg-indigo-700 transition">Login</a>
+      </div>
+
+      <!-- Mobile menu toggle (optional) -->
+      <div class="md:hidden">
+        <button id="mobile-menu-button" class="text-indigo-600 focus:outline-none">
+          <!-- hamburger icon -->
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile menu (hidden by default) -->
+  <div id="mobile-menu" class="hidden md:hidden bg-white/95 shadow-lg">
+    <div class="flex flex-col px-6 py-4 gap-4">
+      <a href="#home" class="hover:text-indigo-600 transition">Home</a>
+      <a href="#about" class="hover:text-indigo-600 transition">About</a>
+      <a href="#projects" class="hover:text-indigo-600 transition">Projects</a>
+      <a href="#resources" class="hover:text-indigo-600 transition">Resources</a>
+      <a href="#events" class="hover:text-indigo-600 transition">Events</a>
+      <a href="#" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition">Login</a>
+    </div>
+  </div>
+
+  <script>
+    const btn = document.getElementById('mobile-menu-button');
+    const menu = document.getElementById('mobile-menu');
+    btn.addEventListener('click', () => {
+      menu.classList.toggle('hidden');
+    });
+  </script>
+</nav>

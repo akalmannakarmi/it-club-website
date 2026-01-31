@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "pages/default/navbar.html" %}
+
+{% if visibility.show_hero %}
+  {% include "pages/default/hero.html" %}
+{% endif %}
+
+{% if visibility.show_about %}
+  {% include "pages/default/about.html" %}
+{% endif %}
+
+{% if visibility.show_whatwedo %}
+  {% include "pages/default/whatwedo.html" %}
+{% endif %}
+
+{% if visibility.show_upcoming %}
+  {% include "pages/default/upcoming.html" %}
+{% endif %}
+
+{% if visibility.show_projects %}
+  {% include "pages/default/projects.html" %}
+{% endif %}
+
+{% if visibility.show_resources %}
+  {% include "pages/default/resources.html" %}
+{% endif %}
+
+{% if visibility.show_events %}
+  {% include "pages/default/events.html" %}
+{% endif %}
+
+{% if visibility.show_footer %}
+  {% include "pages/default/footer.html" %}
+{% endif %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // What We Do Slider
+  if (document.querySelector(".mySwiper")) {
+    new Swiper(".mySwiper", {
+      slidesPerView: 1.2,
+      spaceBetween: 24,
+      loop: true,
+      navigation: {
+        nextEl: ".mySwiper .swiper-button-next",
+        prevEl: ".mySwiper .swiper-button-prev"
+      },
+      breakpoints: { 640: { slidesPerView: 1.5 }, 1024: { slidesPerView: 3 } }
+    });
+  }
+
+  // Projects Slider
+  if (document.querySelector(".projectsSwiper")) {
+    new Swiper(".projectsSwiper", {
+      slidesPerView: 1.1,
+      spaceBetween: 24,
+      loop: true,
+      navigation: {
+        nextEl: ".projectsSwiper .swiper-button-next",
+        prevEl: ".projectsSwiper .swiper-button-prev"
+      },
+      breakpoints: { 640: { slidesPerView: 1.5 }, 1024: { slidesPerView: 2.5 } }
+    });
+  }
+
+  // Resources Slider
+  if (document.querySelector(".resourcesSwiper")) {
+    new Swiper(".resourcesSwiper", {
+      slidesPerView: 1.2,
+      spaceBetween: 24,
+      loop: true,
+      navigation: {
+        nextEl: ".resourcesSwiper .swiper-button-next",
+        prevEl: ".resourcesSwiper .swiper-button-prev"
+      },
+      breakpoints: { 640: { slidesPerView: 1.5 }, 1024: { slidesPerView: 3 } }
+    });
+  }
+
+  // Major Events Slider
+  if (document.querySelector(".majorEventsSwiper")) {
+    new Swiper(".majorEventsSwiper", {
+      slidesPerView: 1.1,
+      spaceBetween: 24,
+      loop: true,
+      navigation: {
+        nextEl: ".majorEventsSwiper .swiper-button-next",
+        prevEl: ".majorEventsSwiper .swiper-button-prev"
+      },
+      breakpoints: { 640: { slidesPerView: 1.3 }, 1024: { slidesPerView: 2 } }
+    });
+  }
+</script>
+{% endblock %}

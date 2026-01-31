@@ -4,10 +4,14 @@ from django.db import models
 
 
 class PageVisibility(models.Model):
-    show_home = models.BooleanField(default=True)
-    show_resource = models.BooleanField(default=True)
-    show_event = models.BooleanField(default=True)
-    show_announcement = models.BooleanField(default=True)
+    show_hero = models.BooleanField(default=True)
+    show_about = models.BooleanField(default=True)
+    show_whatwedo = models.BooleanField(default=True)
+    show_upcoming = models.BooleanField(default=True)
+    show_projects = models.BooleanField(default=True)
+    show_resources = models.BooleanField(default=True)
+    show_events = models.BooleanField(default=True)
+    show_footer = models.BooleanField(default=True)
 
     def __str__(self):
         return "Page Visibility Settings"

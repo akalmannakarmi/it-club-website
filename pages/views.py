@@ -4,7 +4,7 @@ from pages.models import PageVisibility
 
 
 class IndexView(View):
-    template = "pages/index.html"
+    template = "pages/default/index.html"
 
     def get(self, request):
         visibility = PageVisibility.objects.first()
