@@ -6,15 +6,25 @@
 
       <!-- Navigation links -->
       <div class="hidden md:flex items-center gap-8 font-medium">
-        <a href="#home" class="py-2 hover:text-indigo-600 transition">Home</a>
-        <a href="#about" class="py-2 hover:text-indigo-600 transition">About</a>
-        <a href="#projects" class="py-2 hover:text-indigo-600 transition">Projects</a>
-        <a href="#resources" class="py-2 hover:text-indigo-600 transition">Resources</a>
-        <a href="#events" class="py-2 hover:text-indigo-600 transition">Events</a>
-        <a href="#" class="bg-indigo-600 text-white px-5 py-2 rounded-xl hover:bg-indigo-700 transition">Login</a>
+        {% if visibility.show_hero %}
+          <a href="#home" class="py-2 hover:text-indigo-600 transition">Home</a>
+        {% endif %}
+        {% if visibility.show_about %}
+          <a href="#about" class="py-2 hover:text-indigo-600 transition">About</a>
+        {% endif %}
+        {% if visibility.show_projects %}
+          <a href="#projects" class="py-2 hover:text-indigo-600 transition">Projects</a>
+        {% endif %}
+        {% if visibility.show_resources %}
+          <a href="#resources" class="py-2 hover:text-indigo-600 transition">Resources</a>
+        {% endif %}
+        {% if visibility.show_events %}
+          <a href="#events" class="py-2 hover:text-indigo-600 transition">Events</a>
+        {% endif %}
+        <a href="{% url 'user:login' %}" class="bg-indigo-600 text-white px-5 py-2 rounded-xl hover:bg-indigo-700 transition">Login</a>
       </div>
 
-      <!-- Mobile menu toggle (optional) -->
+      <!-- Mobile menu toggle -->
       <div class="md:hidden">
         <button id="mobile-menu-button" class="text-indigo-600 focus:outline-none">
           <!-- hamburger icon -->
@@ -30,12 +40,22 @@
   <!-- Mobile menu (hidden by default) -->
   <div id="mobile-menu" class="hidden md:hidden bg-white/95 shadow-lg">
     <div class="flex flex-col px-6 py-4 gap-4">
-      <a href="#home" class="hover:text-indigo-600 transition">Home</a>
-      <a href="#about" class="hover:text-indigo-600 transition">About</a>
-      <a href="#projects" class="hover:text-indigo-600 transition">Projects</a>
-      <a href="#resources" class="hover:text-indigo-600 transition">Resources</a>
-      <a href="#events" class="hover:text-indigo-600 transition">Events</a>
-      <a href="#" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition">Login</a>
+      {% if visibility.show_hero %}
+        <a href="#home" class="hover:text-indigo-600 transition">Home</a>
+      {% endif %}
+      {% if visibility.show_about %}
+        <a href="#about" class="hover:text-indigo-600 transition">About</a>
+      {% endif %}
+      {% if visibility.show_projects %}
+        <a href="#projects" class="hover:text-indigo-600 transition">Projects</a>
+      {% endif %}
+      {% if visibility.show_resources %}
+        <a href="#resources" class="hover:text-indigo-600 transition">Resources</a>
+      {% endif %}
+      {% if visibility.show_events %}
+        <a href="#events" class="hover:text-indigo-600 transition">Events</a>
+      {% endif %}
+      <a href="{% url 'user:login' %}" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition">Login</a>
     </div>
   </div>
 
