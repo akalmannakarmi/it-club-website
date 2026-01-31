@@ -36,10 +36,7 @@ class MemberListView(AdminRequiredMixin, ListView):
         batch = self.request.GET.get("batch")
 
         if search:
-            qs = qs.filter(
-                Q(username__icontains=search) |
-                Q(email__icontains=search)
-            )
+            qs = qs.filter(Q(username__icontains=search) | Q(email__icontains=search))
 
         if faculty:
             qs = qs.filter(faculty=faculty)
@@ -54,6 +51,7 @@ class MemberListView(AdminRequiredMixin, ListView):
         context["faculty_choices"] = User.FACULTY_CHOICES
         context["active_page"] = "members"
         return context
+
 
 class MemberCreateView(AdminRequiredMixin, CreateView):
     model = User

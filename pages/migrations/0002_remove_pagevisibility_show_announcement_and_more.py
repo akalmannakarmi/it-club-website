@@ -4,66 +4,65 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('pages', '0001_initial'),
+        ("pages", "0001_initial"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='pagevisibility',
-            name='show_announcement',
+            model_name="pagevisibility",
+            name="show_announcement",
         ),
         migrations.RemoveField(
-            model_name='pagevisibility',
-            name='show_event',
+            model_name="pagevisibility",
+            name="show_event",
         ),
         migrations.RemoveField(
-            model_name='pagevisibility',
-            name='show_home',
+            model_name="pagevisibility",
+            name="show_home",
         ),
         migrations.RemoveField(
-            model_name='pagevisibility',
-            name='show_resource',
+            model_name="pagevisibility",
+            name="show_resource",
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='show_about',
+            model_name="pagevisibility",
+            name="show_about",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='show_events',
+            model_name="pagevisibility",
+            name="show_events",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='show_footer',
+            model_name="pagevisibility",
+            name="show_footer",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='show_hero',
+            model_name="pagevisibility",
+            name="show_hero",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='show_projects',
+            model_name="pagevisibility",
+            name="show_projects",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='show_resources',
+            model_name="pagevisibility",
+            name="show_resources",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='show_upcoming',
+            model_name="pagevisibility",
+            name="show_upcoming",
             field=models.BooleanField(default=True),
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='show_whatwedo',
+            model_name="pagevisibility",
+            name="show_whatwedo",
             field=models.BooleanField(default=True),
         ),
     ]
