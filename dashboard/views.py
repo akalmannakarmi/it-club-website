@@ -8,7 +8,8 @@ from django.db.models import Q
 from django.urls import reverse_lazy
 from django.contrib import messages
 from user.models import User
-from .forms import MemberForm
+from pages.models import PageVisibility
+from .forms import PageForm, MemberForm
 
 
 class DashboardView(AdminRequiredMixin, TemplateView):
@@ -19,6 +20,26 @@ class DashboardView(AdminRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "dashboard"
         context["total_members"] = User.objects.count()
+        return context
+
+
+class PageView(AdminRequiredMixin, UpdateView):
+    model = PageVisibility
+    form_class = PageForm
+    template_name = "dashboard/page_form.html"
+    success_url = reverse_lazy("dashboard:home")
+
+    def get_object(self, queryset=None):
+        obj, created = PageVisibility.objects.get_or_create(pk=1)
+        return obj
+
+    def form_valid(self, form):
+        messages.success(self.request, "Page settings updated successfully")
+        return super().form_valid(form)
+    
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "page_settings"
         return context
 
 

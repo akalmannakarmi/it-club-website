@@ -1,0 +1,154 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Page Settings · IT Club{% endblock %}
+{% block page_title %}Page Settings{% endblock %}
+
+{% block subcontent %}
+
+<div class="max-w-5xl mx-auto">
+
+  <form method="POST"
+        enctype="multipart/form-data"
+        class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-lg space-y-8">
+    {% csrf_token %}
+
+    <h2 class="text-2xl font-semibold text-slate-100">
+      Page Visibility Settings
+    </h2>
+
+    <!-- ========================
+         ORGANIZATION INFO
+    ========================= -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Banner Title -->
+      <div class="flex flex-col">
+        <label for="id_banner_title" class="text-sm text-slate-300 mb-1">
+          Banner Title
+        </label>
+        <input type="text"
+               name="banner_title"
+               id="id_banner_title"
+               value="{{ form.banner_title.value|default_if_none:'' }}"
+               class="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+
+        {% if form.banner_title.errors %}
+          <p class="text-sm text-red-400 mt-1">
+            {{ form.banner_title.errors.0 }}
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Banner Image -->
+      <div class="flex flex-col">
+        <label for="id_banner_image" class="text-sm text-slate-300 mb-1">
+          Banner Image
+        </label>
+
+        <input type="file"
+               name="banner_image"
+               id="id_banner_image"
+               class="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-slate-300">
+
+        {% if form.instance.banner_image %}
+          <img src="{{ form.instance.banner_image.url }}"
+               class="mt-3 rounded-xl max-h-40 object-cover border border-slate-700">
+        {% endif %}
+
+        {% if form.banner_image.errors %}
+          <p class="text-sm text-red-400 mt-1">
+            {{ form.banner_image.errors.0 }}
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Banner About -->
+      <div class="flex flex-col md:col-span-2">
+        <label for="id_banner_desc" class="text-sm text-slate-300 mb-1">
+          Banner Description
+        </label>
+
+        <textarea name="banner_desc"
+                  id="id_banner_desc"
+                  rows="4"
+                  class="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none">{{ form.banner_desc.value|default_if_none:'' }}</textarea>
+
+        {% if form.banner_desc.errors %}
+          <p class="text-sm text-red-400 mt-1">
+            {{ form.banner_desc.errors.0 }}
+          </p>
+        {% endif %}
+      </div>
+
+    </div>
+
+    <!-- ========================
+         SECTION VISIBILITY
+    ========================= -->
+    <div class="pt-6 border-t border-slate-800">
+
+      <h3 class="text-lg font-semibold text-slate-200 mb-4">
+        Section Visibility
+      </h3>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {% for field in form %}
+            {% if field.name|slice:":5" == "show_" %}
+
+            <label class="flex items-center justify-between bg-slate-800 px-4 py-4 rounded-xl border border-slate-700 hover:border-indigo-500 transition cursor-pointer">
+
+            <span class="text-slate-200 text-sm font-medium">
+                {{ field.label }}
+            </span>
+
+            <!-- Toggle -->
+            <div class="relative inline-block w-11 h-6">
+                <input type="checkbox"
+                    name="{{ field.name }}"
+                    id="id_{{ field.name }}"
+                    {% if field.value %}checked{% endif %}
+                    class="peer sr-only">
+
+                <!-- Background -->
+                <div class="w-11 h-6 bg-slate-600 rounded-full peer
+                            peer-checked:bg-indigo-600
+                            transition-colors duration-300">
+                </div>
+
+                <!-- Circle -->
+                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full
+                            transition-transform duration-300
+                            peer-checked:translate-x-5">
+                </div>
+            </div>
+
+            </label>
+
+            {% endif %}
+        {% endfor %}
+
+        </div>
+
+
+    <!-- ========================
+         ACTIONS
+    ========================= -->
+    <div class="flex justify-between items-center pt-6 border-t border-slate-800">
+
+      <a href="{% url 'dashboard:home' %}"
+         class="text-slate-400 hover:text-slate-200 transition">
+        ← Back
+      </a>
+
+      <button type="submit"
+              class="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 transition font-semibold">
+        Save Settings
+      </button>
+
+    </div>
+
+  </form>
+
+</div>
+
+{% endblock %}

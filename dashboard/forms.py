@@ -1,5 +1,6 @@
 from django import forms
 from user.models import User
+from pages.models import PageVisibility
 
 BASE_INPUT_CLASS = (
     "w-full bg-slate-950 border border-slate-800 rounded-xl "
@@ -7,6 +8,10 @@ BASE_INPUT_CLASS = (
     "focus:outline-none focus:ring-2 focus:ring-indigo-500"
 )
 
+class PageForm(forms.ModelForm):
+    class Meta:
+        model = PageVisibility
+        fields = ("__all__")
 
 class MemberForm(forms.ModelForm):
     class Meta:
@@ -40,3 +45,5 @@ class MemberForm(forms.ModelForm):
                 }
             ),
         }
+
+

@@ -1,7 +1,8 @@
 from django.urls import path
-from . import views
 
 from .views import (
+    DashboardView,
+    PageView,
     MemberListView,
     MemberCreateView,
     MemberUpdateView,
@@ -13,7 +14,8 @@ from .views import (
 app_name = "dashboard"
 
 urlpatterns = [
-    path("", views.DashboardView.as_view(), name="home"),
+    path("", DashboardView.as_view(), name="home"),
+    path("page/", PageView.as_view(), name="page_settings"),
     path("members/", MemberListView.as_view(), name="member_list"),
     path("members/create/", MemberCreateView.as_view(), name="member_create"),
     path(
