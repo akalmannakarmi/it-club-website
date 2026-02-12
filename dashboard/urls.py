@@ -17,6 +17,10 @@ from .views import (
     EventCreateView,
     EventUpdateView,
     EventDeleteView,
+    ProjectListView,
+    ProjectCreateView,
+    ProjectUpdateView,
+    ProjectDeleteView,
 )
 
 app_name = "dashboard"
@@ -40,4 +44,9 @@ urlpatterns = [
     path("event/create/", EventCreateView.as_view(), name="event_create"),
     path("event/edit/<int:pk>/", EventUpdateView.as_view(), name="event_edit"),
     path("event/delete/<int:pk>/", EventDeleteView.as_view(), name="event_delete"),
+
+    path("project/", ProjectListView.as_view(), name="project_list"),
+    path("project/create/", ProjectCreateView.as_view(), name="project_create"),
+    path("project/edit/<int:pk>/", ProjectUpdateView.as_view(), name="project_edit"),
+    path("project/delete/<int:pk>/", ProjectDeleteView.as_view(), name="project_delete"),
 ]

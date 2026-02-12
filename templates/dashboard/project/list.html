@@ -1,0 +1,98 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Projects · IT Club{% endblock %}
+{% block page_title %}Projects{% endblock %}
+
+{% block subcontent %}
+
+<!-- Header -->
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+  <div>
+    <h1 class="text-2xl font-semibold text-slate-100">Projects</h1>
+    <p class="text-slate-400 text-sm">Manage club projects</p>
+  </div>
+
+  <a href="{% url 'dashboard:project_create' %}"
+     class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
+            bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
+    ➕ Add Project
+  </a>
+</div>
+
+<!-- Search -->
+<form method="GET" class="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6 flex gap-4">
+  <input type="text"
+         name="search"
+         value="{{ request.GET.search }}"
+         placeholder="Search project title"
+         class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2
+                text-slate-200 placeholder:text-slate-500 focus:outline-none
+                focus:ring-2 focus:ring-indigo-500">
+
+  <button type="submit"
+          class="bg-indigo-600 hover:bg-indigo-700 transition rounded-xl px-6 py-2 font-semibold">
+    Search
+  </button>
+</form>
+
+<!-- Table -->
+<div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+  <table class="w-full text-sm">
+    <thead class="bg-slate-800 text-slate-300">
+      <tr>
+        <th class="px-4 py-3 text-left">Title</th>
+        <th class="px-4 py-3 text-left">Supervisor</th>
+        <th class="px-4 py-3 text-left">Members</th>
+        <th class="px-4 py-3 text-right">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-slate-800">
+      {% for project in projects %}
+      <tr class="hover:bg-slate-800/40 transition">
+
+        <td class="px-4 py-3 font-medium text-slate-100">{{ project.title }}</td>
+
+        <td class="px-4 py-3 text-slate-300">
+          {{ project.supervisor.username|default:"—" }}
+        </td>
+
+        <td class="px-4 py-3 text-slate-300">
+          {% if project.members.all %}
+            {% for member in project.members.all %}
+              <span class="inline-block px-2 py-1 bg-slate-700/50 text-slate-200 rounded-full text-xs mr-1">
+                {{ member.username }}
+              </span>
+            {% endfor %}
+          {% else %}
+            —
+          {% endif %}
+        </td>
+
+        <td class="px-4 py-3 text-right">
+          <div class="flex items-center justify-end gap-3">
+            <a href="{% url 'dashboard:project_edit' project.id %}"
+               class="p-2 rounded-lg hover:bg-indigo-500/10 text-indigo-400 transition">✏️</a>
+
+            <form method="POST" action="{% url 'dashboard:project_delete' project.id %}">
+              {% csrf_token %}
+              <button type="submit"
+                      onclick="return confirm('Are you sure you want to delete this project?')"
+                      class="p-2 rounded-lg hover:bg-red-500/10 text-red-400 transition">🗑</button>
+            </form>
+          </div>
+        </td>
+
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center text-slate-500 py-6">
+          No projects found.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

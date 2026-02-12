@@ -1,0 +1,251 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ page_title }} · IT Club{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block subcontent %}
+<div class="max-w-4xl mx-auto">
+
+  <form method="POST" enctype="multipart/form-data"
+        class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-lg space-y-8">
+    {% csrf_token %}
+
+    <h2 class="text-2xl font-semibold text-slate-100">{{ page_title }}</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
+
+      <!-- Title -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-2">Project Title *</label>
+        <input type="text" name="title" value="{{ form.title.value|default_if_none:'' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      </div>
+
+      <!-- Supervisor (Custom Single Select) -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-2">Supervisor</label>
+        <div class="relative">
+          <button type="button" id="supervisor-button"
+                  class="w-full bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-left text-slate-200 flex justify-between items-center">
+            <span id="supervisor-label">— Select Supervisor —</span>
+            <svg class="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </button>
+          <ul id="supervisor-list"
+              class="absolute z-10 mt-1 w-full bg-slate-950 border border-slate-800 rounded-xl shadow-lg max-h-60 overflow-auto hidden">
+            {% for user in all_users %}
+            <li data-id="{{ user.id }}" class="cursor-pointer px-4 py-2 hover:bg-indigo-600/20 text-slate-200">
+              {{ user.username }}
+            </li>
+            {% endfor %}
+          </ul>
+          <input type="hidden" name="supervisor" id="supervisor-input" value="{{ form.supervisor.value|default_if_none:'' }}">
+        </div>
+      </div>
+
+      <!-- Members (Custom Multi-Select) -->
+      <div class="flex flex-col md:col-span-2">
+        <label class="text-sm text-slate-300 mb-2">Members</label>
+        <div class="relative">
+          <div id="members-container" class="min-h-[44px] bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 flex flex-wrap items-center gap-1 cursor-text">
+            <input type="text" id="members-search" placeholder="Search members..."
+                   class="flex-1 bg-transparent focus:outline-none text-slate-200">
+          </div>
+          <ul id="members-list"
+              class="absolute z-10 mt-1 w-full bg-slate-950 border border-slate-800 rounded-xl shadow-lg max-h-60 overflow-auto hidden">
+            {% for user in all_users %}
+            <li data-id="{{ user.id }}" class="cursor-pointer px-4 py-2 hover:bg-indigo-600/20 text-slate-200">
+              {{ user.username }}
+            </li>
+            {% endfor %}
+          </ul>
+          <p class="text-xs text-slate-400 mt-1">Search and select multiple members</p>
+        </div>
+      </div>
+
+      <!-- Caption -->
+      <div class="flex flex-col md:col-span-2">
+        <label class="text-sm text-slate-300 mb-2">Caption</label>
+        <input type="text" name="caption" value="{{ form.caption.value|default_if_none:'' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+      </div>
+
+      <!-- Description -->
+      <div class="flex flex-col md:col-span-2">
+        <label class="text-sm text-slate-300 mb-2">Description</label>
+        <textarea name="description" rows="5"
+                  class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">{{ form.description.value|default_if_none:'' }}</textarea>
+      </div>
+
+      <!-- Technology Stack -->
+      <div class="flex flex-col md:col-span-2">
+        <label class="text-sm text-slate-300 mb-2">Technology Stack</label>
+        <textarea name="technology_stack" rows="3"
+                  class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">{{ form.technology_stack.value|default_if_none:'' }}</textarea>
+      </div>
+
+      <!-- Image -->
+      <div class="flex flex-col md:col-span-2">
+        <label class="text-sm text-slate-300 mb-2">Project Image</label>
+        {% if form.instance.image %}
+          <img src="{{ form.instance.image.url }}" class="h-24 rounded-lg border border-slate-700 mb-2">
+        {% endif %}
+        <input type="file" name="image"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-300
+                      file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0
+                      file:bg-indigo-600 file:text-white hover:file:bg-indigo-700">
+      </div>
+
+      <!-- Live / Repo Links -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-2">Live Project URL</label>
+        <input type="url" name="link" value="{{ form.link.value|default_if_none:'' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+      </div>
+
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-2">Repository URL</label>
+        <input type="url" name="repo_link" value="{{ form.repo_link.value|default_if_none:'' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-between items-center pt-6 border-t border-slate-800">
+      <a href="{% url 'dashboard:project_list' %}" class="text-slate-400 hover:text-slate-200 transition">← Back to Projects</a>
+      <div class="flex items-center gap-4">
+        <button type="submit" class="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 transition font-semibold">Save Project</button>
+        <a href="{% url 'dashboard:project_list' %}" class="px-6 py-2 rounded-xl border border-slate-700 hover:bg-slate-800 transition">Cancel</a>
+      </div>
+    </div>
+
+  </form>
+</div>
+
+<!-- Pass selected values from Django safely -->
+{{ form.members.value|default:"[]"|json_script:"selectedMembersData" }}
+{{ form.supervisor.value|default:""|json_script:"selectedSupervisorData" }}
+
+<script>
+const supervisorButton = document.getElementById('supervisor-button');
+const supervisorList = document.getElementById('supervisor-list');
+const supervisorInput = document.getElementById('supervisor-input');
+const supervisorLabel = document.getElementById('supervisor-label');
+
+supervisorButton.addEventListener('click', () => {
+  supervisorList.classList.toggle('hidden');
+});
+
+supervisorList.querySelectorAll('li').forEach(li => {
+  li.addEventListener('click', () => {
+    supervisorInput.value = li.dataset.id;
+    supervisorLabel.textContent = li.textContent;
+    supervisorList.classList.add('hidden');
+  });
+});
+
+// Pre-fill supervisor on edit
+const selectedSupervisor = JSON.parse(document.getElementById('selectedSupervisorData').textContent);
+if (selectedSupervisor) {
+  const supervisorLi = supervisorList.querySelector(`li[data-id="${selectedSupervisor}"]`);
+  if (supervisorLi) supervisorLabel.textContent = supervisorLi.textContent;
+}
+
+// --- Members multi-select ---
+const membersContainer = document.getElementById('members-container');
+const membersSearch = document.getElementById('members-search');
+const membersList = document.getElementById('members-list');
+const selectedMembers = new Set();
+
+function createHiddenInput(id) {
+  const input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'members';
+  input.value = id;
+  return input;
+}
+
+function createTag(username, id) {
+  const span = document.createElement('span');
+  span.className = 'bg-indigo-600 text-white rounded px-2 py-1 flex items-center gap-1';
+  span.textContent = username;
+
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'text-red-400 ml-1';
+  btn.innerHTML = '&times;';
+  btn.addEventListener('click', () => {
+    membersContainer.removeChild(span);
+    const hiddenInput = membersContainer.querySelector(`input[value="${id}"]`);
+    if (hiddenInput) membersContainer.removeChild(hiddenInput);
+    selectedMembers.delete(id);
+  });
+
+  span.appendChild(btn);
+  return span;
+}
+
+// Pre-fill members on edit
+let selectedMembersData = [];
+const selectedDataElement = document.getElementById('selectedMembersData');
+
+if (selectedDataElement) {
+    try {
+        const parsed = JSON.parse(selectedDataElement.textContent);
+        if (Array.isArray(parsed)) {
+            selectedMembersData = parsed;
+        }
+    } catch (e) {
+        selectedMembersData = [];
+    }
+}
+
+selectedMembersData.forEach(memberId => {
+
+  const memberLi = membersList.querySelector(`li[data-id="${memberId}"]`);
+  if (memberLi) {
+    const tag = createTag(memberLi.textContent, memberLi.dataset.id);
+    membersContainer.insertBefore(tag, membersSearch);
+    const hiddenInput = createHiddenInput(memberLi.dataset.id);
+    membersContainer.appendChild(hiddenInput);
+    selectedMembers.add(memberLi.dataset.id);
+  }
+});
+
+membersSearch.addEventListener('focus', () => membersList.classList.remove('hidden'));
+
+membersSearch.addEventListener('input', () => {
+  const filter = membersSearch.value.toLowerCase();
+  membersList.querySelectorAll('li').forEach(li => {
+    if (li.textContent.toLowerCase().includes(filter) && !selectedMembers.has(li.dataset.id)) {
+      li.style.display = 'block';
+    } else {
+      li.style.display = 'none';
+    }
+  });
+});
+
+membersList.querySelectorAll('li').forEach(li => {
+  li.addEventListener('click', () => {
+    if (!selectedMembers.has(li.dataset.id)) {
+      const tag = createTag(li.textContent, li.dataset.id);
+      membersContainer.insertBefore(tag, membersSearch);
+      const hiddenInput = createHiddenInput(li.dataset.id);
+      membersContainer.appendChild(hiddenInput);
+      selectedMembers.add(li.dataset.id);
+      membersSearch.value = '';
+      membersList.querySelectorAll('li').forEach(li => li.style.display = 'block');
+    }
+  });
+});
+
+// Close dropdowns when clicking outside
+document.addEventListener('click', e => {
+  if (!membersContainer.contains(e.target)) membersList.classList.add('hidden');
+  if (!supervisorButton.contains(e.target) && !supervisorList.contains(e.target)) supervisorList.classList.add('hidden');
+});
+</script>
+
+{% endblock %}

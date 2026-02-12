@@ -10,7 +10,8 @@ from django.contrib import messages
 from user.models import User
 from pages.models import PageVisibility, WhatWeDo
 from events.models import Event
-from .forms import PageForm, MemberForm, WhatWeDoForm, EventForm
+from projects.models import Project
+from .forms import PageForm, MemberForm, WhatWeDoForm, EventForm, ProjectForm
 
 
 class DashboardView(AdminRequiredMixin, TemplateView):
@@ -263,4 +264,70 @@ class EventDeleteView(AdminRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Event deleted successfully")
+        return super().delete(request, *args, **kwargs)
+
+
+
+class ProjectListView(AdminRequiredMixin, ListView):
+    model = Project
+    template_name = "dashboard/project/list.html"
+    context_object_name = "projects"
+    paginate_by = 10
+
+    def get_queryset(self):
+        qs = Project.objects.all()
+        search = self.request.GET.get("search")
+        if search:
+            qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "project_list"
+        return context
+
+
+class ProjectCreateView(AdminRequiredMixin, CreateView):
+    model = Project
+    form_class = ProjectForm
+    template_name = "dashboard/project/form.html"
+    success_url = reverse_lazy("dashboard:project_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Project created successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Create Project"
+        context["active_page"] = "project_list"
+        context["all_users"] = User.objects.all()
+        return context
+
+
+class ProjectUpdateView(AdminRequiredMixin, UpdateView):
+    model = Project
+    form_class = ProjectForm
+    template_name = "dashboard/project/form.html"
+    success_url = reverse_lazy("dashboard:project_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Project updated successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Edit Project"
+        context["active_page"] = "project_list"
+        context["all_users"] = User.objects.all()
+        return context
+
+
+class ProjectDeleteView(AdminRequiredMixin, DeleteView):
+    model = Project
+    success_url = reverse_lazy("dashboard:project_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Project deleted successfully")
         return super().delete(request, *args, **kwargs)
