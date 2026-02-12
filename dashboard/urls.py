@@ -13,6 +13,10 @@ from .views import (
     WhatWeDoCreateView,
     WhatWeDoUpdateView,
     WhatWeDoDeleteView,
+    EventListView,
+    EventCreateView,
+    EventUpdateView,
+    EventDeleteView,
 )
 
 app_name = "dashboard"
@@ -31,4 +35,9 @@ urlpatterns = [
     path("what-we-do/create/", WhatWeDoCreateView.as_view(), name="what_we_do_create"),
     path("what-we-do/edit/<int:pk>/", WhatWeDoUpdateView.as_view(), name="what_we_do_edit"),
     path("what-we-do/delete/<int:pk>/", WhatWeDoDeleteView.as_view(), name="what_we_do_delete"),
+
+    path("event/", EventListView.as_view(), name="event_list"),
+    path("event/create/", EventCreateView.as_view(), name="event_create"),
+    path("event/edit/<int:pk>/", EventUpdateView.as_view(), name="event_edit"),
+    path("event/delete/<int:pk>/", EventDeleteView.as_view(), name="event_delete"),
 ]

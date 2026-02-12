@@ -1,0 +1,143 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ page_title }} · IT Club{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block subcontent %}
+
+<div class="max-w-4xl mx-auto">
+
+  <form method="POST"
+        enctype="multipart/form-data"
+        class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-lg space-y-8">
+    {% csrf_token %}
+
+    <!-- Header -->
+    <div>
+      <h2 class="text-2xl font-semibold text-slate-100">
+        {{ page_title }}
+      </h2>
+      <p class="text-slate-400 text-sm mt-1">
+        Add or update event details.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Title -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-2">Event Title *</label>
+        <input type="text"
+               name="title"
+               value="{{ form.title.value|default_if_none:'' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2
+                      text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500
+                      {% if form.title.errors %}border-red-500{% endif %}"
+               placeholder="Enter event title">
+        {% if form.title.errors %}
+          <p class="text-sm text-red-400 mt-1">
+            {{ form.title.errors.0 }}
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Date -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-2">Event Date *</label>
+        <input type="datetime-local"
+               name="date"
+               value="{{ form.date.value|date:'Y-m-d\\TH:i' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2
+                      text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      </div>
+
+      <!-- Caption -->
+      <div class="flex flex-col md:col-span-2">
+        <label class="text-sm text-slate-300 mb-2">Caption</label>
+        <input type="text"
+               name="caption"
+               value="{{ form.caption.value|default_if_none:'' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2
+                      text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+               placeholder="Short caption (optional)">
+      </div>
+
+      <!-- Image -->
+      <div class="flex flex-col md:col-span-2">
+        <label for="id_image" class="text-sm text-slate-300 mb-2">
+          Image
+        </label>
+
+        {% if form.instance.image %}
+        <div class="mb-4">
+          <p class="text-xs text-slate-400 mb-2">Current Image:</p>
+          <img src="{{ form.instance.image.url }}"
+               class="h-24 rounded-lg border border-slate-700">
+        </div>
+        {% endif %}
+
+        <input type="file"
+               name="image"
+               id="id_image"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2
+                      text-slate-300
+                      file:mr-4 file:py-2 file:px-4
+                      file:rounded-lg file:border-0
+                      file:bg-indigo-600 file:text-white
+                      hover:file:bg-indigo-700">
+      </div>
+
+      <!-- Description -->
+      <div class="flex flex-col md:col-span-2">
+        <label class="text-sm text-slate-300 mb-2">Description</label>
+        <textarea name="description"
+                  rows="5"
+                  class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2
+                         text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Write event description...">{{ form.description.value|default_if_none:'' }}</textarea>
+      </div>
+
+      <!-- Is Major -->
+      <div class="flex items-center gap-3 md:col-span-2 mt-2">
+        <input type="checkbox"
+               name="is_major"
+               id="id_is_major"
+               {% if form.is_major.value %}checked{% endif %}
+               class="w-4 h-4 text-indigo-600 bg-slate-900 border-slate-700 rounded focus:ring-indigo-500">
+
+        <label for="id_is_major"
+               class="text-sm text-slate-300">
+          Mark as Major Event
+        </label>
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-between items-center pt-6 border-t border-slate-800">
+
+      <a href="{% url 'dashboard:event_list' %}"
+         class="text-slate-400 hover:text-slate-200 transition">
+        ← Back to Events
+      </a>
+
+      <div class="flex items-center gap-4">
+        <button type="submit"
+                class="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700
+                       transition font-semibold">
+          Save Event
+        </button>
+
+        <a href="{% url 'dashboard:event_list' %}"
+           class="px-6 py-2 rounded-xl border border-slate-700
+                  hover:bg-slate-800 transition">
+          Cancel
+        </a>
+      </div>
+
+    </div>
+
+  </form>
+</div>
+
+{% endblock %}

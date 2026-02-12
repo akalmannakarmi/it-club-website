@@ -1,6 +1,8 @@
 from django.shortcuts import render
+from django.utils.timezone import datetime
 from django.views import View
 from pages.models import PageVisibility,WhatWeDo
+from events.models import Event
 
 
 class IndexView(View):
@@ -9,8 +11,10 @@ class IndexView(View):
     def get(self, request):
         visibility = PageVisibility.objects.first()
         whatwedos = WhatWeDo.objects.all()[:10]
+        upcomingEvents = Event.objects.order_by("date").filter(date__gte=datetime.now().date())[:3]
+        majorEvents = Event.objects.order_by("-date").filter(is_major=True)[:10]
 
-        return render(request, self.template, {"visibility": visibility, "whatwedos": whatwedos})
+        return render(request, self.template, {"visibility": visibility, "whatwedos": whatwedos, "upcomingEvents":upcomingEvents, "majorEvents":majorEvents})
 
 
 class AnnouncementsView(View):

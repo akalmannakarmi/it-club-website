@@ -1,6 +1,7 @@
 from django import forms
 from user.models import User
 from pages.models import PageVisibility, WhatWeDo
+from events.models import Event
 
 BASE_INPUT_CLASS = (
     "w-full bg-slate-950 border border-slate-800 rounded-xl "
@@ -51,4 +52,10 @@ class MemberForm(forms.ModelForm):
 class WhatWeDoForm(forms.ModelForm):
     class Meta:
         model = WhatWeDo
+        fields = ("__all__")
+
+
+class EventForm(forms.ModelForm):
+    class Meta:
+        model = Event
         fields = ("__all__")

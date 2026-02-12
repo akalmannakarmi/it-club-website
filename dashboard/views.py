@@ -9,7 +9,8 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from user.models import User
 from pages.models import PageVisibility, WhatWeDo
-from .forms import PageForm, MemberForm, WhatWeDoForm
+from events.models import Event
+from .forms import PageForm, MemberForm, WhatWeDoForm, EventForm
 
 
 class DashboardView(AdminRequiredMixin, TemplateView):
@@ -199,4 +200,67 @@ class WhatWeDoDeleteView(AdminRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Activity deleted successfully")
+        return super().delete(request, *args, **kwargs)
+
+
+class EventListView(AdminRequiredMixin, ListView):
+    model = Event
+    template_name = "dashboard/event/list.html"
+    context_object_name = "events"
+    paginate_by = 10
+
+    def get_queryset(self):
+        qs = Event.objects.all()
+        search = self.request.GET.get("search")
+        if search:
+            qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "event_list"
+        return context
+
+
+class EventCreateView(AdminRequiredMixin, CreateView):
+    model = Event
+    form_class = EventForm
+    template_name = "dashboard/event/form.html"
+    success_url = reverse_lazy("dashboard:event_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Event created successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Create Event"
+        context["active_page"] = "event_list"
+        return context
+
+
+class EventUpdateView(AdminRequiredMixin, UpdateView):
+    model = Event
+    form_class = EventForm
+    template_name = "dashboard/event/form.html"
+    success_url = reverse_lazy("dashboard:event_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Event updated successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Edit Event"
+        context["active_page"] = "event_list"
+        return context
+
+
+class EventDeleteView(AdminRequiredMixin, DeleteView):
+    model = Event
+    success_url = reverse_lazy("dashboard:event_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Event deleted successfully")
         return super().delete(request, *args, **kwargs)

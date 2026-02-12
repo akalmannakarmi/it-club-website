@@ -4,25 +4,18 @@
 
     <div class="swiper majorEventsSwiper" data-aos="fade-up">
       <div class="swiper-wrapper">
-
+        {% for event in majorEvents %}
         <div class="swiper-slide bg-white rounded-3xl overflow-hidden shadow-lg">
-          <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d" class="h-64 w-full object-cover">
+          {% if event.image %}
+          <img src="{{event.image.url}}" class="h-64 w-full object-cover">
+          {% endif %}
           <div class="p-6">
-            <h3 class="text-xl font-semibold mb-2">Annual Hackathon 2026</h3>
-            <p class="text-slate-600 mb-4">24-hour coding competition with mentorship & prizes.</p>
+            <h3 class="text-xl font-semibold mb-2">{{event.title}}</h3>
+            <p class="text-slate-600 mb-4">{{event.caption}}</p>
             <a href="#" class="text-indigo-600 font-semibold">View Event →</a>
           </div>
         </div>
-
-        <div class="swiper-slide bg-white rounded-3xl overflow-hidden shadow-lg">
-          <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f" class="h-64 w-full object-cover">
-          <div class="p-6">
-            <h3 class="text-xl font-semibold mb-2">Tech Talk: AI & ML</h3>
-            <p class="text-slate-600 mb-4">Insights from industry leaders on AI trends.</p>
-            <a href="#" class="text-indigo-600 font-semibold">View Event →</a>
-          </div>
-        </div>
-
+        {% endfor %}
       </div>
 
       <div class="swiper-button-next"></div>

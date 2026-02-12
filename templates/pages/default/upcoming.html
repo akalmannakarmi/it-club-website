@@ -1,28 +1,17 @@
+{% load math_filters %}
 <section class="py-28 bg-white">
   <div class="max-w-7xl mx-auto px-6">
     <h2 class="text-3xl font-bold mb-12">Upcoming Activities</h2>
     <div class="grid md:grid-cols-3 gap-8">
-      <div class="flex items-start gap-4 bg-slate-50 p-6 rounded-2xl shadow">
-        <div class="text-indigo-600 font-bold text-xl">Feb 5</div>
+      {% for event in upcomingEvents %}
+      <div class="flex items-start gap-4 bg-slate-50 p-6 rounded-2xl shadow mt-{{ forloop.counter0|multiply:8 }}">
+        <div class="text-indigo-600 font-bold text-xl">{{ event.date|date:"M j" }}</div>
         <div>
-          <h4 class="font-semibold mb-1">Workshop: Python Basics</h4>
-          <p class="text-slate-600 text-sm">Introductory Python session for all members.</p>
+          <h4 class="font-semibold mb-1">{{event.title}}</h4>
+          <p class="text-slate-600 text-sm">{{event.caption}}</p>
         </div>
       </div>
-      <div class="flex items-start gap-4 bg-slate-50 p-6 rounded-2xl shadow mt-8">
-        <div class="text-indigo-600 font-bold text-xl">Feb 12</div>
-        <div>
-          <h4 class="font-semibold mb-1">Guest Lecture: Cybersecurity Trends</h4>
-          <p class="text-slate-600 text-sm">Insights from industry experts on current trends.</p>
-        </div>
-      </div>
-      <div class="flex items-start gap-4 bg-slate-50 p-6 rounded-2xl shadow mt-16">
-        <div class="text-indigo-600 font-bold text-xl">Feb 19</div>
-        <div>
-          <h4 class="font-semibold mb-1">Project Showcase</h4>
-          <p class="text-slate-600 text-sm">Members present ongoing projects to the club.</p>
-        </div>
-      </div>
+      {% endfor %}
     </div>
     <div class="text-center mt-6">
       <a href="#" class="text-indigo-600 font-semibold hover:underline">
