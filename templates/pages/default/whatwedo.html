@@ -4,34 +4,17 @@
 
     <div class="swiper mySwiper" data-aos="fade-up">
       <div class="swiper-wrapper">
+        {% for activity in whatwedos %}
         <div class="swiper-slide bg-white p-10 rounded-3xl shadow-lg flex flex-col items-center">
-          <img src="https://images.unsplash.com/photo-1581091870626-5e9b43f5402a" class="h-32 w-32 object-cover rounded-full mb-4">
-          <h3 class="text-xl font-semibold mb-2">Workshops</h3>
+          {% if activity.image %}
+          <img src="{{activity.image.url}}" class="h-32 w-32 object-cover rounded-full mb-4">
+          {% endif %}
+          <h3 class="text-xl font-semibold mb-2">{{activity.title}}</h3>
           <p class="text-slate-600 text-center">
-            Hands-on sessions on programming, web development, and cybersecurity.
+            {{activity.caption}}
           </p>
         </div>
-        <div class="swiper-slide bg-white p-10 rounded-3xl shadow-lg flex flex-col items-center">
-          <img src="https://images.unsplash.com/photo-1590608897129-79c7e17f3d18" class="h-32 w-32 object-cover rounded-full mb-4">
-          <h3 class="text-xl font-semibold mb-2">Regular Meetings</h3>
-          <p class="text-slate-600 text-center">
-            Discussion-driven sessions to share knowledge and collaborate.
-          </p>
-        </div>
-        <div class="swiper-slide bg-white p-10 rounded-3xl shadow-lg flex flex-col items-center">
-          <img src="https://images.unsplash.com/photo-1612831455549-771eea7b9c07" class="h-32 w-32 object-cover rounded-full mb-4">
-          <h3 class="text-xl font-semibold mb-2">Team Projects</h3>
-          <p class="text-slate-600 text-center">
-            Collaborative real-world projects to develop practical skills.
-          </p>
-        </div>
-        <div class="swiper-slide bg-white p-10 rounded-3xl shadow-lg flex flex-col items-center">
-          <img src="https://images.unsplash.com/photo-1581091215363-216f70e3d3d6" class="h-32 w-32 object-cover rounded-full mb-4">
-          <h3 class="text-xl font-semibold mb-2">Community</h3>
-          <p class="text-slate-600 text-center">
-            Networking and mentorship opportunities for all members.
-          </p>
-        </div>
+        {% endfor %}
       </div>
       <div class="swiper-button-next"></div>
       <div class="swiper-button-prev"></div>

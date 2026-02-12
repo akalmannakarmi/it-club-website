@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.views import View
-from pages.models import PageVisibility
+from pages.models import PageVisibility,WhatWeDo
 
 
 class IndexView(View):
@@ -8,8 +8,9 @@ class IndexView(View):
 
     def get(self, request):
         visibility = PageVisibility.objects.first()
+        whatwedos = WhatWeDo.objects.all()[:10]
 
-        return render(request, self.template, {"visibility": visibility})
+        return render(request, self.template, {"visibility": visibility, "whatwedos": whatwedos})
 
 
 class AnnouncementsView(View):

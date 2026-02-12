@@ -20,3 +20,10 @@ class PageVisibility(models.Model):
     def save(self, *args, **kwargs):
         self.pk = 1  # force singleton
         super().save(*args, **kwargs)
+
+
+class WhatWeDo(models.Model):
+    title = models.TextField("Activity Title", unique=True)
+    caption = models.TextField("Activity Caption", null=True, blank=True)
+    image = models.ImageField(upload_to="pages/activity", null=True, blank=True)
+    description = models.TextField("Activity Description", null=True, blank=True)

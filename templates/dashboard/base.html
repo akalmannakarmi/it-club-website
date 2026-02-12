@@ -66,6 +66,25 @@
       </a>
 
 
+      <!-- What We Do -->
+      <a href="{% url 'dashboard:what_we_do_list' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+      {% if active_page == 'what_we_do' %}
+        bg-indigo-500/10 text-indigo-400
+      {% else %}
+        hover:bg-slate-800 text-slate-300
+      {% endif %}">
+
+        <!-- Grid Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+            fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+            d="M4 6h7v7H4V6zm9 0h7v7h-7V6zM4 15h7v7H4v-7zm9 7v-7h7v7h-7z"/>
+        </svg>
+
+        What We Do
+      </a>
+
+
       <!-- Back to Site -->
       <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 transition">
 

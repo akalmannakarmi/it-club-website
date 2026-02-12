@@ -8,8 +8,8 @@ from django.db.models import Q
 from django.urls import reverse_lazy
 from django.contrib import messages
 from user.models import User
-from pages.models import PageVisibility
-from .forms import PageForm, MemberForm
+from pages.models import PageVisibility, WhatWeDo
+from .forms import PageForm, MemberForm, WhatWeDoForm
 
 
 class DashboardView(AdminRequiredMixin, TemplateView):
@@ -136,3 +136,67 @@ class MemberDeactivateView(AdminRequiredMixin, View):
         member.save()
 
         return redirect("dashboard:member_list")
+
+
+
+class WhatWeDoListView(AdminRequiredMixin, ListView):
+    model = WhatWeDo
+    template_name = "dashboard/whatwedo/list.html"
+    context_object_name = "what_we_do_list"
+    paginate_by = 10
+
+    def get_queryset(self):
+        qs = WhatWeDo.objects.all()
+        search = self.request.GET.get("search")
+        if search:
+            qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "what_we_do_list"
+        return context
+
+
+class WhatWeDoCreateView(AdminRequiredMixin, CreateView):
+    model = WhatWeDo
+    form_class = WhatWeDoForm
+    template_name = "dashboard/whatwedo/form.html"
+    success_url = reverse_lazy("dashboard:what_we_do_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Activity created successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Create Activity"
+        context["active_page"] = "what_we_do_list"
+        return context
+
+
+class WhatWeDoUpdateView(AdminRequiredMixin, UpdateView):
+    model = WhatWeDo
+    form_class = WhatWeDoForm
+    template_name = "dashboard/whatwedo/form.html"
+    success_url = reverse_lazy("dashboard:what_we_do_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Activity updated successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Edit What We Do"
+        context["active_page"] = "what_we_do_list"
+        return context
+
+
+class WhatWeDoDeleteView(AdminRequiredMixin, DeleteView):
+    model = WhatWeDo
+    success_url = reverse_lazy("dashboard:what_we_do_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Activity deleted successfully")
+        return super().delete(request, *args, **kwargs)
