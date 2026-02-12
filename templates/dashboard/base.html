@@ -133,6 +133,30 @@
         Events
       </a>
 
+      <!-- Resources -->
+      <a href="{% url 'dashboard:resource_list' %}" 
+        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+        {% if active_page == 'resource_list' %}
+          bg-indigo-500/10 text-indigo-400
+        {% else %}
+          hover:bg-slate-800 text-slate-300
+        {% endif %}">
+
+        <!-- Book / Document Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" 
+            class="w-5 h-5" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+          <path stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="1.8"
+                d="M12 6v13m0-13C10.343 4.343 8.343 3.5 6 3.5S1.657 4.343 0 6v13c1.657-1.657 3.657-2.5 6-2.5s4.343.843 6 2.5m0-13c1.657-1.657 3.657-2.5 6-2.5s4.343.843 6 2.5v13c-1.657-1.657-3.657-2.5-6-2.5s-4.343.843-6 2.5" />
+        </svg>
+
+        Resources
+      </a>
+
 
 
       <!-- Back to Site -->

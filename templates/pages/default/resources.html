@@ -4,25 +4,15 @@
 
     <div class="swiper resourcesSwiper" data-aos="fade-up">
       <div class="swiper-wrapper">
-
+        {% for resource in resources %}
         <div class="swiper-slide bg-slate-50 p-6 rounded-2xl shadow flex flex-col items-center">
-          <img src="https://images.unsplash.com/photo-1581091870626-5e9b43f5402a" class="h-20 w-20 mb-4">
-          <h3 class="font-semibold mb-2">Web Development</h3>
-          <p class="text-slate-600 text-center text-sm">HTML, CSS, JS, Django.</p>
+          {% if resource.image %}
+          <img src="{{resource.image.url}}" class="h-20 w-20 mb-4">
+          {% endif %}
+          <h3 class="font-semibold mb-2">{{resource.title}}</h3>
+          <p class="text-slate-600 text-center text-sm">{{resource.caption}}</p>
         </div>
-
-        <div class="swiper-slide bg-slate-50 p-6 rounded-2xl shadow flex flex-col items-center">
-          <img src="https://images.unsplash.com/photo-1590608897129-79c7e17f3d18" class="h-20 w-20 mb-4">
-          <h3 class="font-semibold mb-2">Cybersecurity</h3>
-          <p class="text-slate-600 text-center text-sm">Networking & security basics.</p>
-        </div>
-
-        <div class="swiper-slide bg-slate-50 p-6 rounded-2xl shadow flex flex-col items-center">
-          <img src="https://images.unsplash.com/photo-1612831455549-771eea7b9c07" class="h-20 w-20 mb-4">
-          <h3 class="font-semibold mb-2">Programming</h3>
-          <p class="text-slate-600 text-center text-sm">Python, Git, problem-solving.</p>
-        </div>
-
+        {% endfor %}
       </div>
 
       <div class="swiper-button-next"></div>

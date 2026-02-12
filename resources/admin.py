@@ -1,6 +1,4 @@
 from django.contrib import admin
-from .models import ResourceExtra, Topic
+from .models import Resource
 
-
-admin.site.register(Topic)
-admin.site.register(ResourceExtra)
+admin.site.register(Resource)

@@ -11,7 +11,8 @@ from user.models import User
 from pages.models import PageVisibility, WhatWeDo
 from events.models import Event
 from projects.models import Project
-from .forms import PageForm, MemberForm, WhatWeDoForm, EventForm, ProjectForm
+from resources.models import Resource
+from .forms import PageForm, MemberForm, WhatWeDoForm, EventForm, ProjectForm, ResourceForm
 
 
 class DashboardView(AdminRequiredMixin, TemplateView):
@@ -330,4 +331,67 @@ class ProjectDeleteView(AdminRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Project deleted successfully")
+        return super().delete(request, *args, **kwargs)
+
+
+class ResourceListView(AdminRequiredMixin, ListView):
+    model = Resource
+    template_name = "dashboard/resource/list.html"
+    context_object_name = "resources"
+    paginate_by = 10
+
+    def get_queryset(self):
+        qs = Resource.objects.all()
+        search = self.request.GET.get("search")
+        if search:
+            qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "resource_list"
+        return context
+
+
+class ResourceCreateView(AdminRequiredMixin, CreateView):
+    model = Resource
+    form_class = ResourceForm
+    template_name = "dashboard/resource/form.html"
+    success_url = reverse_lazy("dashboard:resource_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Resource created successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Create Resource"
+        context["active_page"] = "resource_list"
+        return context
+
+
+class ResourceUpdateView(AdminRequiredMixin, UpdateView):
+    model = Resource
+    form_class = ResourceForm
+    template_name = "dashboard/resource/form.html"
+    success_url = reverse_lazy("dashboard:resource_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Resource updated successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Edit Resource"
+        context["active_page"] = "resource_list"
+        return context
+
+
+class ResourceDeleteView(AdminRequiredMixin, DeleteView):
+    model = Resource
+    success_url = reverse_lazy("dashboard:resource_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Resource deleted successfully")
         return super().delete(request, *args, **kwargs)

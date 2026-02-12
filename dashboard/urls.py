@@ -21,6 +21,10 @@ from .views import (
     ProjectCreateView,
     ProjectUpdateView,
     ProjectDeleteView,
+    ResourceListView,
+    ResourceCreateView,
+    ResourceUpdateView,
+    ResourceDeleteView,
 )
 
 app_name = "dashboard"
@@ -49,4 +53,9 @@ urlpatterns = [
     path("project/create/", ProjectCreateView.as_view(), name="project_create"),
     path("project/edit/<int:pk>/", ProjectUpdateView.as_view(), name="project_edit"),
     path("project/delete/<int:pk>/", ProjectDeleteView.as_view(), name="project_delete"),
+
+    path("resource/", ResourceListView.as_view(), name="resource_list"),
+    path("resource/create/", ResourceCreateView.as_view(), name="resource_create"),
+    path("resource/edit/<int:pk>/", ResourceUpdateView.as_view(), name="resource_edit"),
+    path("resource/delete/<int:pk>/", ResourceDeleteView.as_view(), name="resource_delete"),
 ]
