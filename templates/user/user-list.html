@@ -41,7 +41,7 @@
     <thead>
         <tr>
             <th>#</th>
-            <th>Username</th>
+            <th>Name</th>
             <th>Email</th>
             <th>Groups</th>
             <th>Active</th>
@@ -52,7 +52,7 @@
         {% for user in users %}
             <tr>
                 <td>{{ forloop.counter0|add:page_obj.start_index }}</td>
-                <td>{{ user.username }}</td>
+                <td>{{ user.full_name }}</td>
                 <td>{{ user.email|default:"—" }}</td>
                 <td>
                     {% for group in user.groups.all %}

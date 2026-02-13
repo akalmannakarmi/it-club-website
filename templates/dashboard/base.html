@@ -208,7 +208,7 @@
       </h2>
 
       <div class="flex items-center gap-4 text-sm text-slate-300">
-        <span>{{ user.username }}</span>
+        <span>{{ user.full_name }}</span>
 
         <form method="POST" action="{% url 'user:logout' %}">
           {% csrf_token %}

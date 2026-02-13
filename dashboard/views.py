@@ -88,7 +88,7 @@ class MemberListView(AdminRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        qs = User.objects.all().order_by("username")
+        qs = User.objects.all().order_by("-updated_at")
 
         search = self.request.GET.get("search")
         faculty = self.request.GET.get("faculty")

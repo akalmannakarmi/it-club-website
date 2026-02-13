@@ -19,13 +19,22 @@ class User(AbstractUser, BaseModel):
         current_year = datetime.now().year + 57
         return [(str(year), str(year)) for year in range(start_year, current_year + 1)]
 
+    username = None
+    email = models.EmailField("email address", unique=True)
     faculty = models.CharField(max_length=10, choices=FACULTY_CHOICES, blank=True)
     batch = models.CharField(max_length=10, choices=batch_choices(), blank=True)
     phone = models.CharField(max_length=15, blank=True)
     interested_topics = models.TextField(help_text="Comma separated topics", blank=True)
 
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
     def __str__(self):
-        return self.username or (self.first_name + " " + self.last_name)
+        return self.full_name or self.email
+
+    @property
+    def full_name(self):
+        return self.first_name + " " + self.last_name
 
     @property
     def is_admin_group(self):
