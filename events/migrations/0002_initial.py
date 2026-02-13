@@ -4,24 +4,52 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
-        ('events', '0001_initial'),
+        ("events", "0001_initial"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.TextField(unique=True, verbose_name='Event Title')),
-                ('caption', models.TextField(blank=True, null=True, verbose_name='Event Caption')),
-                ('image', models.ImageField(blank=True, null=True, upload_to='events/', verbose_name='Event Image')),
-                ('date', models.DateTimeField(verbose_name='Event Date')),
-                ('is_major', models.BooleanField(default=False, verbose_name='Is Major Event')),
-                ('description', models.TextField(blank=True, null=True, verbose_name='Event Description')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.TextField(unique=True, verbose_name="Event Title")),
+                (
+                    "caption",
+                    models.TextField(
+                        blank=True, null=True, verbose_name="Event Caption"
+                    ),
+                ),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="events/",
+                        verbose_name="Event Image",
+                    ),
+                ),
+                ("date", models.DateTimeField(verbose_name="Event Date")),
+                (
+                    "is_major",
+                    models.BooleanField(default=False, verbose_name="Is Major Event"),
+                ),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True, null=True, verbose_name="Event Description"
+                    ),
+                ),
             ],
         ),
     ]

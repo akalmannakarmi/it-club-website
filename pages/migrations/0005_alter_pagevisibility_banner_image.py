@@ -4,15 +4,19 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('pages', '0004_whatwedo'),
+        ("pages", "0004_whatwedo"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='pagevisibility',
-            name='banner_image',
-            field=models.ImageField(blank=True, null=True, upload_to='pages/banner/', verbose_name='Banner Image'),
+            model_name="pagevisibility",
+            name="banner_image",
+            field=models.ImageField(
+                blank=True,
+                null=True,
+                upload_to="pages/banner/",
+                verbose_name="Banner Image",
+            ),
         ),
     ]

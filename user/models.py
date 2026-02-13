@@ -12,6 +12,7 @@ class User(AbstractUser):
         ("MBA", "MBA"),
         ("BIT", "BIT"),
     ]
+
     def batch_choices():
         start_year = 2068
         current_year = datetime.now().year + 57

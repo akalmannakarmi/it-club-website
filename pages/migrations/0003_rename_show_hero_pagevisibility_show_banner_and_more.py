@@ -4,30 +4,34 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('pages', '0002_remove_pagevisibility_show_announcement_and_more'),
+        ("pages", "0002_remove_pagevisibility_show_announcement_and_more"),
     ]
 
     operations = [
         migrations.RenameField(
-            model_name='pagevisibility',
-            old_name='show_hero',
-            new_name='show_banner',
+            model_name="pagevisibility",
+            old_name="show_hero",
+            new_name="show_banner",
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='banner_desc',
+            model_name="pagevisibility",
+            name="banner_desc",
             field=models.TextField(blank=True, null=True),
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='banner_image',
-            field=models.ImageField(blank=True, null=True, upload_to='page/banner/', verbose_name='Banner Image'),
+            model_name="pagevisibility",
+            name="banner_image",
+            field=models.ImageField(
+                blank=True,
+                null=True,
+                upload_to="page/banner/",
+                verbose_name="Banner Image",
+            ),
         ),
         migrations.AddField(
-            model_name='pagevisibility',
-            name='banner_title',
-            field=models.TextField(default='Club', verbose_name='Organization Name'),
+            model_name="pagevisibility",
+            name="banner_title",
+            field=models.TextField(default="Club", verbose_name="Organization Name"),
         ),
     ]

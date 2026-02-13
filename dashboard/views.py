@@ -12,7 +12,14 @@ from pages.models import PageVisibility, WhatWeDo
 from events.models import Event
 from projects.models import Project
 from resources.models import Resource
-from .forms import PageForm, MemberForm, WhatWeDoForm, EventForm, ProjectForm, ResourceForm
+from .forms import (
+    PageForm,
+    MemberForm,
+    WhatWeDoForm,
+    EventForm,
+    ProjectForm,
+    ResourceForm,
+)
 
 
 class DashboardView(AdminRequiredMixin, TemplateView):
@@ -39,7 +46,7 @@ class PageView(AdminRequiredMixin, UpdateView):
     def form_valid(self, form):
         messages.success(self.request, "Page settings updated successfully")
         return super().form_valid(form)
-    
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "page_settings"
@@ -73,7 +80,7 @@ class MemberListView(AdminRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["faculty_choices"] = User.FACULTY_CHOICES
-        context['batch_choices'] = User.batch_choices()
+        context["batch_choices"] = User.batch_choices()
         context["active_page"] = "members"
         return context
 
@@ -91,7 +98,7 @@ class MemberCreateView(AdminRequiredMixin, CreateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["faculty_choices"] = User.FACULTY_CHOICES
-        context['batch_choices'] = User.batch_choices()
+        context["batch_choices"] = User.batch_choices()
         context["page_title"] = "Add Member"
         context["active_page"] = "members"
         return context
@@ -110,7 +117,7 @@ class MemberUpdateView(AdminRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["faculty_choices"] = User.FACULTY_CHOICES
-        context['batch_choices'] = User.batch_choices()
+        context["batch_choices"] = User.batch_choices()
         context["page_title"] = "Edit Member"
         context["active_page"] = "members"
         return context
@@ -130,7 +137,7 @@ class MemberActivateView(AdminRequiredMixin, View):
         member = get_object_or_404(User, id=pk)
         member.is_active = True
         member.save()
-        
+
         messages.success(request, "Member activated successfully")
         next_url = request.POST.get("next") or reverse_lazy("dashboard:member_list")
         return redirect(next_url)
@@ -145,7 +152,6 @@ class MemberDeactivateView(AdminRequiredMixin, View):
         messages.success(request, "Member deactivated successfully")
         next_url = request.POST.get("next") or reverse_lazy("dashboard:member_list")
         return redirect(next_url)
-
 
 
 class WhatWeDoListView(AdminRequiredMixin, ListView):
@@ -272,7 +278,6 @@ class EventDeleteView(AdminRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Event deleted successfully")
         return super().delete(request, *args, **kwargs)
-
 
 
 class ProjectListView(AdminRequiredMixin, ListView):

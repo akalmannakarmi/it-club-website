@@ -8,7 +8,7 @@ class RegisterForm(forms.ModelForm):
 
     class Meta:
         model = User
-        fields = ["first_name","last_name","email","phone","batch","faculty"]
+        fields = ["first_name", "last_name", "email", "phone", "batch", "faculty"]
 
     def clean(self):
         cleaned_data = super().clean()
@@ -24,4 +24,3 @@ class RegisterForm(forms.ModelForm):
 class LoginForm(forms.Form):
     email = forms.EmailField()
     password = forms.CharField(widget=forms.PasswordInput)
-

@@ -4,20 +4,42 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('pages', '0003_rename_show_hero_pagevisibility_show_banner_and_more'),
+        ("pages", "0003_rename_show_hero_pagevisibility_show_banner_and_more"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='WhatWeDo',
+            name="WhatWeDo",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.TextField(unique=True, verbose_name='Activity Title')),
-                ('caption', models.TextField(blank=True, null=True, verbose_name='Activity Caption')),
-                ('image', models.ImageField(blank=True, null=True, upload_to='pages/activity')),
-                ('description', models.TextField(blank=True, null=True, verbose_name='Activity Description')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.TextField(unique=True, verbose_name="Activity Title")),
+                (
+                    "caption",
+                    models.TextField(
+                        blank=True, null=True, verbose_name="Activity Caption"
+                    ),
+                ),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True, null=True, upload_to="pages/activity"
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(
+                        blank=True, null=True, verbose_name="Activity Description"
+                    ),
+                ),
             ],
         ),
     ]

@@ -5,28 +5,79 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('resources', '0003_alter_resourceextra_file_alter_topic_recorded_video'),
+        ("resources", "0003_alter_resourceextra_file_alter_topic_recorded_video"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Resource',
+            name="Resource",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=200, verbose_name='Resource Title')),
-                ('caption', models.TextField(blank=True, null=True, verbose_name='Resource Caption')),
-                ('image', models.ImageField(blank=True, null=True, upload_to='resources/', verbose_name='Resource Image')),
-                ('description', models.TextField(blank=True, verbose_name='Resource Description')),
-                ('url', models.URLField(blank=True, null=True, verbose_name='Resource Video URL')),
-                ('file', models.FileField(blank=True, null=True, upload_to='resources/file/', validators=[django.core.validators.FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'txt', 'ppt', 'pptx'])], verbose_name='Resource attached file')),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "title",
+                    models.CharField(max_length=200, verbose_name="Resource Title"),
+                ),
+                (
+                    "caption",
+                    models.TextField(
+                        blank=True, null=True, verbose_name="Resource Caption"
+                    ),
+                ),
+                (
+                    "image",
+                    models.ImageField(
+                        blank=True,
+                        null=True,
+                        upload_to="resources/",
+                        verbose_name="Resource Image",
+                    ),
+                ),
+                (
+                    "description",
+                    models.TextField(blank=True, verbose_name="Resource Description"),
+                ),
+                (
+                    "url",
+                    models.URLField(
+                        blank=True, null=True, verbose_name="Resource Video URL"
+                    ),
+                ),
+                (
+                    "file",
+                    models.FileField(
+                        blank=True,
+                        null=True,
+                        upload_to="resources/file/",
+                        validators=[
+                            django.core.validators.FileExtensionValidator(
+                                allowed_extensions=[
+                                    "pdf",
+                                    "doc",
+                                    "docx",
+                                    "txt",
+                                    "ppt",
+                                    "pptx",
+                                ]
+                            )
+                        ],
+                        verbose_name="Resource attached file",
+                    ),
+                ),
             ],
         ),
         migrations.DeleteModel(
-            name='ResourceExtra',
+            name="ResourceExtra",
         ),
         migrations.DeleteModel(
-            name='Topic',
+            name="Topic",
         ),
     ]
