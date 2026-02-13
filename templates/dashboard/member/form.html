@@ -1,0 +1,105 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ page_title }} · IT Club{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block subcontent %}
+
+<div class="max-w-5xl mx-auto">
+
+  <form method="POST" class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-lg space-y-6">
+    {% csrf_token %}
+
+    <h2 class="text-2xl font-semibold text-slate-100 mb-4">{{ page_title }}</h2>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- First Name -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">First Name</label>
+        <input type="text" name="first_name"
+               value="{{ form.first_name.value|default_if_none:'' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+      </div>
+
+      <!-- Last Name -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">Last Name</label>
+        <input type="text" name="last_name"
+               value="{{ form.last_name.value|default_if_none:'' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+      </div>
+
+      <!-- Email -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">Email</label>
+        <input type="email" name="email"
+               value="{{ form.email.value|default_if_none:'' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+      </div>
+
+      <!-- Phone -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">Phone</label>
+        <input type="text" name="phone"
+               value="{{ form.phone.value|default_if_none:'' }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+      </div>
+
+      <!-- Faculty -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">Faculty</label>
+        <select name="faculty"
+                class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+          <option value="">Select Faculty</option>
+          {% for value, label in faculty_choices %}
+          <option value="{{ value }}" {% if form.faculty.value == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Batch -->
+      <div class="flex flex-col">
+        <label class="text-sm text-slate-300 mb-1">Batch</label>
+        <select name="batch"
+                class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+          <option value="">Select Batch</option>
+          {% for value, label in batch_choices %}
+          <option value="{{ value }}" {% if form.batch.value == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <!-- Active -->
+      <div class="flex items-center gap-3 md:col-span-2 mt-2">
+        <input type="checkbox" name="is_active" id="id_is_active"
+               {% if form.is_active.value %}checked{% endif %}
+               class="w-4 h-4 text-indigo-600 bg-slate-900 border-slate-700 rounded focus:ring-indigo-500">
+        <label for="id_is_active" class="text-sm text-slate-300">Active Member</label>
+      </div>
+
+    </div>
+
+    <!-- Actions -->
+    <div class="flex justify-between items-center pt-6 border-t border-slate-800 mt-6">
+      <a href="{% url 'dashboard:member_list' %}" class="text-slate-400 hover:text-slate-200">
+        ← Back to Members
+      </a>
+
+      <div class="flex items-center gap-4">
+        <button type="submit" class="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 font-semibold">
+          Save
+        </button>
+
+        <a href="{% url 'dashboard:member_list' %}" 
+           class="px-6 py-2 rounded-xl border border-slate-700 hover:bg-slate-800">
+          Cancel
+        </a>
+      </div>
+    </div>
+
+  </form>
+
+</div>
+
+{% endblock %}

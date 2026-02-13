@@ -48,7 +48,7 @@ class PageView(AdminRequiredMixin, UpdateView):
 
 class MemberListView(AdminRequiredMixin, ListView):
     model = User
-    template_name = "dashboard/member_list.html"
+    template_name = "dashboard/member/list.html"
     context_object_name = "members"
     paginate_by = 10
 
@@ -73,6 +73,7 @@ class MemberListView(AdminRequiredMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["faculty_choices"] = User.FACULTY_CHOICES
+        context['batch_choices'] = User.batch_choices()
         context["active_page"] = "members"
         return context
 
@@ -80,7 +81,7 @@ class MemberListView(AdminRequiredMixin, ListView):
 class MemberCreateView(AdminRequiredMixin, CreateView):
     model = User
     form_class = MemberForm
-    template_name = "dashboard/member_form.html"
+    template_name = "dashboard/member/form.html"
     success_url = reverse_lazy("dashboard:member_list")
 
     def form_valid(self, form):
@@ -89,6 +90,8 @@ class MemberCreateView(AdminRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["faculty_choices"] = User.FACULTY_CHOICES
+        context['batch_choices'] = User.batch_choices()
         context["page_title"] = "Add Member"
         context["active_page"] = "members"
         return context
@@ -97,8 +100,7 @@ class MemberCreateView(AdminRequiredMixin, CreateView):
 class MemberUpdateView(AdminRequiredMixin, UpdateView):
     model = User
     form_class = MemberForm
-    template_name = "dashboard/member_form.html"
-    pk_url_kwarg = "member_id"
+    template_name = "dashboard/member/form.html"
     success_url = reverse_lazy("dashboard:member_list")
 
     def form_valid(self, form):
@@ -107,6 +109,8 @@ class MemberUpdateView(AdminRequiredMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context["faculty_choices"] = User.FACULTY_CHOICES
+        context['batch_choices'] = User.batch_choices()
         context["page_title"] = "Edit Member"
         context["active_page"] = "members"
         return context
@@ -114,8 +118,6 @@ class MemberUpdateView(AdminRequiredMixin, UpdateView):
 
 class MemberDeleteView(AdminRequiredMixin, DeleteView):
     model = User
-    template_name = "dashboard/member_confirm_delete.html"
-    pk_url_kwarg = "member_id"
     success_url = reverse_lazy("dashboard:member_list")
 
     def delete(self, request, *args, **kwargs):
@@ -124,21 +126,25 @@ class MemberDeleteView(AdminRequiredMixin, DeleteView):
 
 
 class MemberActivateView(AdminRequiredMixin, View):
-    def post(self, request, member_id):
-        member = get_object_or_404(User, id=member_id)
+    def post(self, request, pk):
+        member = get_object_or_404(User, id=pk)
         member.is_active = True
         member.save()
-
-        return redirect("dashboard:member_list")
+        
+        messages.success(request, "Member activated successfully")
+        next_url = request.POST.get("next") or reverse_lazy("dashboard:member_list")
+        return redirect(next_url)
 
 
 class MemberDeactivateView(AdminRequiredMixin, View):
-    def post(self, request, member_id):
-        member = get_object_or_404(User, id=member_id)
+    def post(self, request, pk):
+        member = get_object_or_404(User, id=pk)
         member.is_active = False
         member.save()
 
-        return redirect("dashboard:member_list")
+        messages.success(request, "Member deactivated successfully")
+        next_url = request.POST.get("next") or reverse_lazy("dashboard:member_list")
+        return redirect(next_url)
 
 
 
