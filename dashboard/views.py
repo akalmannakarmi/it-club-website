@@ -193,7 +193,7 @@ class WhatWeDoListView(AdminRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        qs = WhatWeDo.objects.all()
+        qs = WhatWeDo.objects.all().order_by("-updated_at")
         search = self.request.GET.get("search")
         if search:
             qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
@@ -256,7 +256,7 @@ class EventListView(AdminRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        qs = Event.objects.all()
+        qs = Event.objects.all().order_by("-updated_at")
         search = self.request.GET.get("search")
         if search:
             qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
@@ -319,7 +319,7 @@ class ProjectListView(AdminRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        qs = Project.objects.all()
+        qs = Project.objects.all().order_by("-updated_at")
         search = self.request.GET.get("search")
         if search:
             qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
@@ -384,7 +384,7 @@ class ResourceListView(AdminRequiredMixin, ListView):
     paginate_by = 10
 
     def get_queryset(self):
-        qs = Resource.objects.all()
+        qs = Resource.objects.all().order_by("-updated_at")
         search = self.request.GET.get("search")
         if search:
             qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))

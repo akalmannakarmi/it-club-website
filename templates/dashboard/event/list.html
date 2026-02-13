@@ -115,4 +115,55 @@
   </table>
 </div>
 
+<!-- Pagination -->
+{% if is_paginated %}
+<div class="mt-6 flex items-center justify-between bg-slate-900 border border-slate-800 rounded-2xl px-4 py-3">
+
+  <div class="text-sm text-slate-400">
+    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+  </div>
+
+  <div class="flex items-center gap-2">
+
+    {% if page_obj.has_previous %}
+      <a href="?page=1{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+         class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm">
+        First
+      </a>
+
+      <a href="?page={{ page_obj.previous_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+         class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm">
+        Previous
+      </a>
+    {% endif %}
+
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num %}
+        <span class="px-3 py-1 rounded-lg bg-indigo-600 text-white text-sm">
+          {{ num }}
+        </span>
+      {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+        <a href="?page={{ num }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+           class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm">
+          {{ num }}
+        </a>
+      {% endif %}
+    {% endfor %}
+
+    {% if page_obj.has_next %}
+      <a href="?page={{ page_obj.next_page_number }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+         class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm">
+        Next
+      </a>
+
+      <a href="?page={{ page_obj.paginator.num_pages }}{% if request.GET.search %}&search={{ request.GET.search }}{% endif %}"
+         class="px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-sm">
+        Last
+      </a>
+    {% endif %}
+
+  </div>
+</div>
+{% endif %}
+
 {% endblock %}
