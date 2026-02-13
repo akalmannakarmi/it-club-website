@@ -49,6 +49,15 @@ class BaseModel(models.Model):
 
         return data
 
+    def _get_user(self):
+        if user := get_current_user():
+            return user
+        if isinstance(self, User):
+            return self
+        if hasattr(self, "user") and isinstance(self.user, User):
+            return self.user
+        return None
+
     def save(self, no_audit=False, *args, **kwargs):
         is_create = self._state.adding
 
@@ -57,7 +66,7 @@ class BaseModel(models.Model):
             return
 
         AuditLog.objects.create(
-            user=get_current_user(),
+            user=self._get_user(),
             model_name=self.__class__.__name__,
             object_id=self.pk,
             action="create" if is_create else "update",
@@ -70,7 +79,7 @@ class BaseModel(models.Model):
         self.save(no_audit=True)
 
         AuditLog.objects.create(
-            user=get_current_user(),
+            user=self._get_user(),
             model_name=self.__class__.__name__,
             object_id=self.pk,
             action="delete",

@@ -157,6 +157,29 @@
         Resources
       </a>
 
+      <!-- Audit Logs -->
+      <a href="{% url 'dashboard:audit_list' %}" 
+        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+        {% if active_page == 'audit_list' %}
+          bg-indigo-500/10 text-indigo-400
+        {% else %}
+          hover:bg-slate-800 text-slate-300
+        {% endif %}">
+
+        <!-- Clipboard / Activity Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" 
+            class="w-5 h-5" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+          <path stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="1.8"
+                d="M9 5h6m-6 4h6m-7 4h8m2 7H6a2 2 0 01-2-2V5a2 2 0 012-2h3m6 0h3a2 2 0 012 2v14a2 2 0 01-2 2z" />
+        </svg>
+
+        Audit Logs
+      </a>
 
 
       <!-- Back to Site -->

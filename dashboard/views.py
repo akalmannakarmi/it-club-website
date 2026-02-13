@@ -12,6 +12,7 @@ from pages.models import PageVisibility, WhatWeDo
 from events.models import Event
 from projects.models import Project
 from resources.models import Resource
+from audit.models import AuditLog
 from .forms import (
     PageForm,
     MemberForm,
@@ -53,6 +54,33 @@ class PageView(AdminRequiredMixin, UpdateView):
         return context
 
 
+class AuditListView(AdminRequiredMixin, ListView):
+    model = AuditLog
+    template_name = "dashboard/audit/list.html"
+    context_object_name = "audits"
+    paginate_by = 10
+
+    def get_queryset(self):
+        qs = AuditLog.objects.all().order_by("-timestamp")
+
+        search = self.request.GET.get("search")
+
+        if search:
+            qs = qs.filter(
+                Q(user__first_name__icontains=search)
+                | Q(user__last_name__icontains=search)
+                | Q(user__email__icontains=search)
+                | Q(model_name__icontains=search)
+            )
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "audit_list"
+        return context
+
+
 class MemberListView(AdminRequiredMixin, ListView):
     model = User
     template_name = "dashboard/member/list.html"
@@ -67,7 +95,11 @@ class MemberListView(AdminRequiredMixin, ListView):
         batch = self.request.GET.get("batch")
 
         if search:
-            qs = qs.filter(Q(username__icontains=search) | Q(email__icontains=search))
+            qs = qs.filter(
+                Q(first_name__icontains=search)
+                | Q(last_name__icontains=search)
+                | Q(email__icontains=search)
+            )
 
         if faculty:
             qs = qs.filter(faculty=faculty)

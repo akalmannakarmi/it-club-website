@@ -25,6 +25,7 @@ from .views import (
     ResourceCreateView,
     ResourceUpdateView,
     ResourceDeleteView,
+    AuditListView,
 )
 
 app_name = "dashboard"
@@ -32,6 +33,7 @@ app_name = "dashboard"
 urlpatterns = [
     path("", DashboardView.as_view(), name="home"),
     path("page/", PageView.as_view(), name="page_settings"),
+    path("audit/", AuditListView.as_view(), name="audit_list"),
     path("members/", MemberListView.as_view(), name="member_list"),
     path("members/create/", MemberCreateView.as_view(), name="member_create"),
     path("members/edit/<int:pk>/", MemberUpdateView.as_view(), name="member_edit"),

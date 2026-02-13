@@ -4,7 +4,10 @@ _thread_locals = threading.local()
 
 
 def get_current_user():
-    return getattr(_thread_locals, "user", None)
+    user = getattr(_thread_locals, "user", None)
+    if user and getattr(user, "is_authenticated", False):
+        return user
+    return None
 
 
 class CurrentUserMiddleware:
