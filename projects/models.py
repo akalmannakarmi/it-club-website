@@ -1,8 +1,9 @@
 from django.db import models
 from user.models import User
+from audit.models import BaseModel
 
 
-class Project(models.Model):
+class Project(BaseModel):
     title = models.CharField("Project Title", max_length=200)
     caption = models.TextField("Project Caption", null=True, blank=True)
     description = models.TextField("Project Description", null=True, blank=True)

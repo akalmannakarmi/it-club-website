@@ -1,9 +1,10 @@
 from django.db import models
+from audit.models import BaseModel
 from django.contrib.auth.models import AbstractUser
 from django.utils.timezone import datetime
 
 
-class User(AbstractUser):
+class User(AbstractUser, BaseModel):
     FACULTY_CHOICES = [
         ("CSIT", "BSc CSIT"),
         ("BCA", "BCA"),

@@ -1,7 +1,8 @@
 from django.db import models
+from audit.models import BaseModel
 
 
-class PageVisibility(models.Model):
+class PageVisibility(BaseModel):
     banner_title = models.TextField("Organization Name", default="Club")
     banner_image = models.ImageField(
         "Banner Image", upload_to="pages/banner/", null=True, blank=True
@@ -25,7 +26,7 @@ class PageVisibility(models.Model):
         super().save(*args, **kwargs)
 
 
-class WhatWeDo(models.Model):
+class WhatWeDo(BaseModel):
     title = models.TextField("Activity Title", unique=True)
     caption = models.TextField("Activity Caption", null=True, blank=True)
     image = models.ImageField(upload_to="pages/activity", null=True, blank=True)

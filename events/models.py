@@ -1,7 +1,8 @@
 from django.db import models
+from audit.models import BaseModel
 
 
-class Event(models.Model):
+class Event(BaseModel):
     title = models.TextField("Event Title", unique=True)
     caption = models.TextField("Event Caption", null=True, blank=True)
     image = models.ImageField("Event Image", upload_to="events/", null=True, blank=True)

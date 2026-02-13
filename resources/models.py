@@ -1,4 +1,5 @@
 from django.db import models
+from audit.models import BaseModel
 from django.core.validators import FileExtensionValidator
 
 
@@ -7,7 +8,7 @@ ALLOWED_EXTENSIONS = FileExtensionValidator(
 )
 
 
-class Resource(models.Model):
+class Resource(BaseModel):
     title = models.CharField("Resource Title", max_length=200)
     caption = models.TextField("Resource Caption", null=True, blank=True)
     image = models.ImageField(
