@@ -26,6 +26,10 @@ from .views import (
     ResourceUpdateView,
     ResourceDeleteView,
     AuditListView,
+    SessionListView,
+    SessionCreateView,
+    SessionUpdateView,
+    SessionDeleteView,
 )
 
 app_name = "dashboard"
@@ -77,5 +81,13 @@ urlpatterns = [
         "resource/delete/<int:pk>/",
         ResourceDeleteView.as_view(),
         name="resource_delete",
+    ),
+    path("session/", SessionListView.as_view(), name="session_list"),
+    path("session/create/", SessionCreateView.as_view(), name="session_create"),
+    path("session/edit/<int:pk>/", SessionUpdateView.as_view(), name="session_edit"),
+    path(
+        "session/delete/<int:pk>/",
+        SessionDeleteView.as_view(),
+        name="session_delete",
     ),
 ]

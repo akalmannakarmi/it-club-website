@@ -65,6 +65,30 @@
         Members
       </a>
 
+      <!-- Sessions / Attendance -->
+      <a href="{% url 'dashboard:session_list' %}" 
+        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+        {% if active_page == 'session_list' %}
+          bg-indigo-500/10 text-indigo-400
+        {% else %}
+          hover:bg-slate-800 text-slate-300
+        {% endif %}">
+
+        <!-- Clipboard Check Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg" 
+            class="w-5 h-5" 
+            fill="none" 
+            viewBox="0 0 24 24" 
+            stroke="currentColor">
+          <path stroke-linecap="round" 
+                stroke-linejoin="round" 
+                stroke-width="1.8"
+                d="M9 5h6m-3 4l2 2-4 4m7-10H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2z" />
+        </svg>
+
+        Sessions
+      </a>
+
       <!-- Projects -->
       <a href="{% url 'dashboard:project_list' %}" 
         class="flex items-center gap-3 px-4 py-3 rounded-xl transition

@@ -1,0 +1,156 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}{{ page_title }} · IT Club{% endblock %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block subcontent %}
+
+<div class="max-w-6xl mx-auto">
+
+<form method="POST"
+      class="bg-slate-900 border border-slate-800 rounded-2xl p-8 shadow-lg space-y-6">
+  {% csrf_token %}
+
+  <h2 class="text-2xl font-semibold text-slate-100">
+    {{ page_title }}
+  </h2>
+
+  <!-- Basic Info -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <!-- Title -->
+    <div class="flex flex-col md:col-span-2">
+      <label class="text-sm text-slate-300 mb-1">Session Title</label>
+      <input type="text"
+             name="title"
+             value="{{ form.title.value|default_if_none:'' }}"
+             required
+             class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200 focus:ring-2 focus:ring-indigo-500">
+    </div>
+
+    <!-- Date -->
+    <div class="flex flex-col">
+      <label class="text-sm text-slate-300 mb-1">Session Date</label>
+      <input type="date"
+             name="date"
+             value="{{ form.date.value|date:'Y-m-d' }}"
+             required
+             class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200 focus:ring-2 focus:ring-indigo-500">
+    </div>
+
+    <!-- Description -->
+    <div class="flex flex-col md:col-span-2">
+      <label class="text-sm text-slate-300 mb-1">Description</label>
+      <textarea name="description"
+                rows="4"
+                class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200 focus:ring-2 focus:ring-indigo-500">{{ form.description.value|default_if_none:'' }}</textarea>
+    </div>
+
+  </div>
+
+  <!-- Attendees Section -->
+  <div class="pt-6 border-t border-slate-800">
+
+    <div class="flex justify-between items-center mb-3">
+      <label class="text-lg font-medium text-slate-200">
+        Attendees
+      </label>
+
+      <span id="selectedCount"
+            class="text-sm text-indigo-400">
+        0 Selected
+      </span>
+    </div>
+
+    <!-- Search Box -->
+    <input type="text"
+           id="attendeeSearch"
+           placeholder="Search member..."
+           class="w-full mb-4 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+
+    <!-- Scrollable Members List -->
+    <div class="max-h-72 overflow-y-auto bg-slate-950 border border-slate-800 rounded-xl p-4">
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+
+        {% for member in members %}
+        <label class="flex items-center gap-2 text-sm text-slate-300 attendee-item">
+          <input type="checkbox"
+                 name="attendees"
+                 value="{{ member.id }}"
+                 {% if member in form.instance.attendees.all %}checked{% endif %}
+                 class="accent-indigo-600 attendee-checkbox">
+          <span>
+            {{ member.first_name }} {{ member.last_name }}
+            <span class="text-xs text-slate-500 block">
+              {{ member.email }}
+            </span>
+          </span>
+        </label>
+        {% endfor %}
+
+      </div>
+
+    </div>
+
+    <p class="text-xs text-slate-400 mt-2">
+      Select members who attended this session.
+    </p>
+
+  </div>
+
+  <!-- Actions -->
+  <div class="flex justify-between items-center pt-6 border-t border-slate-800 mt-6">
+
+    <a href="{% url 'dashboard:session_list' %}"
+       class="text-slate-400 hover:text-slate-200 transition">
+      ← Back to Sessions
+    </a>
+
+    <div class="flex gap-4">
+      <button type="submit"
+              class="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 transition font-semibold">
+        Save
+      </button>
+
+      <a href="{% url 'dashboard:session_list' %}"
+         class="px-6 py-2 rounded-xl border border-slate-700 hover:bg-slate-800 transition">
+        Cancel
+      </a>
+    </div>
+
+  </div>
+
+</form>
+</div>
+
+<!-- Simple JS Search + Selected Counter -->
+<script>
+const searchInput = document.getElementById("attendeeSearch");
+const attendees = document.querySelectorAll(".attendee-item");
+const checkboxes = document.querySelectorAll(".attendee-checkbox");
+const selectedCount = document.getElementById("selectedCount");
+
+function updateCount() {
+  let count = document.querySelectorAll(".attendee-checkbox:checked").length;
+  selectedCount.innerText = count + " Selected";
+}
+
+updateCount();
+
+checkboxes.forEach(cb => {
+  cb.addEventListener("change", updateCount);
+});
+
+searchInput.addEventListener("keyup", function() {
+  let value = this.value.toLowerCase();
+
+  attendees.forEach(item => {
+    item.style.display = item.innerText.toLowerCase().includes(value)
+      ? "flex"
+      : "none";
+  });
+});
+</script>
+
+{% endblock %}

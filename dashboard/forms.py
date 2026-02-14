@@ -4,6 +4,7 @@ from pages.models import PageVisibility, WhatWeDo
 from events.models import Event
 from projects.models import Project
 from resources.models import Resource
+from attendance.models import Session
 
 
 class PageForm(forms.ModelForm):
@@ -47,4 +48,10 @@ class ProjectForm(forms.ModelForm):
 class ResourceForm(forms.ModelForm):
     class Meta:
         model = Resource
+        fields = "__all__"
+
+
+class SessionForm(forms.ModelForm):
+    class Meta:
+        model = Session
         fields = "__all__"

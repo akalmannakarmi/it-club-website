@@ -13,6 +13,7 @@ from events.models import Event
 from projects.models import Project
 from resources.models import Resource
 from audit.models import AuditLog
+from attendance.models import Session
 from .forms import (
     PageForm,
     MemberForm,
@@ -20,6 +21,7 @@ from .forms import (
     EventForm,
     ProjectForm,
     ResourceForm,
+    SessionForm,
 )
 
 
@@ -437,4 +439,69 @@ class ResourceDeleteView(AdminRequiredMixin, DeleteView):
 
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Resource deleted successfully")
+        return super().delete(request, *args, **kwargs)
+
+
+class SessionListView(AdminRequiredMixin, ListView):
+    model = Session
+    template_name = "dashboard/session/list.html"
+    context_object_name = "sessions"
+    paginate_by = 10
+
+    def get_queryset(self):
+        qs = Session.objects.all().order_by("-updated_at")
+        search = self.request.GET.get("search")
+        if search:
+            qs = qs.filter(Q(title__icontains=search))
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "session_list"
+        return context
+
+
+class SessionCreateView(AdminRequiredMixin, CreateView):
+    model = Session
+    form_class = SessionForm
+    template_name = "dashboard/session/form.html"
+    success_url = reverse_lazy("dashboard:session_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Session created successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Create Session"
+        context["active_page"] = "session_list"
+        context["members"] = User.objects.filter(is_active=True).order_by("first_name")
+        return context
+
+
+class SessionUpdateView(AdminRequiredMixin, UpdateView):
+    model = Session
+    form_class = SessionForm
+    template_name = "dashboard/session/form.html"
+    success_url = reverse_lazy("dashboard:session_list")
+
+    def form_valid(self, form):
+        messages.success(self.request, "Session updated successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["page_title"] = "Edit Session"
+        context["active_page"] = "session_list"
+        context["members"] = User.objects.filter(is_active=True).order_by("first_name")
+        return context
+
+
+class SessionDeleteView(AdminRequiredMixin, DeleteView):
+    model = Session
+    success_url = reverse_lazy("dashboard:session_list")
+
+    def delete(self, request, *args, **kwargs):
+        messages.success(request, "Session deleted successfully")
         return super().delete(request, *args, **kwargs)

@@ -1,0 +1,97 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Sessions · IT Club{% endblock %}
+{% block page_title %}Sessions{% endblock %}
+
+{% block subcontent %}
+
+<!-- Header -->
+<div class="flex justify-between items-center mb-6">
+  <div>
+    <h1 class="text-2xl font-semibold text-slate-100">Sessions</h1>
+    <p class="text-slate-400 text-sm">Manage training sessions & attendance</p>
+  </div>
+
+  <a href="{% url 'dashboard:session_create' %}"
+     class="px-4 py-2 rounded-xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
+    ➕ Create Session
+  </a>
+</div>
+
+<!-- Search -->
+<form method="GET"
+      class="bg-slate-900 border border-slate-800 rounded-2xl p-4 mb-6 flex gap-4">
+
+  <input type="text"
+         name="search"
+         value="{{ request.GET.search }}"
+         placeholder="Search session title..."
+         class="flex-1 bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
+
+  <button type="submit"
+          class="bg-indigo-600 hover:bg-indigo-700 rounded-xl px-6 py-2 font-semibold">
+    Search
+  </button>
+</form>
+
+<!-- Table -->
+<div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+
+  <table class="w-full text-sm">
+    <thead class="bg-slate-800 text-slate-300">
+      <tr>
+        <th class="px-4 py-3 text-left">Title</th>
+        <th class="px-4 py-3">Date</th>
+        <th class="px-4 py-3">Attendees</th>
+        <th class="px-4 py-3 text-right">Actions</th>
+      </tr>
+    </thead>
+
+    <tbody class="divide-y divide-slate-800">
+      {% for session in sessions %}
+      <tr class="hover:bg-slate-800/40 transition">
+        <td class="px-4 py-3 text-slate-100 font-medium">
+          {{ session.title }}
+        </td>
+
+        <td class="px-4 py-3 text-center text-slate-400">
+          {{ session.date }}
+        </td>
+
+        <td class="px-4 py-3 text-center">
+          <span class="px-3 py-1 rounded-full text-xs bg-indigo-500/10 text-indigo-400">
+            {{ session.attendees.count }} Attendees
+          </span>
+        </td>
+
+        <td class="px-4 py-3 text-right">
+          <div class="flex justify-end gap-3">
+            <a href="{% url 'dashboard:session_edit' session.id %}"
+               class="text-indigo-400 hover:underline text-sm">
+              Edit
+            </a>
+
+            <form method="POST"
+                  action="{% url 'dashboard:session_delete' session.id %}">
+              {% csrf_token %}
+              <button type="submit"
+                      onclick="return confirm('Delete this session?')"
+                      class="text-red-400 hover:underline text-sm">
+                Delete
+              </button>
+            </form>
+          </div>
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="text-center text-slate-500 py-6">
+          No sessions found.
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
