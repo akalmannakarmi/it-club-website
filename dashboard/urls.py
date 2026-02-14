@@ -2,6 +2,7 @@ from django.urls import path
 
 from .views import (
     DashboardView,
+    ActivityView,
     PageView,
     MemberListView,
     MemberCreateView,
@@ -30,12 +31,15 @@ from .views import (
     SessionCreateView,
     SessionUpdateView,
     SessionDeleteView,
+    AttendanceListView,
+    AttendanceDetailView,
 )
 
 app_name = "dashboard"
 
 urlpatterns = [
     path("", DashboardView.as_view(), name="home"),
+    path("activity-data/", ActivityView.as_view(), name="activity_data"),
     path("page/", PageView.as_view(), name="page_settings"),
     path("audit/", AuditListView.as_view(), name="audit_list"),
     path("members/", MemberListView.as_view(), name="member_list"),
@@ -89,5 +93,9 @@ urlpatterns = [
         "session/delete/<int:pk>/",
         SessionDeleteView.as_view(),
         name="session_delete",
+    ),
+    path("attendance/", AttendanceListView.as_view(), name="attendance_list"),
+    path(
+        "attendance/<int:pk>/", AttendanceDetailView.as_view(), name="attendance_detail"
     ),
 ]

@@ -1,12 +1,19 @@
-from django.views.generic import TemplateView, View
-from user.mixins import AdminRequiredMixin
-
-
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView
+from django.views.generic import (
+    ListView,
+    CreateView,
+    UpdateView,
+    DeleteView,
+    TemplateView,
+    View,
+)
 from django.shortcuts import redirect, get_object_or_404
-from django.db.models import Q
+from django.utils.timezone import timedelta, datetime
+from django.db.models import Q, Count
 from django.urls import reverse_lazy
 from django.contrib import messages
+from django.http import JsonResponse
+
+from user.mixins import AdminRequiredMixin
 from user.models import User
 from pages.models import PageVisibility, WhatWeDo
 from events.models import Event
@@ -33,7 +40,102 @@ class DashboardView(AdminRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "dashboard"
         context["total_members"] = User.objects.count()
+        context["total_events"] = Event.objects.count()
+        context["total_projects"] = Project.objects.count()
+        context["total_resources"] = Resource.objects.count()
+
+        last_three_sessions = Session.objects.order_by("-date")[:3]
+        active_members = (
+            User.objects.filter(attended_sessions__in=last_three_sessions)
+            .distinct()
+            .count()
+        )
+
+        now = datetime.now()
+        last_30_days = now - timedelta(days=30)
+        recent_sessions = Session.objects.filter(date__gte=last_30_days)
+
+        attendees_this_month = (
+            User.objects.filter(attended_sessions__in=recent_sessions)
+            .distinct()
+            .count()
+        )
+
+        previous_30_days = now - timedelta(days=60)
+        previous_sessions = Session.objects.filter(
+            date__gte=previous_30_days, date__lt=last_30_days
+        )
+
+        attendees_previous = (
+            User.objects.filter(attended_sessions__in=previous_sessions)
+            .distinct()
+            .count()
+        )
+
+        if attendees_previous > 0:
+            attendees_change = round(
+                ((attendees_this_month - attendees_previous) / attendees_previous) * 100
+            )
+        else:
+            attendees_change = 100 if attendees_this_month > 0 else 0
+
+        context["active_members"] = active_members
+        context["attendees_this_month"] = attendees_this_month
+        context["attendees_change"] = attendees_change
+
         return context
+
+
+class ActivityView(AdminRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        days = int(request.GET.get("days", 30))
+        end_date = datetime.now().date()
+        start_date = end_date - timedelta(days=days)
+
+        # Prepare date labels
+        date_labels = [
+            (start_date + timedelta(days=i)).strftime("%Y-%m-%d")
+            for i in range(days + 1)
+        ]
+
+        # Count sessions per day
+        session_counts = []
+        attendee_counts = []
+        for d in date_labels:
+            day = datetime.strptime(d, "%Y-%m-%d").date()
+            sessions = Session.objects.filter(date=day)
+            session_counts.append(sessions.count())
+            attendee_counts.append(sum(s.attendees.count() for s in sessions))
+
+        # Count events
+        event_counts = [Event.objects.filter(date__date=d).count() for d in date_labels]
+
+        # Count projects
+        project_counts = [
+            Project.objects.filter(created_at__date=d).count() for d in date_labels
+        ]
+
+        # Count resources
+        resource_counts = [
+            Resource.objects.filter(created_at__date=d).count() for d in date_labels
+        ]
+
+        # Count new users
+        user_counts = [
+            User.objects.filter(created_at__date=d).count() for d in date_labels
+        ]
+
+        return JsonResponse(
+            {
+                "labels": date_labels,
+                "sessions": session_counts,
+                "attendees": attendee_counts,
+                "events": event_counts,
+                "projects": project_counts,
+                "resources": resource_counts,
+                "users": user_counts,
+            }
+        )
 
 
 class PageView(AdminRequiredMixin, UpdateView):
@@ -505,3 +607,68 @@ class SessionDeleteView(AdminRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         messages.success(request, "Session deleted successfully")
         return super().delete(request, *args, **kwargs)
+
+
+class AttendanceListView(AdminRequiredMixin, ListView):
+    model = User
+    template_name = "dashboard/attendance/list.html"
+    context_object_name = "members"
+    paginate_by = 10
+
+    def get_queryset(self):
+        qs = (
+            User.objects.filter(is_active=True)
+            .annotate(attended_count=Count("attended_sessions"))
+            .order_by("first_name")
+        )
+
+        search = self.request.GET.get("search")
+        if search:
+            qs = qs.filter(
+                Q(first_name__icontains=search)
+                | Q(last_name__icontains=search)
+                | Q(email__icontains=search)
+            )
+
+        return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        total_sessions = Session.objects.count()
+        context["total_sessions"] = total_sessions
+        context["active_page"] = "attendance_list"
+
+        for member in context["members"]:
+            if total_sessions > 0:
+                member.attendance_percent = round(
+                    (member.attended_count / total_sessions) * 100
+                )
+            else:
+                member.attendance_percent = 0
+
+        return context
+
+
+class AttendanceDetailView(AdminRequiredMixin, ListView):
+    model = Session
+    template_name = "dashboard/attendance/detail.html"
+    context_object_name = "sessions"
+    paginate_by = 10
+
+    def get_queryset(self):
+        self.member = get_object_or_404(User, id=self.kwargs["pk"])
+
+        return Session.objects.all().order_by("-date")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        attended_ids = set(self.member.attended_sessions.values_list("id", flat=True))
+
+        for session in context["sessions"]:
+            session.attended = session.id in attended_ids
+
+        context["member"] = self.member
+        context["active_page"] = "attendance_list"
+
+        return context

@@ -65,7 +65,7 @@
         Members
       </a>
 
-      <!-- Sessions / Attendance -->
+      <!-- Sessions -->
       <a href="{% url 'dashboard:session_list' %}" 
         class="flex items-center gap-3 px-4 py-3 rounded-xl transition
         {% if active_page == 'session_list' %}
@@ -87,6 +87,30 @@
         </svg>
 
         Sessions
+      </a>
+
+      <!-- Attendance -->
+      <a href="{% url 'dashboard:attendance_list' %}"
+        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+        {% if active_page == 'attendance_list' %}
+          bg-indigo-500/10 text-indigo-400
+        {% else %}
+          hover:bg-slate-800 text-slate-300
+        {% endif %}">
+
+        <!-- Chart Bar Icon -->
+        <svg xmlns="http://www.w3.org/2000/svg"
+            class="w-5 h-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor">
+          <path stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.8"
+                d="M9 17v-6m4 6V7m4 10v-3M5 20h14"/>
+        </svg>
+
+        Attendance
       </a>
 
       <!-- Projects -->

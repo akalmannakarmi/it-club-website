@@ -20,25 +20,25 @@
 
   <!-- Total Members -->
   <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-    <p class="text-sm text-slate-400">Total Members</p>
+    <p class="text-sm text-slate-400">Members</p>
     <h3 class="text-3xl font-bold text-indigo-400 mt-3">
       {{ total_members }}
     </h3>
   </div>
 
-  <!-- Active Events -->
+  <!-- Total Events -->
   <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-    <p class="text-sm text-slate-400">Active Events</p>
+    <p class="text-sm text-slate-400">Events</p>
     <h3 class="text-3xl font-bold text-emerald-400 mt-3">
-      0
+      {{ total_events }}
     </h3>
   </div>
 
-  <!-- Announcements -->
+  <!-- Total Projects -->
   <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
-    <p class="text-sm text-slate-400">Announcements</p>
+    <p class="text-sm text-slate-400">Projects</p>
     <h3 class="text-3xl font-bold text-amber-400 mt-3">
-      0
+      {{ total_projects}}
     </h3>
   </div>
 
@@ -46,7 +46,7 @@
   <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
     <p class="text-sm text-slate-400">Resources</p>
     <h3 class="text-3xl font-bold text-sky-400 mt-3">
-      0
+      {{ total_resources }}
     </h3>
   </div>
 
@@ -69,16 +69,16 @@
         ➕ Add Member
       </a>
 
-      <a href="#"
+      <a href="{% url 'dashboard:event_create' %}"
          class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl
                 bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition">
         📅 Create Event
       </a>
 
-      <a href="#"
+      <a href="{% url 'dashboard:session_create' %}"
          class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl
                 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition">
-        📢 New Announcement
+        🗓️ New Session
       </a>
 
     </div>
@@ -87,25 +87,151 @@
   <!-- System Status / Info -->
   <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
     <h2 class="text-lg font-semibold text-slate-100 mb-4">
-      System Overview
+      Overview
     </h2>
 
     <ul class="space-y-3 text-sm text-slate-400">
       <li class="flex justify-between">
-        <span>Attendance Module</span>
-        <span class="text-emerald-400">Active</span>
+        <span>Active Members (Last 3 Sessions)</span>
+        <span class="text-emerald-400 font-semibold">
+          {{ active_members }}
+        </span>
       </li>
       <li class="flex justify-between">
-        <span>Events Module</span>
-        <span class="text-slate-500">Not Configured</span>
+        <span>Attendees (Last 30 Days)</span>
+        <span class="text-indigo-400 font-semibold">
+          {{ attendees_this_month }}
+        </span>
       </li>
-      <li class="flex justify-between">
-        <span>Resources Module</span>
-        <span class="text-slate-500">Not Configured</span>
+      <li class="flex justify-between items-center">
+        <span>Compared to Previous 30 Days</span>
+
+        {% if attendees_change > 0 %}
+          <span class="text-emerald-400 font-semibold">
+            ↑ {{ attendees_change }}%
+          </span>
+        {% elif attendees_change < 0 %}
+          <span class="text-red-400 font-semibold">
+            ↓ {{ attendees_change|cut:"-" }}%
+          </span>
+        {% else %}
+          <span class="text-slate-400">
+            0%
+          </span>
+        {% endif %}
       </li>
     </ul>
   </div>
 
 </div>
+
+<!-- Activity Graph -->
+<div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 mt-10">
+  <h2 class="text-lg font-semibold text-slate-100 mb-4">
+    Activities Over Time
+  </h2>
+
+  <!-- Filter Dropdown -->
+  <div class="mb-4">
+    <select id="activity-range" class="rounded-md bg-slate-800 text-slate-100 px-3 py-1">
+      <option value="30" selected>Last 30 Days</option>
+      <option value="90">Last 90 Days</option>
+      <option value="365">Last Year</option>
+    </select>
+  </div>
+
+  <canvas id="activityChart" class="w-full h-64"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const ctx = document.getElementById('activityChart').getContext('2d');
+let activityChart;
+
+async function fetchData(days=30) {
+    const res = await fetch(`/dashboard/activity-data/?days=${days}`);
+    return await res.json();
+}
+
+async function renderChart(days=30) {
+    const data = await fetchData(days);
+
+    const datasets = [
+        {
+            label: "Sessions",
+            data: data.sessions,
+            borderColor: "rgba(255, 99, 132, 1)",      // Red
+            backgroundColor: "rgba(255, 99, 132, 0.2)",
+            hidden: false
+        },
+        {
+            label: "Attendees",
+            data: data.attendees,
+            borderColor: "rgba(54, 162, 235, 1)",      // Blue
+            backgroundColor: "rgba(54, 162, 235, 0.2)",
+            hidden: false
+        },
+        {
+            label: "Events",
+            data: data.events,
+            borderColor: "rgba(255, 206, 86, 1)",      // Yellow
+            backgroundColor: "rgba(255, 206, 86, 0.2)",
+            hidden: false
+        },
+        {
+            label: "Projects",
+            data: data.projects,
+            borderColor: "rgba(75, 192, 192, 1)",      // Teal
+            backgroundColor: "rgba(75, 192, 192, 0.2)",
+            hidden: false
+        },
+        {
+            label: "Resources",
+            data: data.resources,
+            borderColor: "rgba(153, 102, 255, 1)",     // Purple
+            backgroundColor: "rgba(153, 102, 255, 0.2)",
+            hidden: false
+        },
+        {
+            label: "Users",
+            data: data.users,
+            borderColor: "rgba(255, 159, 64, 1)",      // Orange
+            backgroundColor: "rgba(255, 159, 64, 0.2)",
+            hidden: false
+        }
+    ];
+
+    if (activityChart) {
+        activityChart.data.labels = data.labels;
+        activityChart.data.datasets = datasets;
+        activityChart.update();
+    } else {
+        activityChart = new Chart(ctx, {
+            type: "line",
+            data: { labels: data.labels, datasets: datasets },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: "top", labels: { usePointStyle: true } },
+                    tooltip: { mode: "index", intersect: false }
+                },
+                interaction: { mode: "nearest", axis: "x", intersect: false },
+                scales: {
+                    x: { display: true, title: { display: true, text: "Date" } },
+                    y: { display: true, title: { display: true, text: "Count" }, beginAtZero: true }
+                }
+            }
+        });
+    }
+}
+
+// Initial load
+renderChart();
+
+// Update chart when dropdown changes
+document.getElementById("activity-range").addEventListener("change", function() {
+    renderChart(this.value);
+});
+</script>
 
 {% endblock %}
