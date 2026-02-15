@@ -15,7 +15,7 @@ from django.http import JsonResponse
 
 from user.mixins import AdminRequiredMixin
 from user.models import User
-from pages.models import PageVisibility, WhatWeDo
+from pages.models import PageSettings, AboutUs, WhatWeDo
 from events.models import Event
 from projects.models import Project
 from resources.models import Resource
@@ -23,6 +23,7 @@ from audit.models import AuditLog
 from attendance.models import Session
 from .forms import (
     PageForm,
+    AboutUsForm,
     MemberForm,
     WhatWeDoForm,
     EventForm,
@@ -139,13 +140,13 @@ class ActivityView(AdminRequiredMixin, View):
 
 
 class PageView(AdminRequiredMixin, UpdateView):
-    model = PageVisibility
+    model = PageSettings
     form_class = PageForm
     template_name = "dashboard/page_form.html"
     success_url = reverse_lazy("dashboard:home")
 
     def get_object(self, queryset=None):
-        obj, created = PageVisibility.objects.get_or_create(pk=1)
+        obj, created = PageSettings.objects.get_or_create(pk=1)
         return obj
 
     def form_valid(self, form):
@@ -155,6 +156,26 @@ class PageView(AdminRequiredMixin, UpdateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["active_page"] = "page_settings"
+        return context
+
+
+class AboutUsView(AdminRequiredMixin, UpdateView):
+    model = AboutUs
+    form_class = AboutUsForm
+    template_name = "dashboard/about_form.html"
+    success_url = reverse_lazy("dashboard:home")
+
+    def get_object(self, queryset=None):
+        obj, created = AboutUs.objects.get_or_create(pk=1)
+        return obj
+
+    def form_valid(self, form):
+        messages.success(self.request, "About Us updated successfully")
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "about_us"
         return context
 
 

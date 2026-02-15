@@ -1,6 +1,6 @@
 from django import forms
 from user.models import User
-from pages.models import PageVisibility, WhatWeDo
+from pages.models import PageSettings, AboutUs, WhatWeDo
 from events.models import Event
 from projects.models import Project
 from resources.models import Resource
@@ -9,7 +9,13 @@ from attendance.models import Session
 
 class PageForm(forms.ModelForm):
     class Meta:
-        model = PageVisibility
+        model = PageSettings
+        fields = "__all__"
+
+
+class AboutUsForm(forms.ModelForm):
+    class Meta:
+        model = AboutUs
         fields = "__all__"
 
 
