@@ -1,5 +1,6 @@
 from django.db import models
 from audit.models import BaseModel
+from django.core.cache import cache
 
 
 class PageSettings(BaseModel):
@@ -23,6 +24,7 @@ class PageSettings(BaseModel):
     def save(self, *args, **kwargs):
         self.pk = 1  # force singleton
         super().save(*args, **kwargs)
+        cache.delete("page_settings")
 
 
 class WhatWeDo(BaseModel):
