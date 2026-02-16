@@ -5,6 +5,7 @@ from django.views.generic import TemplateView, ListView, FormView, View
 from django.contrib import messages
 from django.urls import reverse_lazy
 
+from pages.models import AboutUs
 from .forms import RegisterForm, LoginForm
 from .models import User
 from .mixins import AdminRequiredMixin
@@ -27,6 +28,7 @@ class RegisterView(FormView):
         context = super().get_context_data(**kwargs)
         context["faculty_choices"] = User.FACULTY_CHOICES
         context["batch_choices"] = User.batch_choices()
+        context["aboutus"] = AboutUs.objects.first()
 
         return context
 
@@ -46,7 +48,7 @@ class LoginView(FormView):
             messages.error(self.request, "Invalid email or password")
             return self.form_invalid(form)
 
-        user = authenticate(self.request, username=user_obj.username, password=password)
+        user = authenticate(self.request, email=user_obj.email, password=password)
 
         if user is not None:
             login(self.request, user)
@@ -54,6 +56,11 @@ class LoginView(FormView):
 
         messages.error(self.request, "Invalid email or password")
         return self.form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["aboutus"] = AboutUs.objects.first()
+        return context
 
 
 class LogoutView(View):

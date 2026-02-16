@@ -1,9 +1,9 @@
 <section id="banner" class="py-28 bg-white">
   <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
     <div data-aos="fade-right">
-      <h2 class="text-3xl font-bold mb-6">{{ visibility.banner_title }}</h2>
+      <h2 class="text-3xl font-bold mb-6">About {{ page_settings.org_name }}</h2>
       <p class="text-slate-600 text-lg leading-relaxed">
-        {{visibility.banner_desc|default:''}}
+        {{aboutus.caption|default:''}}
       </p>
       <!-- <div class="flex gap-6 mt-6">
         <div class="flex items-center gap-2">
@@ -23,9 +23,9 @@
         View More About Us →
       </a>
     </div>
-    {% if visibility.banner_image %}
+    {% if aboutus.main_image %}
       <img
-        src="{{ visibility.banner_image.url}}"
+        src="{{ aboutus.main_image.url}}"
         class="rounded-3xl shadow-xl"
         alt="Team collaboration"
         data-aos="fade-left"

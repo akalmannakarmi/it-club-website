@@ -2,8 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}IT Club{% endblock %}</title>
+    <title>{% block title %}{% endblock %} · {{page_settings.org_name}}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    {% if page_settings.page_icon %}
+        <link rel="icon" type="image/png" href="{{ page_settings.page_icon.url }}">
+    {% endif %}
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
