@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
                         verbose_name="ID",
                     ),
                 ),
-                ("title", models.TextField(unique=True, verbose_name="Event Title")),
+                ("title", models.TextField(verbose_name="Event Title")),
                 (
                     "caption",
                     models.TextField(

@@ -45,7 +45,7 @@ class DashboardView(AdminRequiredMixin, TemplateView):
         context["total_projects"] = Project.objects.count()
         context["total_resources"] = Resource.objects.count()
 
-        last_three_sessions = Session.objects.order_by("-date")[:3]
+        last_three_sessions = list(Session.objects.order_by("-date")[:3])
         active_members = (
             User.objects.filter(attended_sessions__in=last_three_sessions)
             .distinct()
