@@ -13,6 +13,8 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import JsonResponse
 
+
+from user.utils.email import send_html_email
 from user.mixins import AdminRequiredMixin
 from user.models import User
 from pages.models import PageSettings, AboutUs, WhatWeDo
@@ -45,7 +47,7 @@ class DashboardView(AdminRequiredMixin, TemplateView):
         context["total_projects"] = Project.objects.count()
         context["total_resources"] = Resource.objects.count()
 
-        last_three_sessions = Session.objects.order_by("-date")[:3]
+        last_three_sessions = list(Session.objects.order_by("-date")[:3])
         active_members = (
             User.objects.filter(attended_sessions__in=last_three_sessions)
             .distinct()
@@ -295,6 +297,17 @@ class MemberActivateView(AdminRequiredMixin, View):
         member.is_active = True
         member.save()
 
+        try:
+            send_html_email(
+                subject="Your account has been activated",
+                template="user/emails/account_activated.html",
+                to_email=member.email,
+                context={"user": member},
+                request=request,
+            )
+        except Exception as e:
+            print(f"Failed to send account activation email: {e}")
+
         messages.success(request, "Member activated successfully")
         next_url = request.POST.get("next") or reverse_lazy("dashboard:member_list")
         return redirect(next_url)
@@ -305,6 +318,17 @@ class MemberDeactivateView(AdminRequiredMixin, View):
         member = get_object_or_404(User, id=pk)
         member.is_active = False
         member.save()
+
+        try:
+            send_html_email(
+                subject="Your account has been deactivated",
+                template="user/emails/account_deactivated.html",
+                to_email=member.email,
+                context={"user": member},
+                request=request,
+            )
+        except Exception as e:
+            print(f"Failed to send account deactivation email: {e}")
 
         messages.success(request, "Member deactivated successfully")
         next_url = request.POST.get("next") or reverse_lazy("dashboard:member_list")

@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+  <body style="font-family: Arial; background: #f1f5f9; padding: 40px">
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center">
+          <table
+            width="600"
+            style="background: white; border-radius: 12px; padding: 40px"
+          >
+            <tr>
+              <td>
+                <h2 style="color: #dc2626">Account Deactivated</h2>
+
+                <p>Hello {{ user.first_name }},</p>
+
+                <p>Your account has been deactivated by an administrator.</p>
+
+                <p>
+                  If you believe this was done by mistake, please contact the
+                  administration team.
+                </p>
+
+                <br />
+
+                <p style="color: #64748b; font-size: 14px">
+                  {{ page_settings.org_name }} Team
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

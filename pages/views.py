@@ -13,13 +13,16 @@ class IndexView(View):
     def get(self, request):
         visibility = PageSettings.objects.first()
         aboutus = AboutUs.objects.first()
-        whatwedos = WhatWeDo.objects.all()[:10]
+        whatwedos = WhatWeDo.objects.filter(display=True).order_by("order")[:10]
         upcomingEvents = Event.objects.order_by("date").filter(
-            date__gte=datetime.now().date()
+            display=True,
+            date__gte=datetime.now().date(),
         )[:3]
-        majorEvents = Event.objects.order_by("-date").filter(is_major=True)[:10]
-        projects = Project.objects.order_by("-id").all()[:10]
-        resources = Resource.objects.order_by("-id").all()[:10]
+        majorEvents = Event.objects.order_by("-date", "order").filter(
+            display=True, is_major=True
+        )[:10]
+        projects = Project.objects.order_by("order").filter(display=True)[:10]
+        resources = Resource.objects.order_by("order").filter(display=True)[:10]
 
         return render(
             request,

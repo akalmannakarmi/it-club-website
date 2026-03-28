@@ -8,6 +8,8 @@ class PageSettings(BaseModel):
     page_icon = models.ImageField(
         "Page Icon", upload_to="pages/icon/", null=True, blank=True
     )
+    institution_name = models.TextField("Institution Name", null=True, blank=True)
+    institution_url = models.URLField("Institution Page URL", null=True, blank=True)
 
     show_banner = models.BooleanField(default=True)
     show_about = models.BooleanField(default=True)
@@ -28,10 +30,12 @@ class PageSettings(BaseModel):
 
 
 class WhatWeDo(BaseModel):
-    title = models.TextField("Activity Title", unique=True)
+    title = models.TextField("Activity Title")
     caption = models.TextField("Activity Caption", null=True, blank=True)
     image = models.ImageField(upload_to="pages/activity", null=True, blank=True)
     description = models.TextField("Activity Description", null=True, blank=True)
+    order = models.IntegerField("Order", default=0)
+    display = models.BooleanField("Display", default=True)
 
 
 class AboutUs(BaseModel):

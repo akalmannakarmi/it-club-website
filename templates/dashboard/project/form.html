@@ -110,6 +110,29 @@
                class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-slate-200">
       </div>
 
+      <!-- Order -->
+      <div class="flex flex-col md:col-span-2">
+        <label class="text-sm text-slate-300 mb-2">Order</label>
+        <input type="number"
+               name="order"
+               value="{{ form.order.value }}"
+               class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2
+                      text-slate-200 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+      </div>
+
+      <!-- Caption -->
+      <div class="flex items-center gap-3 mt-2">
+        <input type="checkbox"
+               name="display"
+               id="id_display"
+               {% if form.display.value %}checked{% endif %}
+               class="w-4 h-4 text-indigo-600 bg-slate-900 border-slate-700 rounded focus:ring-indigo-500">
+
+        <label for="id_display"
+               class="text-sm text-slate-300">
+          Display Project
+        </label>
+      </div>
     </div>
 
     <!-- Actions -->

@@ -64,6 +64,47 @@
 
     </div>
 
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+      <!-- Institution Name -->
+      <div class="flex flex-col">
+        <label for="id_institution_name" class="text-sm text-slate-300 mb-1">
+          Institution Name
+        </label>
+        <input type="text"
+               name="institution_name"
+               id="id_institution_name"
+               value="{{ form.institution_name.value|default_if_none:'' }}"
+               class="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+
+        {% if form.institution_name.errors %}
+          <p class="text-sm text-red-400 mt-1">
+            {{ form.institution_name.errors.0 }}
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Institution Page URL -->
+      <div class="flex flex-col">
+        <label for="id_institution_url" class="text-sm text-slate-300 mb-1">
+          Institution Page URL
+        </label>
+
+        <input type="text"
+                name="institution_url"
+                id="id_institution_url"
+                value="{{ form.institution_url.value|default_if_none:'' }}"
+                class="bg-slate-800 border border-slate-700 rounded-xl px-4 py-2 text-slate-100 focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+
+        {% if form.institution_url.errors %}
+          <p class="text-sm text-red-400 mt-1">
+            {{ form.institution_url.errors.0 }}
+          </p>
+        {% endif %}
+      </div>
+
+    </div>
+
     <!-- ========================
          SECTION VISIBILITY
     ========================= -->

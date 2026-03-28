@@ -23,6 +23,8 @@ class Resource(BaseModel):
         null=True,
         validators=[ALLOWED_EXTENSIONS],
     )
+    order = models.IntegerField("Order", default=0)
+    display = models.BooleanField("Display", default=True)
 
     def __str__(self):
         return self.title
