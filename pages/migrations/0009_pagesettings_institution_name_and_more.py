@@ -4,20 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('pages', '0008_aboutus_pagesettings_delete_pagevisibility'),
+        ("pages", "0008_aboutus_pagesettings_delete_pagevisibility"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='pagesettings',
-            name='institution_name',
-            field=models.TextField(blank=True, null=True, verbose_name='Institution Name'),
+            model_name="pagesettings",
+            name="institution_name",
+            field=models.TextField(
+                blank=True, null=True, verbose_name="Institution Name"
+            ),
         ),
         migrations.AddField(
-            model_name='pagesettings',
-            name='institution_url',
-            field=models.URLField(blank=True, null=True, verbose_name='Institution Page URL'),
+            model_name="pagesettings",
+            name="institution_url",
+            field=models.URLField(
+                blank=True, null=True, verbose_name="Institution Page URL"
+            ),
         ),
     ]

@@ -303,7 +303,7 @@ class MemberActivateView(AdminRequiredMixin, View):
                 template="user/emails/account_activated.html",
                 to_email=member.email,
                 context={"user": member},
-                request=request
+                request=request,
             )
         except Exception as e:
             print(f"Failed to send account activation email: {e}")
@@ -325,7 +325,7 @@ class MemberDeactivateView(AdminRequiredMixin, View):
                 template="user/emails/account_deactivated.html",
                 to_email=member.email,
                 context={"user": member},
-                request=request
+                request=request,
             )
         except Exception as e:
             print(f"Failed to send account deactivation email: {e}")

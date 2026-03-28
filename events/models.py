@@ -9,3 +9,5 @@ class Event(BaseModel):
     date = models.DateTimeField("Event Date")
     is_major = models.BooleanField("Is Major Event", default=False)
     description = models.TextField("Event Description", null=True, blank=True)
+    order = models.IntegerField("Order", default=0)
+    display = models.BooleanField("Display", default=True)

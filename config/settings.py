@@ -88,7 +88,7 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-DATABASE_MODE = os.environ.get("DATABASE_MODE","sqlite")
+DATABASE_MODE = os.environ.get("DATABASE_MODE", "sqlite")
 
 if DATABASE_MODE == "mysql":
     DATABASES = {

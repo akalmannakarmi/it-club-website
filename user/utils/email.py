@@ -5,7 +5,6 @@ from django.conf import settings
 from pages.context_processors import page_settings
 
 
-
 def send_html_email(subject, template, to_email, context=None, request=None):
     context = context or {}
     context.update(page_settings(request))

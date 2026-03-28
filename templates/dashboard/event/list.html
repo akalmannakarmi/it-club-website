@@ -46,6 +46,7 @@
         <th class="px-4 py-3 text-left">Title</th>
         <th class="px-4 py-3 text-left">Date</th>
         <th class="px-4 py-3 text-center">Type</th>
+        <th class="px-4 py-3 text-center">Displayed</th>
         <th class="px-4 py-3 text-right">Actions</th>
       </tr>
     </thead>
@@ -77,6 +78,20 @@
             <span class="px-3 py-1 rounded-full text-xs
                          bg-emerald-500/10 text-emerald-400">
               Regular
+            </span>
+          {% endif %}
+        </td>
+        
+        <td class="px-4 py-3 text-center">
+          {% if event.display %}
+            <span class="px-3 py-1 rounded-full text-xs
+                         bg-emerald-500/10 text-emerald-400">
+              Visible
+            </span>
+          {% else %}
+            <span class="px-3 py-1 rounded-full text-xs
+                         bg-red-500/10 text-red-400">
+              Hidden
             </span>
           {% endif %}
         </td>

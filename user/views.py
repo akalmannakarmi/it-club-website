@@ -43,17 +43,13 @@ class RegisterView(FormView):
             print(f"Failed to send email for {user}'s registration: {e}")
 
         messages.success(
-            self.request,
-            "Registration submitted. Please wait for admin approval."
+            self.request, "Registration submitted. Please wait for admin approval."
         )
 
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(
-            self.request,
-            "Please correct the errors below."
-        )
+        messages.error(self.request, "Please correct the errors below.")
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
@@ -119,7 +115,6 @@ class UsersListView(AdminRequiredMixin, ListView):
 
     def get_queryset(self):
         return User.objects.select_related().prefetch_related("groups")
-
 
 
 class PasswordResetView(auth_views.PasswordResetView):

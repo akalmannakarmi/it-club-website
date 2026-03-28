@@ -34,6 +34,8 @@ class WhatWeDo(BaseModel):
     caption = models.TextField("Activity Caption", null=True, blank=True)
     image = models.ImageField(upload_to="pages/activity", null=True, blank=True)
     description = models.TextField("Activity Description", null=True, blank=True)
+    order = models.IntegerField("Order", default=0)
+    display = models.BooleanField("Display", default=True)
 
 
 class AboutUs(BaseModel):

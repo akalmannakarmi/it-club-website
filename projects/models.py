@@ -23,6 +23,8 @@ class Project(BaseModel):
         related_name="supervised_projects",
     )
     members = models.ManyToManyField(User, related_name="projects")
+    order = models.IntegerField("Order", default=0)
+    display = models.BooleanField("Display", default=True)
 
     def __str__(self):
         return self.title
