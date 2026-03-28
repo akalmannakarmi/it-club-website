@@ -8,6 +8,8 @@ class PageSettings(BaseModel):
     page_icon = models.ImageField(
         "Page Icon", upload_to="pages/icon/", null=True, blank=True
     )
+    institution_name = models.TextField("Institution Name", null=True, blank=True)
+    institution_url = models.URLField("Institution Page URL", null=True, blank=True)
 
     show_banner = models.BooleanField(default=True)
     show_about = models.BooleanField(default=True)

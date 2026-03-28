@@ -2,7 +2,13 @@
   <div class="max-w-7xl mx-auto px-6">
     <div class="flex justify-between items-center h-16">
       <!-- Logo / Brand -->
-      <a href="#home" class="text-2xl font-bold text-indigo-700">{{ page_settings.org_name }}</a>
+      <div>
+        {% if page_settings.institution_name  %}
+          <a href="{{ page_settings.institution_url }}" class="text-2xl font-bold text-indigo-700 px-4">{{ page_settings.institution_name }}</a>
+        {% endif %}
+    
+        <a href="#home" class="text-2xl font-bold text-indigo-700">{{ page_settings.org_name }}</a>
+      </div>
 
       <!-- Navigation links -->
       <div class="hidden md:flex items-center gap-8 font-medium">
