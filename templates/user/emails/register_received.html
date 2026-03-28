@@ -1,0 +1,55 @@
+<!doctype html>
+<html>
+  <body
+    style="font-family: Arial, sans-serif; background: #f1f5f9; padding: 40px"
+  >
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center">
+          <table
+            width="600"
+            style="background: white; border-radius: 12px; padding: 40px"
+          >
+            <tr>
+              <td>
+                <h2 style="color: #4f46e5; margin-bottom: 20px">
+                  Registration Received
+                </h2>
+
+                <p>Hello {{ user.first_name|default:user.email }},</p>
+
+                <p style="color: #475569; font-size: 16px">
+                  Thank you for registering with
+                  <strong>{{ page_settings.org_name }}</strong>.
+                </p>
+
+                <p style="color: #475569; font-size: 16px">
+                  Your account request has been successfully received and is
+                  currently being reviewed by our administrators.
+                </p>
+
+                <p style="color: #475569; font-size: 16px">
+                  Once your account is approved, you will receive another email
+                  confirming that you can log in to the platform.
+                </p>
+
+                <hr style="margin: 30px 0" />
+
+                <p style="color: #64748b; font-size: 14px">
+                  If you did not create this account, you can safely ignore this
+                  email.
+                </p>
+
+                <br />
+
+                <p style="color: #94a3b8; font-size: 13px">
+                  {{ page_settings.org_name }} Team
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

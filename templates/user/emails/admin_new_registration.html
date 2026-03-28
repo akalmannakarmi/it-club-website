@@ -1,0 +1,101 @@
+<!doctype html>
+<html>
+  <body
+    style="font-family: Arial, sans-serif; background: #f1f5f9; padding: 40px"
+  >
+    <table width="100%" cellpadding="0" cellspacing="0">
+      <tr>
+        <td align="center">
+          <table
+            width="600"
+            style="background: white; border-radius: 12px; padding: 40px"
+          >
+            <tr>
+              <td>
+                <h2 style="color: #4f46e5; margin-bottom: 20px">
+                  New Member Registration
+                </h2>
+
+                <p style="color: #475569; font-size: 16px">
+                  A new user has registered on
+                  <strong>{{ page_settings.org_name }}</strong> and is awaiting approval.
+                </p>
+
+                <br />
+
+                <table
+                  width="100%"
+                  style="border-collapse: collapse; font-size: 15px"
+                >
+                  <tr>
+                    <td style="padding: 8px 0; color: #64748b; width: 140px">
+                      Name:
+                    </td>
+                    <td style="padding: 8px 0; color: #1e293b">
+                      {{ user.first_name }} {{ user.last_name }}
+                    </td>
+                  </tr>
+
+                  <tr>
+                    <td style="padding: 8px 0; color: #64748b">Email:</td>
+                    <td style="padding: 8px 0; color: #1e293b">
+                      {{ user.email }}
+                    </td>
+                  </tr>
+
+                  {% if user.faculty %}
+                  <tr>
+                    <td style="padding: 8px 0; color: #64748b">Faculty:</td>
+                    <td style="padding: 8px 0; color: #1e293b">
+                      {{ user.get_faculty_display }}
+                    </td>
+                  </tr>
+                  {% endif %} {% if user.batch %}
+                  <tr>
+                    <td style="padding: 8px 0; color: #64748b">Batch:</td>
+                    <td style="padding: 8px 0; color: #1e293b">
+                      {{ user.batch }}
+                    </td>
+                  </tr>
+                  {% endif %}
+
+                  <tr>
+                    <td style="padding: 8px 0; color: #64748b">Registered:</td>
+                    <td style="padding: 8px 0; color: #1e293b">
+                      {{ user.date_joined }}
+                    </td>
+                  </tr>
+                </table>
+
+                <br />
+
+                <p style="margin: 30px 0">
+                  <a
+                    href="{{ protocol }}://{{ domain }}/dashboard/members/"
+                    style="
+                      background: #4f46e5;
+                      color: white;
+                      padding: 12px 24px;
+                      text-decoration: none;
+                      border-radius: 8px;
+                      font-weight: 600;
+                      display: inline-block;
+                    "
+                  >
+                    Review Member
+                  </a>
+                </p>
+
+                <hr style="margin: 30px 0" />
+
+                <p style="color: #94a3b8; font-size: 13px">
+                  This message was sent automatically by {{ page_settings.org_name }}.
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>
