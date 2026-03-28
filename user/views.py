@@ -49,6 +49,13 @@ class RegisterView(FormView):
 
         return super().form_valid(form)
 
+    def form_invalid(self, form):
+        messages.error(
+            self.request,
+            "Please correct the errors below."
+        )
+        return super().form_invalid(form)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["faculty_choices"] = User.FACULTY_CHOICES
