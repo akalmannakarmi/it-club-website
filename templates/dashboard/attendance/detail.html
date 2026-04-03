@@ -19,10 +19,12 @@
         </p>
       </div>
 
+      {% if is_admin %}
       <a href="{% url 'dashboard:attendance_list' %}"
          class="text-sm text-slate-400 hover:text-slate-200">
         ← Back
       </a>
+      {% endif %}
     </div>
 
     <!-- Table -->

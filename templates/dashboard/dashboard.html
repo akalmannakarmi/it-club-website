@@ -62,7 +62,7 @@
     </h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-
+      {% if is_admin %}
       <a href="{% url 'dashboard:member_create' %}"
          class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl
                 bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
@@ -80,7 +80,25 @@
                 bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition">
         🗓️ New Session
       </a>
+      {% elif is_member %}
+      <a href="{% url 'dashboard:my_project' %}"
+         class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl
+                bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
+        View My Projects
+      </a>
 
+      <a href="{% url 'dashboard:event_list' %}"
+         class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl
+                bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition">
+        📅 View Events
+      </a>
+
+      <a href="{% url 'dashboard:session_list' %}"
+         class="flex items-center justify-center gap-2 px-4 py-3 rounded-xl
+                bg-amber-500/10 text-amber-400 hover:bg-amber-500/20 transition">
+        🗓️ View Sessions
+      </a>
+      {% endif %}
     </div>
   </div>
 

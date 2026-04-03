@@ -29,7 +29,7 @@
         {% endif %}
 
         {% if user.is_authenticated %}
-          {% if user.is_admin_group %}
+          {% if is_admin or is_member %}
             <a href="{% url 'dashboard:home' %}" class="py-2 hover:text-indigo-600 transition">
               Dashboard
             </a>

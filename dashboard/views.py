@@ -1,5 +1,6 @@
 from django.views.generic import (
     ListView,
+    DetailView,
     CreateView,
     UpdateView,
     DeleteView,
@@ -12,10 +13,15 @@ from django.db.models import Q, Count
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import JsonResponse
+from django.contrib.auth.models import Group
 
 
 from user.utils.email import send_html_email
-from user.mixins import AdminRequiredMixin
+from user.mixins import (
+    AdminRequiredMixin,
+    MemberRequiredMixin,
+    AdminOrOwnerRequiredMixin,
+)
 from user.models import User
 from pages.models import PageSettings, AboutUs, WhatWeDo
 from events.models import Event
@@ -35,7 +41,7 @@ from .forms import (
 )
 
 
-class DashboardView(AdminRequiredMixin, TemplateView):
+class DashboardView(MemberRequiredMixin, TemplateView):
     template_name = "dashboard/dashboard.html"
     login_url = "/admin/login/"
 
@@ -251,8 +257,12 @@ class MemberCreateView(AdminRequiredMixin, CreateView):
     success_url = reverse_lazy("dashboard:member_list")
 
     def form_valid(self, form):
+        response = super().form_valid(form)
+
+        member_group, _ = Group.objects.get_or_create(name="Member")
+        self.object.groups.add(member_group)
         messages.success(self.request, "Member created successfully")
-        return super().form_valid(form)
+        return response
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -398,7 +408,7 @@ class WhatWeDoDeleteView(AdminRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class EventListView(AdminRequiredMixin, ListView):
+class EventListView(MemberRequiredMixin, ListView):
     model = Event
     template_name = "dashboard/event/list.html"
     context_object_name = "events"
@@ -411,6 +421,17 @@ class EventListView(AdminRequiredMixin, ListView):
             qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
 
         return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "event_list"
+        return context
+
+
+class EventDetailView(MemberRequiredMixin, DetailView):
+    model = Event
+    template_name = "dashboard/event/detail.html"
+    context_object_name = "event"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -481,6 +502,46 @@ class ProjectListView(AdminRequiredMixin, ListView):
         return context
 
 
+class MyProjectListView(MemberRequiredMixin, ListView):
+    model = Project
+    template_name = "dashboard/project/list.html"
+    context_object_name = "projects"
+    paginate_by = 10
+
+    def get_queryset(self):
+        qs = Project.objects.filter(
+            Q(supervisor=self.request.user) | Q(members=self.request.user)
+        ).order_by("-updated_at")
+        search = self.request.GET.get("search")
+        if search:
+            qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
+
+        return qs.distinct()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "project_list"
+        return context
+
+
+class ProjectDetailView(AdminOrOwnerRequiredMixin, DetailView):
+    model = Project
+    template_name = "dashboard/project/detail.html"
+    context_object_name = "project"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "project_list"
+
+        tech_stack = self.object.technology_stack
+        if tech_stack:
+            context["tech_list"] = [t.strip() for t in tech_stack.split(",")]
+        else:
+            context["tech_list"] = []
+
+        return context
+
+
 class ProjectCreateView(AdminRequiredMixin, CreateView):
     model = Project
     form_class = ProjectForm
@@ -526,7 +587,7 @@ class ProjectDeleteView(AdminRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class ResourceListView(AdminRequiredMixin, ListView):
+class ResourceListView(MemberRequiredMixin, ListView):
     model = Resource
     template_name = "dashboard/resource/list.html"
     context_object_name = "resources"
@@ -539,6 +600,17 @@ class ResourceListView(AdminRequiredMixin, ListView):
             qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
 
         return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "resource_list"
+        return context
+
+
+class ResourceDetailView(MemberRequiredMixin, DetailView):
+    model = Resource
+    template_name = "dashboard/resource/detail.html"
+    context_object_name = "resource"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -589,7 +661,7 @@ class ResourceDeleteView(AdminRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class SessionListView(AdminRequiredMixin, ListView):
+class SessionListView(MemberRequiredMixin, ListView):
     model = Session
     template_name = "dashboard/session/list.html"
     context_object_name = "sessions"
@@ -602,6 +674,17 @@ class SessionListView(AdminRequiredMixin, ListView):
             qs = qs.filter(Q(title__icontains=search))
 
         return qs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["active_page"] = "session_list"
+        return context
+
+
+class SessionDetailView(MemberRequiredMixin, DetailView):
+    model = Session
+    template_name = "dashboard/session/detail.html"
+    context_object_name = "session"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -702,6 +785,31 @@ class AttendanceDetailView(AdminRequiredMixin, ListView):
 
     def get_queryset(self):
         self.member = get_object_or_404(User, id=self.kwargs["pk"])
+
+        return Session.objects.all().order_by("-date")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        attended_ids = set(self.member.attended_sessions.values_list("id", flat=True))
+
+        for session in context["sessions"]:
+            session.attended = session.id in attended_ids
+
+        context["member"] = self.member
+        context["active_page"] = "attendance_list"
+
+        return context
+
+
+class MyAttendanceDetailView(MemberRequiredMixin, ListView):
+    model = Session
+    template_name = "dashboard/attendance/detail.html"
+    context_object_name = "sessions"
+    paginate_by = 10
+
+    def get_queryset(self):
+        self.member = self.request.user
 
         return Session.objects.all().order_by("-date")
 

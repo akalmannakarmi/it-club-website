@@ -1,0 +1,151 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Resource Details{% endblock %}
+{% block page_title %}Resource Details{% endblock %}
+
+{% block subcontent %}
+
+<div class="max-w-5xl mx-auto space-y-6">
+
+  <!-- Header -->
+  <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-100">
+        {{ resource.title }}
+      </h1>
+
+      {% if resource.caption %}
+      <p class="text-slate-400 text-sm mt-1">
+        {{ resource.caption }}
+      </p>
+      {% endif %}
+    </div>
+
+    {% if is_admin %}
+    <div class="flex gap-3">
+      <a href="{% url 'dashboard:resource_edit' resource.id %}"
+         class="px-4 py-2 rounded-xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
+        ✏️ Edit
+      </a>
+
+      <form method="POST"
+            action="{% url 'dashboard:resource_delete' resource.id %}">
+        {% csrf_token %}
+        <button type="submit"
+                onclick="return confirm('Delete this resource?')"
+                class="px-4 py-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition">
+          🗑 Delete
+        </button>
+      </form>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- Image Preview -->
+  {% if resource.image %}
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+    <img src="{{ resource.image.url }}"
+         alt="{{ resource.title }}"
+         class="w-full h-72 object-cover">
+  </div>
+  {% endif %}
+
+  <!-- Description -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+    <h2 class="text-lg font-semibold text-slate-200 mb-2">
+      Description
+    </h2>
+
+    {% if resource.description %}
+      <p class="text-slate-300 whitespace-pre-line">
+        {{ resource.description }}
+      </p>
+    {% else %}
+      <p class="text-slate-500 text-sm">
+        No description provided.
+      </p>
+    {% endif %}
+  </div>
+
+  <!-- Resource Actions -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <!-- Video -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <h3 class="text-sm text-slate-400 mb-2">Video</h3>
+
+      {% if resource.url %}
+        <a href="{{ resource.url }}"
+           target="_blank"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
+                  bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
+          🎥 Watch Video
+        </a>
+      {% else %}
+        <p class="text-slate-500 text-sm">
+          No video available.
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- File -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <h3 class="text-sm text-slate-400 mb-2">Attachment</h3>
+
+      {% if resource.file %}
+        <a href="{{ resource.file.url }}"
+           target="_blank"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
+                  bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition">
+          📄 Download File
+        </a>
+      {% else %}
+        <p class="text-slate-500 text-sm">
+          No file attached.
+        </p>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- Meta Info -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Visibility</p>
+      {% if resource.display %}
+        <p class="text-emerald-400 font-semibold mt-1">Visible</p>
+      {% else %}
+        <p class="text-red-400 font-semibold mt-1">Hidden</p>
+      {% endif %}
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Order</p>
+      <p class="text-slate-200 mt-1">
+        {{ resource.order }}
+      </p>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Created</p>
+      <p class="text-slate-200 mt-1">
+        {{ resource.created_at|date:"M d, Y" }}
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Back -->
+  <div>
+    <a href="{% url 'dashboard:resource_list' %}"
+       class="text-slate-400 hover:text-slate-200 transition">
+      ← Back to Resources
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}
