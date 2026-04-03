@@ -13,246 +13,383 @@
     </div>
 
     <nav class="px-4 py-6 space-y-1 text-sm">
+      {% if is_admin %}
+        <!-- Dashboard -->
+        <a href="{% url 'dashboard:home' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'dashboard' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
 
-      <!-- Dashboard -->
-      <a href="{% url 'dashboard:home' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-     {% if active_page == 'dashboard' %}
-       bg-indigo-500/10 text-indigo-400
-     {% else %}
-       hover:bg-slate-800 text-slate-300
-     {% endif %}">
+          <!-- Chart Bar Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3v18h18M9 17V9m4 8V5m4 12v-6" />
+          </svg>
 
-        <!-- Chart Bar Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3v18h18M9 17V9m4 8V5m4 12v-6" />
-        </svg>
-
-        Dashboard
-      </a>
-
-
-      <!-- Page Settings -->
-      <a href="{% url 'dashboard:page_settings' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-     {% if active_page == 'page_settings' %}
-       bg-indigo-500/10 text-indigo-400
-     {% else %}
-       hover:bg-slate-800 text-slate-300
-     {% endif %}">
-
-        <!-- Adjustments / Sliders Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h10M4 18h7" />
-        </svg>
-
-        Page Settings
-      </a>
-
-      <!-- About Us -->
-      <a href="{% url 'dashboard:about_us' %}" 
-        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-        {% if active_page == 'about_us' %}
-          bg-indigo-500/10 text-indigo-400
-        {% else %}
-          hover:bg-slate-800 text-slate-300
-        {% endif %}">
-
-        <!-- Info / Profile Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            class="w-5 h-5" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-          <path stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="1.8"
-                d="M13 16h-1v-4h-1m1-4h.01M12 3a9 9 0 110 18 9 9 0 010-18z" />
-        </svg>
-
-        About Us
-      </a>
+          Dashboard
+        </a>
 
 
-      <!-- Members -->
-      <a href="{% url 'dashboard:member_list' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-     {% if active_page == 'members' %}
-       bg-indigo-500/10 text-indigo-400
-     {% else %}
-       hover:bg-slate-800 text-slate-300
-     {% endif %}">
+        <!-- Page Settings -->
+        <a href="{% url 'dashboard:page_settings' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'page_settings' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
 
-        <!-- Users Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-            d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87m8-6a4 4 0 11-8 0 4 4 0 018 0zm6 0a4 4 0 11-8 0 4 4 0 018 0z" />
-        </svg>
+          <!-- Adjustments / Sliders Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h10M4 18h7" />
+          </svg>
 
-        Members
-      </a>
+          Page Settings
+        </a>
 
-      <!-- Sessions -->
-      <a href="{% url 'dashboard:session_list' %}" 
-        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-        {% if active_page == 'session_list' %}
-          bg-indigo-500/10 text-indigo-400
-        {% else %}
-          hover:bg-slate-800 text-slate-300
-        {% endif %}">
+        <!-- About Us -->
+        <a href="{% url 'dashboard:about_us' %}" 
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'about_us' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
 
-        <!-- Clipboard Check Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            class="w-5 h-5" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-          <path stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="1.8"
-                d="M9 5h6m-3 4l2 2-4 4m7-10H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2z" />
-        </svg>
+          <!-- Info / Profile Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.8"
+                  d="M13 16h-1v-4h-1m1-4h.01M12 3a9 9 0 110 18 9 9 0 010-18z" />
+          </svg>
 
-        Sessions
-      </a>
-
-      <!-- Attendance -->
-      <a href="{% url 'dashboard:attendance_list' %}"
-        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-        {% if active_page == 'attendance_list' %}
-          bg-indigo-500/10 text-indigo-400
-        {% else %}
-          hover:bg-slate-800 text-slate-300
-        {% endif %}">
-
-        <!-- Chart Bar Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg"
-            class="w-5 h-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor">
-          <path stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="1.8"
-                d="M9 17v-6m4 6V7m4 10v-3M5 20h14"/>
-        </svg>
-
-        Attendance
-      </a>
-
-      <!-- Projects -->
-      <a href="{% url 'dashboard:project_list' %}" 
-        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-        {% if active_page == 'project_list' %}
-          bg-indigo-500/10 text-indigo-400
-        {% else %}
-          hover:bg-slate-800 text-slate-300
-        {% endif %}">
-
-        <!-- Folder / Project Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            class="w-5 h-5" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-          <path stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="1.8"
-                d="M3 7h4l3 3h11v11H3V7z" />
-        </svg>
-
-        Projects
-      </a>
+          About Us
+        </a>
 
 
+        <!-- Members -->
+        <a href="{% url 'dashboard:member_list' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'members' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
 
-      <!-- What We Do -->
-      <a href="{% url 'dashboard:what_we_do_list' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-      {% if active_page == 'what_we_do_list' %}
-        bg-indigo-500/10 text-indigo-400
-      {% else %}
-        hover:bg-slate-800 text-slate-300
-      {% endif %}">
+          <!-- Users Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+              d="M17 20h5v-2a4 4 0 00-5-3.87M9 20H4v-2a4 4 0 015-3.87m8-6a4 4 0 11-8 0 4 4 0 018 0zm6 0a4 4 0 11-8 0 4 4 0 018 0z" />
+          </svg>
 
-        <!-- Grid Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
-            fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
-            d="M4 6h7v7H4V6zm9 0h7v7h-7V6zM4 15h7v7H4v-7zm9 7v-7h7v7h-7z"/>
-        </svg>
+          Members
+        </a>
 
-        What We Do
-      </a>
+        <!-- Sessions -->
+        <a href="{% url 'dashboard:session_list' %}" 
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'session_list' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
 
-      <!-- Events -->
-      <a href="{% url 'dashboard:event_list' %}" 
-        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-        {% if active_page == 'event_list' %}
-          bg-indigo-500/10 text-indigo-400
-        {% else %}
-          hover:bg-slate-800 text-slate-300
-        {% endif %}">
+          <!-- Clipboard Check Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.8"
+                  d="M9 5h6m-3 4l2 2-4 4m7-10H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2z" />
+          </svg>
 
-        <!-- Calendar Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            class="w-5 h-5" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-          <path stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="1.8"
-                d="M8 7V3m8 4V3m-9 8h10m-13 9h16a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
-        </svg>
+          Sessions
+        </a>
 
-        Events
-      </a>
+        <!-- Attendance -->
+        <a href="{% url 'dashboard:attendance_list' %}"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'attendance_list' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
 
-      <!-- Resources -->
-      <a href="{% url 'dashboard:resource_list' %}" 
-        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-        {% if active_page == 'resource_list' %}
-          bg-indigo-500/10 text-indigo-400
-        {% else %}
-          hover:bg-slate-800 text-slate-300
-        {% endif %}">
+          <!-- Chart Bar Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.8"
+                  d="M9 17v-6m4 6V7m4 10v-3M5 20h14"/>
+          </svg>
 
-        <!-- Book / Document Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            class="w-5 h-5" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-          <path stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="1.8"
-                d="M12 6v13m0-13C10.343 4.343 8.343 3.5 6 3.5S1.657 4.343 0 6v13c1.657-1.657 3.657-2.5 6-2.5s4.343.843 6 2.5m0-13c1.657-1.657 3.657-2.5 6-2.5s4.343.843 6 2.5v13c-1.657-1.657-3.657-2.5-6-2.5s-4.343.843-6 2.5" />
-        </svg>
+          Attendance
+        </a>
 
-        Resources
-      </a>
+        <!-- Projects -->
+        <a href="{% url 'dashboard:project_list' %}" 
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'project_list' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
 
-      <!-- Audit Logs -->
-      <a href="{% url 'dashboard:audit_list' %}" 
-        class="flex items-center gap-3 px-4 py-3 rounded-xl transition
-        {% if active_page == 'audit_list' %}
-          bg-indigo-500/10 text-indigo-400
-        {% else %}
-          hover:bg-slate-800 text-slate-300
-        {% endif %}">
+          <!-- Folder / Project Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.8"
+                  d="M3 7h4l3 3h11v11H3V7z" />
+          </svg>
 
-        <!-- Clipboard / Activity Icon -->
-        <svg xmlns="http://www.w3.org/2000/svg" 
-            class="w-5 h-5" 
-            fill="none" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor">
-          <path stroke-linecap="round" 
-                stroke-linejoin="round" 
-                stroke-width="1.8"
-                d="M9 5h6m-6 4h6m-7 4h8m2 7H6a2 2 0 01-2-2V5a2 2 0 012-2h3m6 0h3a2 2 0 012 2v14a2 2 0 01-2 2z" />
-        </svg>
+          Projects
+        </a>
 
-        Audit Logs
-      </a>
+        <!-- What We Do -->
+        <a href="{% url 'dashboard:what_we_do_list' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'what_we_do_list' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
 
+          <!-- Grid Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"
+              fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"
+              d="M4 6h7v7H4V6zm9 0h7v7h-7V6zM4 15h7v7H4v-7zm9 7v-7h7v7h-7z"/>
+          </svg>
+
+          What We Do
+        </a>
+
+        <!-- Events -->
+        <a href="{% url 'dashboard:event_list' %}" 
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'event_list' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
+
+          <!-- Calendar Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.8"
+                  d="M8 7V3m8 4V3m-9 8h10m-13 9h16a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
+          </svg>
+
+          Events
+        </a>
+
+        <!-- Resources -->
+        <a href="{% url 'dashboard:resource_list' %}" 
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'resource_list' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
+
+          <!-- Book / Document Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.8"
+                  d="M12 6v13m0-13C10.343 4.343 8.343 3.5 6 3.5S1.657 4.343 0 6v13c1.657-1.657 3.657-2.5 6-2.5s4.343.843 6 2.5m0-13c1.657-1.657 3.657-2.5 6-2.5s4.343.843 6 2.5v13c-1.657-1.657-3.657-2.5-6-2.5s-4.343.843-6 2.5" />
+          </svg>
+
+          Resources
+        </a>
+
+        <!-- Audit Logs -->
+        <a href="{% url 'dashboard:audit_list' %}" 
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'audit_list' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
+
+          <!-- Clipboard / Activity Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.8"
+                  d="M9 5h6m-6 4h6m-7 4h8m2 7H6a2 2 0 01-2-2V5a2 2 0 012-2h3m6 0h3a2 2 0 012 2v14a2 2 0 01-2 2z" />
+          </svg>
+
+          Audit Logs
+        </a>
+        
+      {% elif is_member %}
+
+        <!-- Dashboard -->
+        <a href="{% url 'dashboard:home' %}" class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'dashboard' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
+
+          <!-- Chart Bar Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M3 3v18h18M9 17V9m4 8V5m4 12v-6" />
+          </svg>
+
+          Dashboard
+        </a>
+
+        <!-- Sessions -->
+        <a href="{% url 'dashboard:session_list' %}" 
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'session_list' %}
+            bg-indigo-500/10 text-c-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
+
+          <!-- Clipboard Check Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.8"
+                  d="M9 5h6m-3 4l2 2-4 4m7-10H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V7a2 2 0 00-2-2z" />
+          </svg>
+
+          Sessions
+        </a>
+
+        <!-- My Attendance -->
+        <a href="{% url 'dashboard:my_attendance' %}"
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'my_attendance' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
+
+          <!-- Chart Bar Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg"
+              class="w-5 h-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor">
+            <path stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.8"
+                  d="M9 17v-6m4 6V7m4 10v-3M5 20h14"/>
+          </svg>
+
+          My Attendance
+        </a>
+
+        <!-- My Projects -->
+        <a href="{% url 'dashboard:my_project' %}" 
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'my_project' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
+
+          <!-- Folder / Project Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.8"
+                  d="M3 7h4l3 3h11v11H3V7z" />
+          </svg>
+
+          My Projects
+        </a>
+
+        <!-- Events -->
+        <a href="{% url 'dashboard:event_list' %}" 
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'event_list' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
+
+          <!-- Calendar Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.8"
+                  d="M8 7V3m8 4V3m-9 8h10m-13 9h16a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v11a2 2 0 002 2z" />
+          </svg>
+
+          Events
+        </a>
+
+        <!-- Resources -->
+        <a href="{% url 'dashboard:resource_list' %}" 
+          class="flex items-center gap-3 px-4 py-3 rounded-xl transition
+          {% if active_page == 'resource_list' %}
+            bg-indigo-500/10 text-indigo-400
+          {% else %}
+            hover:bg-slate-800 text-slate-300
+          {% endif %}">
+
+          <!-- Book / Document Icon -->
+          <svg xmlns="http://www.w3.org/2000/svg" 
+              class="w-5 h-5" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor">
+            <path stroke-linecap="round" 
+                  stroke-linejoin="round" 
+                  stroke-width="1.8"
+                  d="M12 6v13m0-13C10.343 4.343 8.343 3.5 6 3.5S1.657 4.343 0 6v13c1.657-1.657 3.657-2.5 6-2.5s4.343.843 6 2.5m0-13c1.657-1.657 3.657-2.5 6-2.5s4.343.843 6 2.5v13c-1.657-1.657-3.657-2.5-6-2.5s-4.343.843-6 2.5" />
+          </svg>
+
+          Resources
+        </a>
+
+      {% endif %}
 
       <!-- Back to Site -->
       <a href="/" class="flex items-center gap-3 px-4 py-3 rounded-xl hover:bg-slate-800 text-slate-300 transition">

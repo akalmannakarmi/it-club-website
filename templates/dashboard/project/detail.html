@@ -1,0 +1,228 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Project Details{% endblock %}
+{% block page_title %}Project Details{% endblock %}
+
+{% block subcontent %}
+
+<div class="max-w-6xl mx-auto space-y-6">
+
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-100">
+        {{ project.title }}
+      </h1>
+
+      {% if project.caption %}
+      <p class="text-slate-400 text-sm mt-1">
+        {{ project.caption }}
+      </p>
+      {% endif %}
+    </div>
+
+    {% if is_admin %}
+    <div class="flex gap-3">
+      <a href="{% url 'dashboard:project_edit' project.id %}"
+         class="px-4 py-2 rounded-xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
+        ✏️ Edit
+      </a>
+
+      <form method="POST"
+            action="{% url 'dashboard:project_delete' project.id %}">
+        {% csrf_token %}
+        <button type="submit"
+                onclick="return confirm('Delete this project?')"
+                class="px-4 py-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition">
+          🗑 Delete
+        </button>
+      </form>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- Image -->
+  {% if project.image %}
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+    <img src="{{ project.image.url }}"
+         alt="{{ project.title }}"
+         class="w-full h-80 object-cover">
+  </div>
+  {% endif %}
+
+  <!-- Description -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+    <h2 class="text-lg font-semibold text-slate-200 mb-2">
+      Description
+    </h2>
+
+    {% if project.description %}
+      <p class="text-slate-300 whitespace-pre-line">
+        {{ project.description }}
+      </p>
+    {% else %}
+      <p class="text-slate-500 text-sm">
+        No description provided.
+      </p>
+    {% endif %}
+  </div>
+
+  <!-- Tech Stack -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+    <h2 class="text-lg font-semibold text-slate-200 mb-3">
+      Technology Stack
+    </h2>
+
+    {% if tech_list %}
+      <div class="flex flex-wrap gap-2">
+        {% for tech in tech_list %}
+          <span class="px-3 py-1 text-xs rounded-full bg-indigo-500/10 text-indigo-400">
+            {{ tech }}
+          </span>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="text-slate-500 text-sm">
+        No technologies listed.
+      </p>
+    {% endif %}
+  </div>
+
+  <!-- Links -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <!-- Live -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <h3 class="text-sm text-slate-400 mb-2">Live Project</h3>
+
+      {% if project.link %}
+        <a href="{{ project.link }}"
+           target="_blank"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
+                  bg-emerald-500/10 text-emerald-400 hover:bg-emerald-500/20 transition">
+          🌐 Visit Live
+        </a>
+      {% else %}
+        <p class="text-slate-500 text-sm">No live link available.</p>
+      {% endif %}
+    </div>
+
+    <!-- Repo -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <h3 class="text-sm text-slate-400 mb-2">Repository</h3>
+
+      {% if project.repo_link %}
+        <a href="{{ project.repo_link }}"
+           target="_blank"
+           class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
+                  bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
+          💻 View Code
+        </a>
+      {% else %}
+        <p class="text-slate-500 text-sm">No repository link.</p>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- Team Section -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <!-- Supervisor -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <h3 class="text-sm text-slate-400 mb-3">Supervisor</h3>
+
+      {% if project.supervisor %}
+        <p class="text-slate-100 font-medium">
+          {{ project.supervisor.full_name }}
+        </p>
+        <p class="text-xs text-slate-400">
+          {{ project.supervisor.email }}
+        </p>
+      {% else %}
+        <p class="text-slate-500 text-sm">
+          No supervisor assigned.
+        </p>
+      {% endif %}
+    </div>
+
+    <!-- Members -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <h3 class="text-sm text-slate-400 mb-3">
+        Members ({{ project.members.count }})
+      </h3>
+
+      {% if project.members.all %}
+        <div class="space-y-2 max-h-48 overflow-y-auto pr-1">
+          {% for member in project.members.all %}
+          <div class="flex justify-between items-center bg-slate-800/40 px-3 py-2 rounded-lg">
+            <div>
+              <p class="text-slate-100 text-sm">
+                {{ member.full_name }}
+              </p>
+              <p class="text-xs text-slate-400">
+                {{ member.email }}
+              </p>
+            </div>
+
+            <span class="text-xs text-slate-500">
+              {{ member.faculty }} • {{ member.batch }}
+            </span>
+          </div>
+          {% endfor %}
+        </div>
+      {% else %}
+        <p class="text-slate-500 text-sm">
+          No members assigned.
+        </p>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- Meta -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Visibility</p>
+      {% if project.display %}
+        <p class="text-emerald-400 font-semibold mt-1">Visible</p>
+      {% else %}
+        <p class="text-red-400 font-semibold mt-1">Hidden</p>
+      {% endif %}
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Order</p>
+      <p class="text-slate-200 mt-1">{{ project.order }}</p>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Created</p>
+      <p class="text-slate-200 mt-1">
+        {{ project.created_at|date:"M d, Y" }}
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Back -->
+  <div>
+    {% if is_admin %}
+      <a href="{% url 'dashboard:project_list' %}"
+        class="text-slate-400 hover:text-slate-200 transition">
+        ← Back to Projects
+      </a>
+    {% elif is_member %}
+      <a href="{% url 'dashboard:my_project' %}"
+        class="text-slate-400 hover:text-slate-200 transition">
+        ← Back to Projects
+      </a>
+      {% endif %}
+  </div>
+
+</div>
+
+{% endblock %}

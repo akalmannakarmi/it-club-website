@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import login, authenticate, logout, views as auth_views
+from django.contrib.auth.models import Group
 from django.shortcuts import redirect
 from django.views.generic import TemplateView, ListView, FormView, View
 from django.contrib import messages
@@ -23,6 +24,8 @@ class RegisterView(FormView):
         user.is_active = False
         user.set_password(form.cleaned_data["password"])
         user.save()
+        member_group, _ = Group.objects.get_or_create(name="Member")
+        user.groups.add(member_group)
 
         try:
             send_html_email(

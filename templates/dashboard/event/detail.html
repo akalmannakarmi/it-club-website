@@ -1,0 +1,131 @@
+{% extends "dashboard/base.html" %}
+
+{% block title %}Event Details{% endblock %}
+{% block page_title %}Event Details{% endblock %}
+
+{% block subcontent %}
+
+<div class="max-w-5xl mx-auto space-y-6">
+
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-start md:justify-between gap-4">
+
+    <div>
+      <h1 class="text-2xl font-semibold text-slate-100">
+        {{ event.title }}
+      </h1>
+
+      {% if event.caption %}
+      <p class="text-slate-400 text-sm mt-1">
+        {{ event.caption }}
+      </p>
+      {% endif %}
+    </div>
+
+    {% if is_admin %}
+    <div class="flex gap-3">
+      <a href="{% url 'dashboard:event_edit' event.id %}"
+         class="px-4 py-2 rounded-xl bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
+        ✏️ Edit
+      </a>
+
+      <form method="POST"
+            action="{% url 'dashboard:event_delete' event.id %}">
+        {% csrf_token %}
+        <button type="submit"
+                onclick="return confirm('Delete this event?')"
+                class="px-4 py-2 rounded-xl bg-red-500/10 text-red-400 hover:bg-red-500/20 transition">
+          🗑 Delete
+        </button>
+      </form>
+    </div>
+    {% endif %}
+
+  </div>
+
+  <!-- Image -->
+  {% if event.image %}
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden">
+    <img src="{{ event.image.url }}"
+         alt="{{ event.title }}"
+         class="w-full h-80 object-cover">
+  </div>
+  {% endif %}
+
+  <!-- Meta Info -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Event Date</p>
+      <p class="text-slate-200 mt-1">
+        {{ event.date|date:"M d, Y · H:i" }}
+      </p>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Type</p>
+      {% if event.is_major %}
+        <p class="text-red-400 font-semibold mt-1">Major Event</p>
+      {% else %}
+        <p class="text-emerald-400 font-semibold mt-1">Regular Event</p>
+      {% endif %}
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Visibility</p>
+      {% if event.display %}
+        <p class="text-emerald-400 font-semibold mt-1">Visible</p>
+      {% else %}
+        <p class="text-red-400 font-semibold mt-1">Hidden</p>
+      {% endif %}
+    </div>
+
+  </div>
+
+  <!-- Description -->
+  <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+    <h2 class="text-lg font-semibold text-slate-200 mb-2">
+      Description
+    </h2>
+
+    {% if event.description %}
+      <p class="text-slate-300 whitespace-pre-line">
+        {{ event.description }}
+      </p>
+    {% else %}
+      <p class="text-slate-500 text-sm">
+        No description provided.
+      </p>
+    {% endif %}
+  </div>
+
+  <!-- Extra Info -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Order</p>
+      <p class="text-slate-200 mt-1">
+        {{ event.order }}
+      </p>
+    </div>
+
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+      <p class="text-sm text-slate-400">Created</p>
+      <p class="text-slate-200 mt-1">
+        {{ event.created_at|date:"M d, Y" }}
+      </p>
+    </div>
+
+  </div>
+
+  <!-- Back -->
+  <div>
+    <a href="{% url 'dashboard:event_list' %}"
+       class="text-slate-400 hover:text-slate-200 transition">
+      ← Back to Events
+    </a>
+  </div>
+
+</div>
+
+{% endblock %}

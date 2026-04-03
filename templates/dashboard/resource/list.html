@@ -14,11 +14,13 @@
     </p>
   </div>
 
+  {% if is_admin %}
   <a href="{% url 'dashboard:resource_create' %}"
      class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
             bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
     ➕ Add Resource
   </a>
+  {% endif %}
 </div>
 
 <!-- Search -->
@@ -111,7 +113,12 @@
         <!-- Actions -->
         <td class="px-4 py-3 text-right">
           <div class="flex items-center justify-end gap-3">
+            <a href="{% url 'dashboard:resource_detail' resource.id %}"
+               class="p-2 rounded-lg hover:bg-indigo-500/10 text-indigo-400 transition">
+              Details
+            </a>
 
+            {% if is_admin %}
             <a href="{% url 'dashboard:resource_edit' resource.id %}"
                class="p-2 rounded-lg hover:bg-indigo-500/10 text-indigo-400 transition">
               ✏️
@@ -126,6 +133,7 @@
                 🗑
               </button>
             </form>
+            {% endif %}
 
           </div>
         </td>

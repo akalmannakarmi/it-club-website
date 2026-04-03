@@ -12,11 +12,13 @@
     <p class="text-slate-400 text-sm">Manage club events</p>
   </div>
 
+  {% if is_admin %}
   <a href="{% url 'dashboard:event_create' %}"
      class="inline-flex items-center gap-2 px-4 py-2 rounded-xl
             bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition">
     ➕ Add Event
   </a>
+  {% endif %}
 </div>
 
 <!-- Search -->
@@ -98,7 +100,12 @@
 
         <td class="px-4 py-3 text-right">
           <div class="flex items-center justify-end gap-3">
+            <a href="{% url 'dashboard:event_detail' event.id %}"
+               class="p-2 rounded-lg hover:bg-indigo-500/10 text-indigo-400 transition">
+              Details
+            </a>
 
+            {% if is_admin %}
             <a href="{% url 'dashboard:event_edit' event.id %}"
                class="p-2 rounded-lg hover:bg-indigo-500/10 text-indigo-400 transition">
               ✏️
@@ -113,6 +120,7 @@
                 🗑
               </button>
             </form>
+            {% endif %}
 
           </div>
         </td>
