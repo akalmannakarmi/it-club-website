@@ -49,15 +49,35 @@
           {% endif %}
         </div>
 
-        <div>
+        <div class="relative">
           <label class="block text-slate-700 font-medium mb-1">Password</label>
-          <input type="password" name="password"
-                 class="w-full rounded-xl px-4 py-3 border focus:ring-2 focus:outline-none
-                 {% if form.password.errors %}
-                   border-red-500 focus:ring-red-500
-                 {% else %}
-                   border-gray-300 focus:ring-indigo-500
-                 {% endif %}">
+
+          <input type="password" name="password" id="login_password"
+            class="w-full rounded-xl px-4 py-3 pr-12 border focus:ring-2 focus:outline-none
+            {% if form.password.errors %}
+              border-red-500 focus:ring-red-500
+            {% else %}
+              border-gray-300 focus:ring-indigo-500
+            {% endif %}">
+
+          <button type="button"
+            onclick="togglePassword('login_password', 'login-icon-password')"
+            class="absolute right-3 top-10 text-gray-500 hover:text-indigo-600">
+
+            <!-- Eye Icon (default) -->
+            <svg id="login-icon-password" xmlns="http://www.w3.org/2000/svg"
+              fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+              class="w-5 h-5">
+
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M2.25 12C3.75 7.5 7.5 4.5 12 4.5s8.25 3 9.75 7.5
+                  -3.75 7.5-9.75 7.5S3.75 16.5 2.25 12z" />
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+
+          </button>
+
           {% if form.password.errors %}
             <p class="text-red-500 text-sm mt-1">{{ form.password.errors.0 }}</p>
           {% endif %}
@@ -85,4 +105,41 @@
 
   </div>
 </section>
+{% endblock %}
+
+
+{% block extra_scripts %}
+<script>
+  function togglePassword(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon = document.getElementById(iconId);
+
+    const eye = `
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M2.25 12C3.75 7.5 7.5 4.5 12 4.5s8.25 3 9.75 7.5
+           -3.75 7.5-9.75 7.5S3.75 16.5 2.25 12z" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    `;
+
+    const eyeSlash = `
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M3.98 8.223A10.477 10.477 0 002.25 12
+           c1.5 4.5 5.25 7.5 9.75 7.5
+           1.54 0 3.01-.3 4.35-.84M6.53 6.53
+           A10.45 10.45 0 0112 4.5c4.5 0 8.25 3
+           9.75 7.5a10.52 10.52 0 01-4.02 5.25M6.53 6.53L3 3m3.53 3.53L20.25 20.25" />
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+        d="M9.88 9.88A3 3 0 0014.12 14.12" />
+    `;
+
+    if (input.type === "password") {
+      input.type = "text";
+      icon.innerHTML = eyeSlash;
+    } else {
+      input.type = "password";
+      icon.innerHTML = eye;
+    }
+  }
+</script>
 {% endblock %}
