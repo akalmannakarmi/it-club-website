@@ -333,3 +333,62 @@ the in-memory cache is the only cache in play.)
 **Consequence:** With multiple web replicas each process caches its own copy;
 cache invalidation only clears the local process. Acceptable at this scale, but
 a distributed cache should be revisited if the deployment grows.
+
+---
+
+## 19. Production security hardening in settings
+
+**Decision:** `config/settings.py` now fails loudly outside DEBUG mode when
+`SECRET_KEY` is unset (`ImproperlyConfigured`), `DEBUG` defaults to `FALSE`,
+and a `if not DEBUG:` block applies HTTPS-only hardening:
+`SECURE_SSL_REDIRECT`, HSTS (1 year + subdomains), `SECURE_CONTENT_TYPE_NOSNIFF`,
+`SECURE_REFERRER_POLICY = "same-origin"`, secure session/CSRF cookies, and
+`SECURE_PROXY_SSL_HEADER` (TLS is terminated before gunicorn on cPanel).
+
+**Why:** A missing env var in production should not silently fall back to a
+public key and debug-on tracebacks. These settings are safe on Django 5.2 and
+only active when `DEBUG` is off.
+
+**Consequence:** Production deploys must export `SECRET_KEY` and set
+`DEBUG=FALSE` (or omit it). HSTS is sent once HTTPS is proven stable; revisit
+`SECURE_HSTS_PRELOAD` only when ready to commit to the preload list.
+
+---
+
+## 20. Timezone is `Asia/Kathmandu`
+
+**Decision:** `TIME_ZONE = "Asia/Kathmandu"` (was `UTC`), `USE_TZ` stays `True`.
+
+**Why:** The club is in Nepal; admin-entered `datetime-local` values are now
+interpreted and displayed in Kathmandu time instead of shifting by +5:45.
+
+**Consequence:** Values are still stored as absolute UTC timestamps in the DB,
+so existing rows are unaffected — only display/interpretation changed. No
+migration required.
+
+---
+
+## 21. Tailwind CDN is dev-only; CDN assets are SRI-pinned
+
+**Decision:** The `cdn.tailwindcss.com` JIT script in `templates/base.html` is
+**dev-only** — it compiles styles at runtime in the browser, which is slow and
+fragile for production. It is intentionally kept for now; switching to a
+compiled CSS pipeline (e.g. a build step producing a static stylesheet) is the
+intended future change and is **out of scope** for the current pass.
+
+**Why:** Building the Tailwind toolchain is a larger change; keeping the dev
+script is the documented interim state rather than a silent regression.
+
+**Consequence:** Before any production launch, replace the Tailwind JIT CDN
+script with a compiled stylesheet.
+
+**Decision (same entry):** Third-party assets loaded from CDNs are pinned to
+exact versions with SRI `integrity` + `crossorigin="anonymous"`:
+Swiper `10.3.1`, AOS `2.3.4`, Chart.js `4.4.1` (`dist/chart.umd.min.js`). The
+previous unpinned `https://cdn.jsdelivr.net/npm/chart.js` (floating latest)
+was a supply-chain risk.
+
+**Why:** SRI guarantees the served bytes match the expected hash; pinning stops
+floating-version drift. Vendoring these files into `static/vendor/` is a
+possible future step to drop the internet dependency entirely.
+
