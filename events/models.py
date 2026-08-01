@@ -11,3 +11,6 @@ class Event(BaseModel):
     description = models.TextField("Event Description", null=True, blank=True)
     order = models.IntegerField("Order", default=0)
     display = models.BooleanField("Display", default=True)
+
+    def __str__(self):
+        return self.title

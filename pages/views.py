@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.utils.timezone import datetime
+from django.utils import timezone
 from django.views import View
 from pages.models import AboutUs, WhatWeDo
 from events.models import Event
@@ -15,7 +15,7 @@ class IndexView(View):
         whatwedos = WhatWeDo.objects.filter(display=True).order_by("order")[:10]
         upcomingEvents = Event.objects.order_by("date").filter(
             display=True,
-            date__gte=datetime.now().date(),
+            date__gte=timezone.now(),
         )[:3]
         majorEvents = Event.objects.order_by("-date", "order").filter(
             display=True, is_major=True

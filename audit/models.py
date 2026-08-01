@@ -102,8 +102,14 @@ class AuditLog(models.Model):
     model_name = models.CharField(max_length=100)
     object_id = models.IntegerField()
     action = models.CharField(max_length=10, choices=ACTIONS)
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
     changes = models.JSONField(null=True, blank=True)
+
+    class Meta:
+        ordering = ["-timestamp"]
+        indexes = [
+            models.Index(fields=["model_name", "object_id"]),
+        ]
 
     def __str__(self):
         return f"{self.model_name} ({self.object_id}) {self.action} by {self.user}"

@@ -41,6 +41,7 @@ from .forms import (
     ResourceForm,
     SessionForm,
 )
+from .mixins import DashboardContextMixin, SearchableListMixin
 
 
 def _safe_next(request, fallback):
@@ -52,12 +53,12 @@ def _safe_next(request, fallback):
     return next_url or fallback
 
 
-class DashboardView(MemberRequiredMixin, TemplateView):
+class DashboardView(MemberRequiredMixin, DashboardContextMixin, TemplateView):
     template_name = "dashboard/dashboard.html"
+    active_page = "dashboard"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["active_page"] = "dashboard"
         context["total_members"] = User.objects.count()
         context["total_events"] = Event.objects.count()
         context["total_projects"] = Project.objects.count()
@@ -158,51 +159,38 @@ class ActivityView(AdminRequiredMixin, View):
         )
 
 
-class PageView(AdminRequiredMixin, UpdateView):
+class PageView(AdminRequiredMixin, DashboardContextMixin, UpdateView):
     model = PageSettings
     form_class = PageForm
     template_name = "dashboard/page_form.html"
     success_url = reverse_lazy("dashboard:home")
+    active_page = "page_settings"
+    success_message = "Page settings updated successfully"
 
     def get_object(self, queryset=None):
         obj, created = PageSettings.objects.get_or_create(pk=1)
         return obj
 
-    def form_valid(self, form):
-        messages.success(self.request, "Page settings updated successfully")
-        return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "page_settings"
-        return context
-
-
-class AboutUsView(AdminRequiredMixin, UpdateView):
+class AboutUsView(AdminRequiredMixin, DashboardContextMixin, UpdateView):
     model = AboutUs
     form_class = AboutUsForm
     template_name = "dashboard/about_form.html"
     success_url = reverse_lazy("dashboard:home")
+    active_page = "about_us"
+    success_message = "About Us updated successfully"
 
     def get_object(self, queryset=None):
         obj, created = AboutUs.objects.get_or_create(pk=1)
         return obj
 
-    def form_valid(self, form):
-        messages.success(self.request, "About Us updated successfully")
-        return super().form_valid(form)
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "about_us"
-        return context
-
-
-class AuditListView(AdminRequiredMixin, ListView):
+class AuditListView(AdminRequiredMixin, DashboardContextMixin, ListView):
     model = AuditLog
     template_name = "dashboard/audit/list.html"
     context_object_name = "audits"
     paginate_by = 10
+    active_page = "audit_list"
 
     def get_queryset(self):
         qs = AuditLog.objects.all().order_by("-timestamp")
@@ -219,17 +207,13 @@ class AuditListView(AdminRequiredMixin, ListView):
 
         return qs
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "audit_list"
-        return context
 
-
-class MemberListView(AdminRequiredMixin, ListView):
+class MemberListView(AdminRequiredMixin, DashboardContextMixin, ListView):
     model = User
     template_name = "dashboard/member/list.html"
     context_object_name = "members"
     paginate_by = 10
+    active_page = "members"
 
     def get_queryset(self):
         qs = User.objects.all().order_by("-updated_at")
@@ -257,15 +241,16 @@ class MemberListView(AdminRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         context["faculty_choices"] = User.FACULTY_CHOICES
         context["batch_choices"] = User.batch_choices()
-        context["active_page"] = "members"
         return context
 
 
-class MemberCreateView(AdminRequiredMixin, CreateView):
+class MemberCreateView(AdminRequiredMixin, DashboardContextMixin, CreateView):
     model = User
     form_class = MemberForm
     template_name = "dashboard/member/form.html"
     success_url = reverse_lazy("dashboard:member_list")
+    active_page = "members"
+    page_title = "Add Member"
 
     def form_valid(self, form):
         response = super().form_valid(form)
@@ -294,27 +279,22 @@ class MemberCreateView(AdminRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context["faculty_choices"] = User.FACULTY_CHOICES
         context["batch_choices"] = User.batch_choices()
-        context["page_title"] = "Add Member"
-        context["active_page"] = "members"
         return context
 
 
-class MemberUpdateView(AdminRequiredMixin, UpdateView):
+class MemberUpdateView(AdminRequiredMixin, DashboardContextMixin, UpdateView):
     model = User
     form_class = MemberForm
     template_name = "dashboard/member/form.html"
     success_url = reverse_lazy("dashboard:member_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Member updated successfully")
-        return super().form_valid(form)
+    active_page = "members"
+    page_title = "Edit Member"
+    success_message = "Member updated successfully"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["faculty_choices"] = User.FACULTY_CHOICES
         context["batch_choices"] = User.batch_choices()
-        context["page_title"] = "Edit Member"
-        context["active_page"] = "members"
         return context
 
 
@@ -369,58 +349,35 @@ class MemberDeactivateView(AdminRequiredMixin, View):
         return redirect(_safe_next(request, reverse_lazy("dashboard:member_list")))
 
 
-class WhatWeDoListView(AdminRequiredMixin, ListView):
+class WhatWeDoListView(
+    AdminRequiredMixin, SearchableListMixin, DashboardContextMixin, ListView
+):
     model = WhatWeDo
     template_name = "dashboard/whatwedo/list.html"
     context_object_name = "what_we_do_list"
     paginate_by = 10
-
-    def get_queryset(self):
-        qs = WhatWeDo.objects.all().order_by("-updated_at")
-        search = self.request.GET.get("search")
-        if search:
-            qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
-
-        return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "what_we_do_list"
-        return context
+    active_page = "what_we_do_list"
+    search_fields = ("title", "caption")
 
 
-class WhatWeDoCreateView(AdminRequiredMixin, CreateView):
+class WhatWeDoCreateView(AdminRequiredMixin, DashboardContextMixin, CreateView):
     model = WhatWeDo
     form_class = WhatWeDoForm
     template_name = "dashboard/whatwedo/form.html"
     success_url = reverse_lazy("dashboard:what_we_do_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Activity created successfully")
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = "Create Activity"
-        context["active_page"] = "what_we_do_list"
-        return context
+    active_page = "what_we_do_list"
+    page_title = "Create Activity"
+    success_message = "Activity created successfully"
 
 
-class WhatWeDoUpdateView(AdminRequiredMixin, UpdateView):
+class WhatWeDoUpdateView(AdminRequiredMixin, DashboardContextMixin, UpdateView):
     model = WhatWeDo
     form_class = WhatWeDoForm
     template_name = "dashboard/whatwedo/form.html"
     success_url = reverse_lazy("dashboard:what_we_do_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Activity updated successfully")
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = "Edit What We Do"
-        context["active_page"] = "what_we_do_list"
-        return context
+    active_page = "what_we_do_list"
+    page_title = "Edit What We Do"
+    success_message = "Activity updated successfully"
 
 
 class WhatWeDoDeleteView(AdminRequiredMixin, DeleteView):
@@ -432,69 +389,42 @@ class WhatWeDoDeleteView(AdminRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class EventListView(MemberRequiredMixin, ListView):
+class EventListView(
+    MemberRequiredMixin, SearchableListMixin, DashboardContextMixin, ListView
+):
     model = Event
     template_name = "dashboard/event/list.html"
     context_object_name = "events"
     paginate_by = 10
-
-    def get_queryset(self):
-        qs = Event.objects.all().order_by("-updated_at")
-        search = self.request.GET.get("search")
-        if search:
-            qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
-
-        return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "event_list"
-        return context
+    active_page = "event_list"
+    search_fields = ("title", "caption")
 
 
-class EventDetailView(MemberRequiredMixin, DetailView):
+class EventDetailView(MemberRequiredMixin, DashboardContextMixin, DetailView):
     model = Event
     template_name = "dashboard/event/detail.html"
     context_object_name = "event"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "event_list"
-        return context
+    active_page = "event_list"
 
 
-class EventCreateView(AdminRequiredMixin, CreateView):
+class EventCreateView(AdminRequiredMixin, DashboardContextMixin, CreateView):
     model = Event
     form_class = EventForm
     template_name = "dashboard/event/form.html"
     success_url = reverse_lazy("dashboard:event_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Event created successfully")
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = "Create Event"
-        context["active_page"] = "event_list"
-        return context
+    active_page = "event_list"
+    page_title = "Create Event"
+    success_message = "Event created successfully"
 
 
-class EventUpdateView(AdminRequiredMixin, UpdateView):
+class EventUpdateView(AdminRequiredMixin, DashboardContextMixin, UpdateView):
     model = Event
     form_class = EventForm
     template_name = "dashboard/event/form.html"
     success_url = reverse_lazy("dashboard:event_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Event updated successfully")
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = "Edit Event"
-        context["active_page"] = "event_list"
-        return context
+    active_page = "event_list"
+    page_title = "Edit Event"
+    success_message = "Event updated successfully"
 
 
 class EventDeleteView(AdminRequiredMixin, DeleteView):
@@ -506,31 +436,23 @@ class EventDeleteView(AdminRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class ProjectListView(AdminRequiredMixin, ListView):
+class ProjectListView(
+    AdminRequiredMixin, SearchableListMixin, DashboardContextMixin, ListView
+):
     model = Project
     template_name = "dashboard/project/list.html"
     context_object_name = "projects"
     paginate_by = 10
-
-    def get_queryset(self):
-        qs = Project.objects.all().order_by("-updated_at")
-        search = self.request.GET.get("search")
-        if search:
-            qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
-
-        return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "project_list"
-        return context
+    active_page = "project_list"
+    search_fields = ("title", "caption")
 
 
-class MyProjectListView(MemberRequiredMixin, ListView):
+class MyProjectListView(MemberRequiredMixin, DashboardContextMixin, ListView):
     model = Project
     template_name = "dashboard/project/list.html"
     context_object_name = "projects"
     paginate_by = 10
+    active_page = "project_list"
 
     def get_queryset(self):
         qs = Project.objects.filter(
@@ -542,20 +464,15 @@ class MyProjectListView(MemberRequiredMixin, ListView):
 
         return qs.distinct()
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "project_list"
-        return context
 
-
-class ProjectDetailView(AdminOrOwnerRequiredMixin, DetailView):
+class ProjectDetailView(AdminOrOwnerRequiredMixin, DashboardContextMixin, DetailView):
     model = Project
     template_name = "dashboard/project/detail.html"
     context_object_name = "project"
+    active_page = "project_list"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["active_page"] = "project_list"
 
         tech_stack = self.object.technology_stack
         if tech_stack:
@@ -566,38 +483,32 @@ class ProjectDetailView(AdminOrOwnerRequiredMixin, DetailView):
         return context
 
 
-class ProjectCreateView(AdminRequiredMixin, CreateView):
+class ProjectCreateView(AdminRequiredMixin, DashboardContextMixin, CreateView):
     model = Project
     form_class = ProjectForm
     template_name = "dashboard/project/form.html"
     success_url = reverse_lazy("dashboard:project_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Project created successfully")
-        return super().form_valid(form)
+    active_page = "project_list"
+    page_title = "Create Project"
+    success_message = "Project created successfully"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = "Create Project"
-        context["active_page"] = "project_list"
         context["all_users"] = User.objects.all()
         return context
 
 
-class ProjectUpdateView(AdminRequiredMixin, UpdateView):
+class ProjectUpdateView(AdminRequiredMixin, DashboardContextMixin, UpdateView):
     model = Project
     form_class = ProjectForm
     template_name = "dashboard/project/form.html"
     success_url = reverse_lazy("dashboard:project_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Project updated successfully")
-        return super().form_valid(form)
+    active_page = "project_list"
+    page_title = "Edit Project"
+    success_message = "Project updated successfully"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = "Edit Project"
-        context["active_page"] = "project_list"
         context["all_users"] = User.objects.all()
         return context
 
@@ -611,69 +522,42 @@ class ProjectDeleteView(AdminRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class ResourceListView(MemberRequiredMixin, ListView):
+class ResourceListView(
+    MemberRequiredMixin, SearchableListMixin, DashboardContextMixin, ListView
+):
     model = Resource
     template_name = "dashboard/resource/list.html"
     context_object_name = "resources"
     paginate_by = 10
-
-    def get_queryset(self):
-        qs = Resource.objects.all().order_by("-updated_at")
-        search = self.request.GET.get("search")
-        if search:
-            qs = qs.filter(Q(title__icontains=search) | Q(caption__icontains=search))
-
-        return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "resource_list"
-        return context
+    active_page = "resource_list"
+    search_fields = ("title", "caption")
 
 
-class ResourceDetailView(MemberRequiredMixin, DetailView):
+class ResourceDetailView(MemberRequiredMixin, DashboardContextMixin, DetailView):
     model = Resource
     template_name = "dashboard/resource/detail.html"
     context_object_name = "resource"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "resource_list"
-        return context
+    active_page = "resource_list"
 
 
-class ResourceCreateView(AdminRequiredMixin, CreateView):
+class ResourceCreateView(AdminRequiredMixin, DashboardContextMixin, CreateView):
     model = Resource
     form_class = ResourceForm
     template_name = "dashboard/resource/form.html"
     success_url = reverse_lazy("dashboard:resource_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Resource created successfully")
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = "Create Resource"
-        context["active_page"] = "resource_list"
-        return context
+    active_page = "resource_list"
+    page_title = "Create Resource"
+    success_message = "Resource created successfully"
 
 
-class ResourceUpdateView(AdminRequiredMixin, UpdateView):
+class ResourceUpdateView(AdminRequiredMixin, DashboardContextMixin, UpdateView):
     model = Resource
     form_class = ResourceForm
     template_name = "dashboard/resource/form.html"
     success_url = reverse_lazy("dashboard:resource_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Resource updated successfully")
-        return super().form_valid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["page_title"] = "Edit Resource"
-        context["active_page"] = "resource_list"
-        return context
+    active_page = "resource_list"
+    page_title = "Edit Resource"
+    success_message = "Resource updated successfully"
 
 
 class ResourceDeleteView(AdminRequiredMixin, DeleteView):
@@ -685,69 +569,50 @@ class ResourceDeleteView(AdminRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class SessionListView(MemberRequiredMixin, ListView):
+class SessionListView(
+    MemberRequiredMixin, SearchableListMixin, DashboardContextMixin, ListView
+):
     model = Session
     template_name = "dashboard/session/list.html"
     context_object_name = "sessions"
     paginate_by = 10
-
-    def get_queryset(self):
-        qs = Session.objects.all().order_by("-updated_at")
-        search = self.request.GET.get("search")
-        if search:
-            qs = qs.filter(Q(title__icontains=search))
-
-        return qs
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "session_list"
-        return context
+    active_page = "session_list"
+    search_fields = ("title",)
 
 
-class SessionDetailView(MemberRequiredMixin, DetailView):
+class SessionDetailView(MemberRequiredMixin, DashboardContextMixin, DetailView):
     model = Session
     template_name = "dashboard/session/detail.html"
     context_object_name = "session"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context["active_page"] = "session_list"
-        return context
+    active_page = "session_list"
 
 
-class SessionCreateView(AdminRequiredMixin, CreateView):
+class SessionCreateView(AdminRequiredMixin, DashboardContextMixin, CreateView):
     model = Session
     form_class = SessionForm
     template_name = "dashboard/session/form.html"
     success_url = reverse_lazy("dashboard:session_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Session created successfully")
-        return super().form_valid(form)
+    active_page = "session_list"
+    page_title = "Create Session"
+    success_message = "Session created successfully"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = "Create Session"
-        context["active_page"] = "session_list"
         context["members"] = User.objects.filter(is_active=True).order_by("first_name")
         return context
 
 
-class SessionUpdateView(AdminRequiredMixin, UpdateView):
+class SessionUpdateView(AdminRequiredMixin, DashboardContextMixin, UpdateView):
     model = Session
     form_class = SessionForm
     template_name = "dashboard/session/form.html"
     success_url = reverse_lazy("dashboard:session_list")
-
-    def form_valid(self, form):
-        messages.success(self.request, "Session updated successfully")
-        return super().form_valid(form)
+    active_page = "session_list"
+    page_title = "Edit Session"
+    success_message = "Session updated successfully"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["page_title"] = "Edit Session"
-        context["active_page"] = "session_list"
         context["members"] = User.objects.filter(is_active=True).order_by("first_name")
         return context
 
@@ -761,11 +626,12 @@ class SessionDeleteView(AdminRequiredMixin, DeleteView):
         return super().delete(request, *args, **kwargs)
 
 
-class AttendanceListView(AdminRequiredMixin, ListView):
+class AttendanceListView(AdminRequiredMixin, DashboardContextMixin, ListView):
     model = User
     template_name = "dashboard/attendance/list.html"
     context_object_name = "members"
     paginate_by = 10
+    active_page = "attendance_list"
 
     def get_queryset(self):
         qs = (
@@ -788,7 +654,6 @@ class AttendanceListView(AdminRequiredMixin, ListView):
         context = super().get_context_data(**kwargs)
         total_sessions = Session.objects.count()
         context["total_sessions"] = total_sessions
-        context["active_page"] = "attendance_list"
 
         for member in context["members"]:
             if total_sessions > 0:
@@ -801,11 +666,12 @@ class AttendanceListView(AdminRequiredMixin, ListView):
         return context
 
 
-class AttendanceDetailView(AdminRequiredMixin, ListView):
+class AttendanceDetailView(AdminRequiredMixin, DashboardContextMixin, ListView):
     model = Session
     template_name = "dashboard/attendance/detail.html"
     context_object_name = "sessions"
     paginate_by = 10
+    active_page = "attendance_list"
 
     def get_queryset(self):
         self.member = get_object_or_404(User, id=self.kwargs["pk"])
@@ -821,31 +687,12 @@ class AttendanceDetailView(AdminRequiredMixin, ListView):
             session.attended = session.id in attended_ids
 
         context["member"] = self.member
-        context["active_page"] = "attendance_list"
 
         return context
 
 
-class MyAttendanceDetailView(MemberRequiredMixin, ListView):
-    model = Session
-    template_name = "dashboard/attendance/detail.html"
-    context_object_name = "sessions"
-    paginate_by = 10
-
+class MyAttendanceDetailView(MemberRequiredMixin, AttendanceDetailView):
     def get_queryset(self):
         self.member = self.request.user
 
         return Session.objects.all().order_by("-date")
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        attended_ids = set(self.member.attended_sessions.values_list("id", flat=True))
-
-        for session in context["sessions"]:
-            session.attended = session.id in attended_ids
-
-        context["member"] = self.member
-        context["active_page"] = "attendance_list"
-
-        return context
