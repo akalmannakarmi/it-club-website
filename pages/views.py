@@ -39,22 +39,17 @@ class IndexView(View):
         )
 
 
-class AnnouncementsView(View):
-    template = "pages/Announcements.html"
-
-    def get(self, request):
-        return render(request, self.template)
-
-
 class EventsView(View):
     template = "pages/Events.html"
 
     def get(self, request):
-        return render(request, self.template)
+        events = Event.objects.order_by("date").filter(display=True)
+        return render(request, self.template, {"events": events})
 
 
 class ResourceView(View):
     template = "pages/Resources.html"
 
     def get(self, request):
-        return render(request, self.template)
+        resources = Resource.objects.order_by("order").filter(display=True)
+        return render(request, self.template, {"resources": resources})

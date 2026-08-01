@@ -14,6 +14,7 @@ from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import JsonResponse
 from django.contrib.auth.models import Group
+from django.utils.http import url_has_allowed_host_and_scheme
 
 
 from user.utils.email import send_html_email
@@ -41,9 +42,17 @@ from .forms import (
 )
 
 
+def _safe_next(request, fallback):
+    next_url = request.POST.get("next")
+    if next_url and not url_has_allowed_host_and_scheme(
+        next_url, allowed_hosts={request.get_host()}
+    ):
+        next_url = None
+    return next_url or fallback
+
+
 class DashboardView(MemberRequiredMixin, TemplateView):
     template_name = "dashboard/dashboard.html"
-    login_url = "/admin/login/"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -261,7 +270,22 @@ class MemberCreateView(AdminRequiredMixin, CreateView):
 
         member_group, _ = Group.objects.get_or_create(name="Member")
         self.object.groups.add(member_group)
-        messages.success(self.request, "Member created successfully")
+
+        try:
+            send_html_email(
+                subject="Your account has been created",
+                template="user/emails/member_invited.html",
+                to_email=self.object.email,
+                context={"user": self.object},
+                request=self.request,
+            )
+        except Exception as e:
+            print(f"Failed to send invite email for {self.object}: {e}")
+
+        messages.success(
+            self.request,
+            "Member created. An invite email with password set-up instructions was sent.",
+        )
         return response
 
     def get_context_data(self, **kwargs):
@@ -319,8 +343,7 @@ class MemberActivateView(AdminRequiredMixin, View):
             print(f"Failed to send account activation email: {e}")
 
         messages.success(request, "Member activated successfully")
-        next_url = request.POST.get("next") or reverse_lazy("dashboard:member_list")
-        return redirect(next_url)
+        return redirect(_safe_next(request, reverse_lazy("dashboard:member_list")))
 
 
 class MemberDeactivateView(AdminRequiredMixin, View):
@@ -341,8 +364,7 @@ class MemberDeactivateView(AdminRequiredMixin, View):
             print(f"Failed to send account deactivation email: {e}")
 
         messages.success(request, "Member deactivated successfully")
-        next_url = request.POST.get("next") or reverse_lazy("dashboard:member_list")
-        return redirect(next_url)
+        return redirect(_safe_next(request, reverse_lazy("dashboard:member_list")))
 
 
 class WhatWeDoListView(AdminRequiredMixin, ListView):

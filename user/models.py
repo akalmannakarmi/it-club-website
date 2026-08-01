@@ -63,7 +63,8 @@ class User(AbstractUser, BaseModel):
 
     @property
     def full_name(self):
-        return self.first_name + " " + self.last_name
+        name = f"{self.first_name} {self.last_name}".strip()
+        return name or self.email
 
     @property
     def is_admin_group(self):

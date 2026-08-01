@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Resources{% endblock %}
+
+{% block content %}
+
+{% include "pages/default/navbar.html" %}
+
+<section class="pt-28 pb-20 min-h-screen bg-slate-50">
+  <div class="max-w-7xl mx-auto px-6">
+    <h2 class="text-3xl font-bold mb-12">Learning Resources</h2>
+
+    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {% for resource in resources %}
+      <article class="bg-white p-6 rounded-2xl shadow">
+        {% if resource.image %}
+        <img src="{{ resource.image.url }}" class="h-20 w-20 mb-4">
+        {% endif %}
+        <h3 class="font-semibold mb-2">{{ resource.title }}</h3>
+        <p class="text-slate-600 text-sm mb-4">{{ resource.caption }}</p>
+        {% if resource.url %}
+        <a href="{{ resource.url }}" target="_blank" rel="noopener"
+           class="inline-block text-indigo-600 font-semibold hover:underline">Open</a>
+        {% endif %}
+        {% if resource.file %}
+        <a href="{{ resource.file.url }}"
+           class="inline-block text-indigo-600 font-semibold hover:underline ml-4">Download</a>
+        {% endif %}
+      </article>
+      {% empty %}
+      <p class="text-slate-500 col-span-full">No resources yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% include "pages/default/footer.html" %}
+
+{% endblock %}

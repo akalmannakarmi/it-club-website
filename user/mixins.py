@@ -9,6 +9,9 @@ class GroupsRequiredMixin(LoginRequiredMixin):
         if not self.group_names:
             raise ValueError("group_names must be set")
 
+        if not request.user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
+
         if not request.user.groups.filter(name__in=self.group_names).exists():
             raise PermissionDenied
 
@@ -28,6 +31,9 @@ class MemberRequiredMixin(GroupsRequiredMixin):
 class AdminOrOwnerRequiredMixin(LoginRequiredMixin):
     def dispatch(self, request, *args, **kwargs):
         user = request.user
+
+        if not user.is_authenticated:
+            return super().dispatch(request, *args, **kwargs)
 
         if user.groups.filter(name="Admin").exists():
             return super().dispatch(request, *args, **kwargs)
