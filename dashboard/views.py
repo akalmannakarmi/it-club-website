@@ -10,6 +10,7 @@ from django.views.generic import (
 from django.shortcuts import redirect, get_object_or_404
 from django.utils.timezone import timedelta, datetime
 from django.db.models import Q, Count
+from django.db.models.functions import TruncDate
 from django.urls import reverse_lazy
 from django.contrib import messages
 from django.http import JsonResponse
@@ -106,52 +107,53 @@ class DashboardView(MemberRequiredMixin, TemplateView):
 
 class ActivityView(AdminRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        days = int(request.GET.get("days", 30))
+        try:
+            days = int(request.GET.get("days", 30))
+        except ValueError:
+            days = 30
+        days = min(max(days, 1), 366)
         end_date = datetime.now().date()
         start_date = end_date - timedelta(days=days)
 
-        # Prepare date labels
         date_labels = [
             (start_date + timedelta(days=i)).strftime("%Y-%m-%d")
             for i in range(days + 1)
         ]
 
-        # Count sessions per day
-        session_counts = []
-        attendee_counts = []
-        for d in date_labels:
-            day = datetime.strptime(d, "%Y-%m-%d").date()
-            sessions = Session.objects.filter(date=day)
-            session_counts.append(sessions.count())
-            attendee_counts.append(sum(s.attendees.count() for s in sessions))
+        def counts_by_day(queryset, field):
+            rows = (
+                queryset.filter(**{f"{field}__gte": start_date})
+                .annotate(day=TruncDate(field))
+                .values("day")
+                .annotate(count=Count("id"))
+            )
+            return {row["day"].isoformat(): row["count"] for row in rows}
 
-        # Count events
-        event_counts = [Event.objects.filter(date__date=d).count() for d in date_labels]
+        session_map = counts_by_day(Session.objects.all(), "date")
+        event_map = counts_by_day(Event.objects.all(), "date")
+        project_map = counts_by_day(Project.objects.all(), "created_at")
+        resource_map = counts_by_day(Resource.objects.all(), "created_at")
+        user_map = counts_by_day(User.objects.all(), "created_at")
 
-        # Count projects
-        project_counts = [
-            Project.objects.filter(created_at__date=d).count() for d in date_labels
-        ]
-
-        # Count resources
-        resource_counts = [
-            Resource.objects.filter(created_at__date=d).count() for d in date_labels
-        ]
-
-        # Count new users
-        user_counts = [
-            User.objects.filter(created_at__date=d).count() for d in date_labels
-        ]
+        attendee_map = {
+            row["day"].isoformat(): row["count"]
+            for row in Session.attendees.through.objects.filter(
+                session__date__gte=start_date
+            )
+            .annotate(day=TruncDate("session__date"))
+            .values("day")
+            .annotate(count=Count("user_id", distinct=True))
+        }
 
         return JsonResponse(
             {
                 "labels": date_labels,
-                "sessions": session_counts,
-                "attendees": attendee_counts,
-                "events": event_counts,
-                "projects": project_counts,
-                "resources": resource_counts,
-                "users": user_counts,
+                "sessions": [session_map.get(d, 0) for d in date_labels],
+                "attendees": [attendee_map.get(d, 0) for d in date_labels],
+                "events": [event_map.get(d, 0) for d in date_labels],
+                "projects": [project_map.get(d, 0) for d in date_labels],
+                "resources": [resource_map.get(d, 0) for d in date_labels],
+                "users": [user_map.get(d, 0) for d in date_labels],
             }
         )
 

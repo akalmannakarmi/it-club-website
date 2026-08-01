@@ -4,35 +4,35 @@
 
 {% include "pages/default/navbar.html" %}
 
-{% if visibility.show_banner %}
+{% if page_settings.show_banner %}
   {% include "pages/default/banner.html" %}
 {% endif %}
 
-{% if visibility.show_about %}
+{% if page_settings.show_about %}
   {% include "pages/default/about.html" %}
 {% endif %}
 
-{% if visibility.show_whatwedo %}
+{% if page_settings.show_whatwedo %}
   {% include "pages/default/whatwedo.html" %}
 {% endif %}
 
-{% if visibility.show_upcoming %}
+{% if page_settings.show_upcoming %}
   {% include "pages/default/upcoming.html" %}
 {% endif %}
 
-{% if visibility.show_projects %}
+{% if page_settings.show_projects %}
   {% include "pages/default/projects.html" %}
 {% endif %}
 
-{% if visibility.show_resources %}
+{% if page_settings.show_resources %}
   {% include "pages/default/resources.html" %}
 {% endif %}
 
-{% if visibility.show_events %}
+{% if page_settings.show_events %}
   {% include "pages/default/events.html" %}
 {% endif %}
 
-{% if visibility.show_footer %}
+{% if page_settings.show_footer %}
   {% include "pages/default/footer.html" %}
 {% endif %}
 

@@ -121,6 +121,16 @@ LOGIN_URL = "user:login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "user:login"
 
+# LocMemCache is per-process: each gunicorn worker keeps its own copy (used for
+# the 1h `page_settings` cache). No shared backend exists on the cPanel host.
+CACHES = {
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "it-club-website",
+    }
+}
+
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 

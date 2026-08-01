@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.utils.timezone import datetime
 from django.views import View
-from pages.models import PageSettings, AboutUs, WhatWeDo
+from pages.models import AboutUs, WhatWeDo
 from events.models import Event
 from projects.models import Project
 from resources.models import Resource
@@ -11,7 +11,6 @@ class IndexView(View):
     template = "pages/default/index.html"
 
     def get(self, request):
-        visibility = PageSettings.objects.first()
         aboutus = AboutUs.objects.first()
         whatwedos = WhatWeDo.objects.filter(display=True).order_by("order")[:10]
         upcomingEvents = Event.objects.order_by("date").filter(
@@ -28,7 +27,6 @@ class IndexView(View):
             request,
             self.template,
             {
-                "visibility": visibility,
                 "aboutus": aboutus,
                 "whatwedos": whatwedos,
                 "upcomingEvents": upcomingEvents,

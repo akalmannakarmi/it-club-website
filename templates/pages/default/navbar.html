@@ -12,19 +12,19 @@
 
       <!-- Navigation links -->
       <div class="hidden md:flex items-center gap-8 font-medium">
-        {% if visibility.show_banner %}
+        {% if page_settings.show_banner %}
           <a href="#home" class="py-2 hover:text-indigo-600 transition">Home</a>
         {% endif %}
-        {% if visibility.show_about %}
+        {% if page_settings.show_about %}
           <a href="#about" class="py-2 hover:text-indigo-600 transition">About</a>
         {% endif %}
-        {% if visibility.show_projects %}
+        {% if page_settings.show_projects %}
           <a href="#projects" class="py-2 hover:text-indigo-600 transition">Projects</a>
         {% endif %}
-        {% if visibility.show_resources %}
+        {% if page_settings.show_resources %}
           <a href="#resources" class="py-2 hover:text-indigo-600 transition">Resources</a>
         {% endif %}
-        {% if visibility.show_events %}
+        {% if page_settings.show_events %}
           <a href="#events" class="py-2 hover:text-indigo-600 transition">Events</a>
         {% endif %}
 
@@ -66,19 +66,19 @@
   <div id="mobile-menu" class="hidden md:hidden bg-white/95 shadow-lg">
     <div class="flex flex-col px-6 py-4 gap-4">
 
-      {% if visibility.show_banner %}
+      {% if page_settings.show_banner %}
         <a href="#home" class="hover:text-indigo-600 transition">Home</a>
       {% endif %}
-      {% if visibility.show_about %}
+      {% if page_settings.show_about %}
         <a href="#about" class="hover:text-indigo-600 transition">About</a>
       {% endif %}
-      {% if visibility.show_projects %}
+      {% if page_settings.show_projects %}
         <a href="#projects" class="hover:text-indigo-600 transition">Projects</a>
       {% endif %}
-      {% if visibility.show_resources %}
+      {% if page_settings.show_resources %}
         <a href="#resources" class="hover:text-indigo-600 transition">Resources</a>
       {% endif %}
-      {% if visibility.show_events %}
+      {% if page_settings.show_events %}
         <a href="#events" class="hover:text-indigo-600 transition">Events</a>
       {% endif %}
 
