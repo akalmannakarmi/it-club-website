@@ -33,6 +33,11 @@ htmlcov/
 .coverage
 .pytest_cache/
 
+# Tooling caches
+.ruff_cache/
+.mypy_cache/
+.pyright/
+
 # Migrations (optional – comment out if you want them tracked)
 # **DO NOT ignore migrations if collaborating**
 # */migrations/
@@ -41,3 +46,9 @@ htmlcov/
 
 # Docker
 .env
+.env.*
+
+# AI stuff
+.codegraph
+AGENTS.md
+opencode.jsonc

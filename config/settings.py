@@ -41,7 +41,6 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "django_celery_beat",
     # Custom apps
     "audit",
     "user",
@@ -167,12 +166,6 @@ STATICFILES_DIRS = [
     STATIC_DIR,
 ]
 
-
-CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/0")
-CELERY_ACCEPT_CONTENT = ["json"]
-CELERY_TASK_SERIALIZER = "json"
-CELERY_TIMEZONE = "UTC"
-CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 # EMail confs
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

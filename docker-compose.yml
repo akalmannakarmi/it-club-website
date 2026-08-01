@@ -11,34 +11,6 @@ services:
     depends_on:
       db:
         condition: service_healthy
-      redis:
-        condition: service_started
-
-  celery:
-    build: .
-    command: celery -A config worker -l info
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
-
-  celery-beat:
-    build: .
-    command: celery -A config beat -l info
-    env_file:
-      - .env
-    volumes:
-      - .:/app
-    depends_on:
-      db:
-        condition: service_healthy
-      redis:
-        condition: service_started
 
   db:
     image: mysql:8.0
@@ -54,11 +26,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
-
-  redis:
-    image: redis:7-alpine
-    ports:
-      - "6379:6379"
 
 volumes:
   mysql_data:

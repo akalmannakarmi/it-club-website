@@ -49,7 +49,6 @@ You can either use Docker (recommended) or run it directly using Django.
 ### Prerequisites
 - Python 3.14
 - pip
-- Redis (for Celery)
 
 Virtual environments (venv, virtualenv, Conda/Miniforge) are optional but recommended.
 
@@ -80,15 +79,6 @@ Virtual environments (venv, virtualenv, Conda/Miniforge) are optional but recomm
 5. Start the development server:
    ```bash
    python manage.py runserver
-   ```
-
-6. (Optional) Start Celery worker in another terminal:
-   ```bash
-   celery -A config worker -l info
-
-7. (Optional) Start Celery beat in another terminal:
-   ```bash
-   celery -A config beat -l info
    ```
 
 ---
