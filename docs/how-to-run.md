@@ -32,10 +32,14 @@ You can either use Docker (recommended) or run it directly using Django.
    ```
 
 5. The `entrypoint.sh` script will automatically:
+   - Collect static files (only when `DEBUG` is not `true`)
    - Run database migrations
-   - Collect static files
    - Seed initial data (if configured)
-   - Start the application using Gunicorn
+   - Start the application using Gunicorn (or `runserver` when `DEBUG=TRUE`)
+
+   The image runs as UID `1000`. In dev, `docker-compose.override.yml`
+   additionally bind-mounts the repo over `/app` for hot-reload; on Linux make
+   sure the host UID owns the repo so `media/` and `db.sqlite3` stay writable.
 
 6. Open the application:
    ```

@@ -1,0 +1,8 @@
+line-length = 88
+exclude = [
+    "ENV",
+    ".codegraph",
+    ".ruff_cache",
+    "staticfiles",
+    "*/migrations/*.py",
+]

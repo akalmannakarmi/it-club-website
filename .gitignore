@@ -49,6 +49,8 @@ htmlcov/
 .env.*
 
 # AI stuff
+.opencode
 .codegraph
+plan
 AGENTS.md
 opencode.jsonc
