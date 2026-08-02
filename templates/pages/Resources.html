@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load static %}
 
 {% block title %}Resources{% endblock %}
 
@@ -6,29 +7,56 @@
 
 {% include "pages/default/navbar.html" %}
 
-<section class="pt-28 pb-20 min-h-screen bg-slate-50">
-  <div class="max-w-7xl mx-auto px-6">
-    <h2 class="text-3xl font-bold mb-12">Learning Resources</h2>
+<section class="min-h-screen bg-brand-50 pt-28 pb-24">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="max-w-2xl" data-aos="fade-up">
+      <span class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-600">
+        <span class="h-px w-8 bg-accent-500"></span>
+        Learn
+      </span>
+      <h1 class="mt-4 font-heading text-4xl font-bold tracking-tight text-ink">Learning Resources</h1>
+      <p class="mt-4 text-slate-600">Curated notes, guides and videos to level up your skills.</p>
+    </div>
 
-    <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
       {% for resource in resources %}
-      <article class="bg-white p-6 rounded-2xl shadow">
-        {% if resource.image %}
-        <img src="{{ resource.image.url }}" class="h-20 w-20 mb-4">
+      <article class="flex flex-col rounded-3xl border border-line bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-brand-600/10">
+        <div class="flex items-center gap-4">
+          <img
+            src="{% if resource.image %}{{ resource.image.url }}{% else %}{% static 'image/resource-default.png' %}{% endif %}"
+            onerror="this.onerror=null;this.src='{% static 'image/resource-default.png' %}'"
+            alt="{{ resource.title }}"
+            class="h-14 w-14 shrink-0 rounded-2xl border border-line object-cover"
+          >
+          <a href="{% url 'resource_detail' resource.pk %}">
+            <h2 class="font-heading text-lg font-semibold tracking-tight text-ink group-hover:text-brand-700 transition-colors duration-150">{{ resource.title }}</h2>
+          </a>
+        </div>
+        {% if resource.caption %}
+          <p class="mt-4 text-sm leading-relaxed text-slate-600">{{ resource.caption }}</p>
         {% endif %}
-        <h3 class="font-semibold mb-2">{{ resource.title }}</h3>
-        <p class="text-slate-600 text-sm mb-4">{{ resource.caption }}</p>
-        {% if resource.url %}
-        <a href="{{ resource.url }}" target="_blank" rel="noopener"
-           class="inline-block text-indigo-600 font-semibold hover:underline">Open</a>
+        {% if resource.description %}
+          <p class="mt-2 text-sm leading-relaxed text-slate-500">{{ resource.description }}</p>
         {% endif %}
-        {% if resource.file %}
-        <a href="{{ resource.file.url }}"
-           class="inline-block text-indigo-600 font-semibold hover:underline ml-4">Download</a>
-        {% endif %}
+        <div class="mt-auto flex flex-wrap gap-2 pt-5">
+          {% if resource.url %}
+            <a href="{{ resource.url }}" target="_blank" rel="noopener"
+               class="inline-flex h-10 items-center gap-1.5 rounded-xl bg-brand-600 px-4 text-sm font-semibold text-white shadow-sm shadow-brand-600/25 transition-colors duration-150 hover:bg-brand-700">
+              Open
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+            </a>
+          {% endif %}
+          {% if resource.file %}
+            <a href="{{ resource.file.url }}"
+               class="inline-flex h-10 items-center gap-1.5 rounded-xl border border-line bg-white px-4 text-sm font-semibold text-ink transition-colors duration-150 hover:border-brand-300 hover:text-brand-700">
+              Download
+              <svg class="h-3.5 w-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            </a>
+          {% endif %}
+        </div>
       </article>
       {% empty %}
-      <p class="text-slate-500 col-span-full">No resources yet.</p>
+      <p class="col-span-full rounded-3xl border border-line bg-white p-10 text-center text-slate-500">No resources yet.</p>
       {% endfor %}
     </div>
   </div>

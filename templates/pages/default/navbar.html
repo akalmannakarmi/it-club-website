@@ -1,61 +1,83 @@
-<nav class="fixed w-full z-50 bg-white/90 backdrop-blur shadow-sm">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="flex justify-between items-center h-16">
+<nav id="site-nav" class="fixed inset-x-0 top-0 z-50 border-b border-line bg-white/90 backdrop-blur-md transition-shadow duration-300">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex h-16 items-center justify-between">
       <!-- Logo / Brand -->
-      <div>
-        {% if page_settings.institution_name  %}
-          <a href="{{ page_settings.institution_url }}" class="text-2xl font-bold text-indigo-700 px-4">{{ page_settings.institution_name }}</a>
-        {% endif %}
-    
-        <a href="#home" class="text-2xl font-bold text-indigo-700">{{ page_settings.org_name }}</a>
+      <div class="flex min-w-0 items-center gap-3">
+        <a href="{% if request.path == '/' %}#banner{% else %}/{% endif %}" class="flex items-center gap-3" aria-label="{{ page_settings.org_name }} home">
+          {% if page_settings.page_icon %}
+            <img src="{{ page_settings.page_icon.url }}" class="h-10 w-10 rounded-xl border border-line object-cover" alt="{{ page_settings.org_name }} logo">
+          {% else %}
+            <span class="grid h-10 w-10 place-items-center rounded-xl bg-ink font-heading text-lg font-bold text-white">
+              {{ page_settings.org_name|slice:":1"|upper }}
+            </span>
+          {% endif %}
+          <span class="min-w-0 leading-tight">
+            {% if page_settings.institution_name %}
+              <span class="block truncate text-[11px] font-semibold uppercase tracking-widest text-brand-600">
+                {{ page_settings.institution_name }}
+              </span>
+            {% endif %}
+            <span class="block truncate font-heading text-lg font-bold tracking-tight text-ink">{{ page_settings.org_name }}</span>
+          </span>
+        </a>
       </div>
 
-      <!-- Navigation links -->
-      <div class="hidden md:flex items-center gap-8 font-medium">
+      <!-- Navigation links (desktop) -->
+      <div class="hidden lg:flex items-center gap-1">
         {% if page_settings.show_banner %}
-          <a href="#home" class="py-2 hover:text-indigo-600 transition">Home</a>
+          <a href="{% if request.path == '/' %}#banner{% else %}/{% endif %}" data-nav="banner" class="nav-link inline-flex h-10 items-center rounded-full px-4 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700 {% if request.path == '/' %}active{% endif %}">Home</a>
         {% endif %}
         {% if page_settings.show_about %}
-          <a href="#about" class="py-2 hover:text-indigo-600 transition">About</a>
+          <a href="{% if request.path == '/' %}#about{% else %}/#about{% endif %}" data-nav="about" class="nav-link inline-flex h-10 items-center rounded-full px-4 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700">About</a>
+        {% endif %}
+        {% if page_settings.show_whatwedo %}
+          <a href="{% if request.path == '/' %}#what-we-do{% else %}/#what-we-do{% endif %}" data-nav="what-we-do" class="nav-link inline-flex h-10 items-center rounded-full px-4 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700">What We Do</a>
         {% endif %}
         {% if page_settings.show_projects %}
-          <a href="#projects" class="py-2 hover:text-indigo-600 transition">Projects</a>
+          <a href="{% url 'projects' %}" class="nav-link inline-flex h-10 items-center rounded-full px-4 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700 {% if '/projects/' in request.path %}active{% endif %}">Projects</a>
         {% endif %}
         {% if page_settings.show_resources %}
-          <a href="#resources" class="py-2 hover:text-indigo-600 transition">Resources</a>
+          <a href="{% url 'resources' %}" class="nav-link inline-flex h-10 items-center rounded-full px-4 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700 {% if '/resource/' in request.path %}active{% endif %}">Resources</a>
         {% endif %}
         {% if page_settings.show_events %}
-          <a href="#events" class="py-2 hover:text-indigo-600 transition">Events</a>
+          <a href="{% url 'events' %}" class="nav-link inline-flex h-10 items-center rounded-full px-4 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700 {% if '/events/' in request.path %}active{% endif %}">Events</a>
         {% endif %}
 
-        {% if user.is_authenticated %}
-          {% if is_admin or is_member %}
-            <a href="{% url 'dashboard:home' %}" class="py-2 hover:text-indigo-600 transition">
-              Dashboard
+        <div class="ml-3 flex items-center gap-2 border-l border-line pl-3">
+          {% if user.is_authenticated %}
+            {% if is_admin or is_member %}
+              <a href="{% url 'dashboard:home' %}" class="inline-flex h-10 items-center rounded-full px-4 text-xs font-semibold uppercase tracking-widest text-slate-600 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700">
+                Dashboard
+              </a>
+            {% endif %}
+            <form method="POST" action="{% url 'user:logout' %}">
+              {% csrf_token %}
+              <button type="submit" class="inline-flex h-10 items-center rounded-full bg-ink px-4 text-xs font-semibold uppercase tracking-widest text-white transition-colors duration-150 hover:bg-black">
+                Logout
+              </button>
+            </form>
+          {% else %}
+            <a href="{% url 'user:register' %}" class="inline-flex h-10 items-center rounded-full bg-brand-600 px-5 text-xs font-semibold uppercase tracking-widest text-white shadow-sm shadow-brand-600/25 transition-colors duration-150 hover:bg-brand-700">
+              Join the Club
             </a>
           {% endif %}
-
-          <form method="POST" action="{% url 'user:logout' %}" class="inline">
-            {% csrf_token %}
-            <button type="submit" class="py-2 px-5 rounded-xl bg-red-500 text-white hover:bg-red-600 transition">
-              Logout
-            </button>
-          </form>
-
-        {% else %}
-          <a href="{% url 'user:login' %}" class="py-2 px-5 rounded-xl bg-indigo-600 text-white hover:bg-indigo-700 transition">
-            Login
-          </a>
-        {% endif %}
+        </div>
       </div>
 
       <!-- Mobile menu toggle -->
-      <div class="md:hidden">
-        <button id="mobile-menu-button" class="text-indigo-600 focus:outline-none">
-          <!-- hamburger icon -->
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2"
+      <div class="lg:hidden">
+        <button id="mobile-menu-button"
+                aria-label="Toggle navigation menu"
+                aria-expanded="false"
+                aria-controls="mobile-menu"
+                class="rounded-lg p-2 text-slate-700 hover:bg-brand-50 hover:text-brand-700 focus-visible:outline-none">
+          <svg id="menu-open-icon" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2"
                viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+          <svg id="menu-close-icon" class="hidden h-6 w-6" fill="none" stroke="currentColor" stroke-width="2"
+               viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M6 6l12 12M18 6L6 18"/>
           </svg>
         </button>
       </div>
@@ -63,52 +85,99 @@
   </div>
 
   <!-- Mobile menu -->
-  <div id="mobile-menu" class="hidden md:hidden bg-white/95 shadow-lg">
-    <div class="flex flex-col px-6 py-4 gap-4">
+  <div id="mobile-menu" class="hidden lg:hidden border-t border-line bg-white shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto">
+    <div class="flex flex-col px-6 py-4 gap-1">
 
       {% if page_settings.show_banner %}
-        <a href="#home" class="hover:text-indigo-600 transition">Home</a>
+        <a href="{% if request.path == '/' %}#banner{% else %}/{% endif %}" class="nav-link rounded-lg px-3 py-3 text-xs font-semibold uppercase tracking-widest text-slate-700 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700 {% if request.path == '/' %}active{% endif %}">Home</a>
       {% endif %}
       {% if page_settings.show_about %}
-        <a href="#about" class="hover:text-indigo-600 transition">About</a>
+        <a href="{% if request.path == '/' %}#about{% else %}/#about{% endif %}" class="nav-link rounded-lg px-3 py-3 text-xs font-semibold uppercase tracking-widest text-slate-700 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700">About</a>
+      {% endif %}
+      {% if page_settings.show_whatwedo %}
+        <a href="{% if request.path == '/' %}#what-we-do{% else %}/#what-we-do{% endif %}" class="nav-link rounded-lg px-3 py-3 text-xs font-semibold uppercase tracking-widest text-slate-700 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700">What We Do</a>
       {% endif %}
       {% if page_settings.show_projects %}
-        <a href="#projects" class="hover:text-indigo-600 transition">Projects</a>
+        <a href="{% url 'projects' %}" class="nav-link rounded-lg px-3 py-3 text-xs font-semibold uppercase tracking-widest text-slate-700 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700 {% if '/projects/' in request.path %}active{% endif %}">Projects</a>
       {% endif %}
       {% if page_settings.show_resources %}
-        <a href="#resources" class="hover:text-indigo-600 transition">Resources</a>
+        <a href="{% url 'resources' %}" class="nav-link rounded-lg px-3 py-3 text-xs font-semibold uppercase tracking-widest text-slate-700 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700 {% if '/resource/' in request.path %}active{% endif %}">Resources</a>
       {% endif %}
       {% if page_settings.show_events %}
-        <a href="#events" class="hover:text-indigo-600 transition">Events</a>
+        <a href="{% url 'events' %}" class="nav-link rounded-lg px-3 py-3 text-xs font-semibold uppercase tracking-widest text-slate-700 transition-colors duration-150 hover:bg-brand-50 hover:text-brand-700 {% if '/events/' in request.path %}active{% endif %}">Events</a>
       {% endif %}
 
-      {% if user.is_authenticated %}
-        {% if is_admin or is_member %}
-          <a href="{% url 'dashboard:home' %}" class="hover:text-indigo-600 transition">
-            Dashboard
+      <div class="mt-2 flex flex-col gap-2">
+        {% if user.is_authenticated %}
+          {% if is_admin or is_member %}
+            <a href="{% url 'dashboard:home' %}" class="rounded-lg border border-line bg-muted px-4 py-3 text-center text-xs font-semibold uppercase tracking-widest text-ink">
+              Dashboard
+            </a>
+          {% endif %}
+          <form method="POST" action="{% url 'user:logout' %}">
+            {% csrf_token %}
+            <button type="submit" class="w-full rounded-lg bg-ink px-4 py-3 text-center text-xs font-semibold uppercase tracking-widest text-white">
+              Logout
+            </button>
+          </form>
+        {% else %}
+          <a href="{% url 'user:register' %}" class="rounded-lg bg-brand-600 px-4 py-3 text-center text-xs font-semibold uppercase tracking-widest text-white">
+            Join the Club
           </a>
         {% endif %}
-
-        <form method="POST" action="{% url 'user:logout' %}">
-          {% csrf_token %}
-          <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded-xl hover:bg-red-600 transition">
-            Logout
-          </button>
-        </form>
-
-      {% else %}
-        <a href="{% url 'user:login' %}" class="bg-indigo-600 text-white px-4 py-2 rounded-xl hover:bg-indigo-700 transition">
-          Login
-        </a>
-      {% endif %}
+      </div>
     </div>
   </div>
 
   <script>
-    const btn = document.getElementById('mobile-menu-button');
-    const menu = document.getElementById('mobile-menu');
-    btn.addEventListener('click', () => {
-      menu.classList.toggle('hidden');
-    });
+    (function () {
+      var nav = document.getElementById('site-nav');
+      var menuButton = document.getElementById('mobile-menu-button');
+      var menu = document.getElementById('mobile-menu');
+      var openIcon = document.getElementById('menu-open-icon');
+      var closeIcon = document.getElementById('menu-close-icon');
+      var desktopLinks = document.querySelectorAll('#site-nav .nav-link[data-nav]');
+      var sections = Array.prototype.map.call(desktopLinks, function (link) {
+        return document.getElementById(link.getAttribute('data-nav'));
+      }).filter(Boolean);
+
+      function setShadow() {
+        nav.classList.toggle('nav-scrolled', window.scrollY > 8);
+      }
+
+      function setActive() {
+        var current = null;
+        sections.forEach(function (sec) {
+          if (sec.getBoundingClientRect().top <= 140) current = sec;
+        });
+        desktopLinks.forEach(function (link) {
+          link.classList.toggle('active', link.getAttribute('data-nav') === (current && current.id));
+        });
+      }
+
+      window.addEventListener('scroll', function () {
+        setShadow();
+        setActive();
+      }, { passive: true });
+      setShadow();
+      setActive();
+
+      function toggleMenu(force) {
+        var open = force !== undefined ? force : menu.classList.contains('hidden');
+        menu.classList.toggle('hidden', !open);
+        menuButton.setAttribute('aria-expanded', open ? 'true' : 'false');
+        openIcon.classList.toggle('hidden', open);
+        closeIcon.classList.toggle('hidden', !open);
+      }
+
+      menuButton.addEventListener('click', function () {
+        toggleMenu();
+      });
+      menu.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          toggleMenu(false);
+        });
+      });
+    })();
   </script>
 </nav>

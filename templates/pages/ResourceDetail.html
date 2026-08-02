@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}{{ resource.title }}{% endblock %}
+
+{% block content %}
+
+{% include "pages/default/navbar.html" %}
+
+<section class="min-h-screen bg-brand-50 pt-28 pb-24">
+  <div class="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+    <a href="{% url 'resources' %}" class="inline-flex h-10 items-center gap-2 text-sm font-semibold text-brand-600 transition-colors duration-150 hover:text-brand-700">
+      <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+      Back to all resources
+    </a>
+
+    <div class="mt-6 overflow-hidden rounded-3xl border border-line bg-white shadow-sm">
+      <div class="relative">
+        <img
+          src="{% if resource.image %}{{ resource.image.url }}{% else %}{% static 'image/resource-default.png' %}{% endif %}"
+          onerror="this.onerror=null;this.src='{% static 'image/resource-default.png' %}'"
+          alt="{{ resource.title }}"
+          class="h-72 w-full object-cover sm:h-96"
+        >
+      </div>
+
+      <div class="p-6 sm:p-10">
+        <span class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-600">
+          <span class="h-px w-8 bg-accent-500"></span>
+          Resource
+        </span>
+        <h1 class="mt-4 font-heading text-3xl font-bold tracking-tight text-ink sm:text-4xl">{{ resource.title }}</h1>
+        {% if resource.caption %}
+          <p class="mt-4 text-lg leading-relaxed text-slate-600">{{ resource.caption }}</p>
+        {% endif %}
+        {% if resource.description %}
+          <div class="mt-5 border-t border-line pt-6">
+            <p class="whitespace-pre-line leading-relaxed text-slate-600">{{ resource.description }}</p>
+          </div>
+        {% endif %}
+
+        {% if resource.url or resource.file %}
+          <div class="mt-8 flex flex-wrap gap-3 border-t border-line pt-6">
+            {% if resource.url %}
+              <a href="{{ resource.url }}" target="_blank" rel="noopener"
+                 class="inline-flex h-12 items-center gap-2 rounded-xl bg-brand-600 px-6 text-sm font-semibold text-white shadow-sm shadow-brand-600/25 transition-colors duration-150 hover:bg-brand-700">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+                Open Resource
+              </a>
+            {% endif %}
+            {% if resource.file %}
+              <a href="{{ resource.file.url }}"
+                 class="inline-flex h-12 items-center gap-2 rounded-xl border border-line bg-white px-6 text-sm font-semibold text-ink transition-colors duration-150 hover:border-brand-300 hover:text-brand-700">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                Download File
+              </a>
+            {% endif %}
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% include "pages/default/footer.html" %}
+
+{% endblock %}

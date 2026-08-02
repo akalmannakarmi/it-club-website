@@ -6,7 +6,8 @@
 #   1. ruff lint + autofix + format
 #   2. Django system checks (URLs, models, settings)
 #   3. makemigrations --check  (fails if models changed without a migration)
-#   4. the Django test suite
+#   4. collectstatic  (builds the manifest needed by {% static %} under tests)
+#   5. the Django test suite
 #
 # Everything runs with DATABASE_MODE=sqlite so it works without Docker/MySQL.
 set -e
@@ -20,16 +21,19 @@ else
   PY="python"
 fi
 
-echo "▶ 1/4 ruff (lint + autofix + format)"
+echo "▶ 1/5 ruff (lint + autofix + format)"
 bash ruff.sh
 
-echo "▶ 2/4 Django system checks"
+echo "▶ 2/5 Django system checks"
 DATABASE_MODE=sqlite "$PY" manage.py check
 
-echo "▶ 3/4 Missing migrations?"
+echo "▶ 3/5 Missing migrations?"
 DATABASE_MODE=sqlite "$PY" manage.py makemigrations --check --dry-run
 
-echo "▶ 4/4 Tests"
+echo "▶ 4/5 Collect static files (manifest)"
+DATABASE_MODE=sqlite "$PY" manage.py collectstatic --noinput
+
+echo "▶ 5/5 Tests"
 DATABASE_MODE=sqlite "$PY" manage.py test
 
 echo

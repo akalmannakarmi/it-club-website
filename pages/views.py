@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
 from django.views import View
 from pages.models import AboutUs, WhatWeDo
@@ -45,9 +45,41 @@ class EventsView(View):
         return render(request, self.template, {"events": events})
 
 
+class ProjectsView(View):
+    template = "pages/Projects.html"
+
+    def get(self, request):
+        projects = Project.objects.order_by("order").filter(display=True)
+        return render(request, self.template, {"projects": projects})
+
+
 class ResourceView(View):
     template = "pages/Resources.html"
 
     def get(self, request):
         resources = Resource.objects.order_by("order").filter(display=True)
         return render(request, self.template, {"resources": resources})
+
+
+class EventDetailView(View):
+    template = "pages/EventDetail.html"
+
+    def get(self, request, pk):
+        event = get_object_or_404(Event, pk=pk, display=True)
+        return render(request, self.template, {"event": event})
+
+
+class ProjectDetailView(View):
+    template = "pages/ProjectDetail.html"
+
+    def get(self, request, pk):
+        project = get_object_or_404(Project, pk=pk, display=True)
+        return render(request, self.template, {"project": project})
+
+
+class ResourceDetailView(View):
+    template = "pages/ResourceDetail.html"
+
+    def get(self, request, pk):
+        resource = get_object_or_404(Resource, pk=pk, display=True)
+        return render(request, self.template, {"resource": resource})
