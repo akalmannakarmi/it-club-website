@@ -51,6 +51,5 @@ section visibility and content are all data-driven, not hardcoded.
 - **Deploy:** push to `main` → GitHub Actions builds/pushes a Docker Hub image
   → `kubectl set image` rollout on Kubernetes
 
-> Note: this project is in active early development — some public pages
-> (`/events/`, `/resource/`, `/announcement/`) are wired up but not fully
-> built.
+> Note: `/events/` and `/resource/` are working public landing pages; the
+> `/announcement/` route was removed.

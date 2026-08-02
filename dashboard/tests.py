@@ -252,6 +252,34 @@ class DashboardRenderTests(TestCase):
             self.assertEqual(response.status_code, 200, msg=name)
 
 
+class ActivityDataTests(TestCase):
+    def setUp(self):
+        self.admin = add_to_group(create_user(email="admin9@example.com"), "Admin")
+        self.member = add_to_group(create_user(email="member9@example.com"), "Member")
+        self.client.force_login(self.admin)
+
+    def test_activity_data_returns_counts(self):
+        session = Session.objects.create(title="S1", date=timezone.localdate())
+        session.attendees.add(self.member)
+        Event.objects.create(title="E1", date=timezone.now(), order=0)
+        response = self.client.get(reverse("dashboard:activity_data"))
+        self.assertEqual(response.status_code, 200)
+        data = response.json()
+        self.assertIn("labels", data)
+        self.assertGreaterEqual(sum(data["sessions"]), 1)
+        self.assertGreaterEqual(sum(data["attendees"]), 1)
+        self.assertGreaterEqual(sum(data["events"]), 1)
+
+    def test_activity_data_caps_days(self):
+        response = self.client.get(reverse("dashboard:activity_data"), {"days": "9999"})
+        self.assertEqual(response.status_code, 200)
+        self.assertLessEqual(len(response.json()["labels"]), 367)
+
+    def test_activity_data_handles_invalid_days(self):
+        response = self.client.get(reverse("dashboard:activity_data"), {"days": "abc"})
+        self.assertEqual(response.status_code, 200)
+
+
 class MemberActivationTests(TestCase):
     def setUp(self):
         self.admin = add_to_group(create_user(email="admin6@example.com"), "Admin")

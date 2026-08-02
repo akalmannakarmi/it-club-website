@@ -97,7 +97,7 @@ Root URLconf lives in `config/urls.py`:
 
 | Prefix | App | Notes |
 |---|---|---|
-| `/` | `pages` | `""` → `IndexView` (homepage); `/events/`, `/resource/`, `/announcement/` are stubbed |
+| `/` | `pages` | `""` → `IndexView` (homepage); `/events/`, `/resource/` → public landing pages |
 | `/accounts/` | `user` | login, logout, register, `/me/` profile, `/users/`, password-reset suite |
 | `/dashboard/` | `dashboard` | analytics, page/about settings, members, what-we-do, events, projects, resources, sessions, attendance, audit |
 | `/admin/` | Django admin | built-in superuser admin |

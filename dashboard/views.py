@@ -7,7 +7,10 @@ from django.views.generic import (
     TemplateView,
     View,
 )
+from datetime import time
+
 from django.shortcuts import redirect, get_object_or_404
+from django.utils import timezone
 from django.utils.timezone import timedelta, datetime
 from django.db.models import Q, Count
 from django.db.models.functions import TruncDate
@@ -71,7 +74,7 @@ class DashboardView(MemberRequiredMixin, DashboardContextMixin, TemplateView):
             .count()
         )
 
-        now = datetime.now()
+        now = timezone.localdate()
         last_30_days = now - timedelta(days=30)
         recent_sessions = Session.objects.filter(date__gte=last_30_days)
 
@@ -113,8 +116,9 @@ class ActivityView(AdminRequiredMixin, View):
         except ValueError:
             days = 30
         days = min(max(days, 1), 366)
-        end_date = datetime.now().date()
+        end_date = timezone.localdate()
         start_date = end_date - timedelta(days=days)
+        start_datetime = timezone.make_aware(datetime.combine(start_date, time.min))
 
         date_labels = [
             (start_date + timedelta(days=i)).strftime("%Y-%m-%d")
@@ -123,26 +127,33 @@ class ActivityView(AdminRequiredMixin, View):
 
         def counts_by_day(queryset, field):
             rows = (
-                queryset.filter(**{f"{field}__gte": start_date})
+                queryset.filter(**{f"{field}__gte": start_datetime})
                 .annotate(day=TruncDate(field))
                 .values("day")
                 .annotate(count=Count("id"))
             )
             return {row["day"].isoformat(): row["count"] for row in rows}
 
-        session_map = counts_by_day(Session.objects.all(), "date")
+        # Session.date is a DateField: group on the raw column. TruncDate on a
+        # DateField is a no-op and breaks on SQLite when USE_TZ=True.
+        session_map = {
+            day.isoformat(): count
+            for day, count in Session.objects.filter(date__gte=start_date)
+            .values_list("date")
+            .annotate(count=Count("id"))
+        }
+
         event_map = counts_by_day(Event.objects.all(), "date")
         project_map = counts_by_day(Project.objects.all(), "created_at")
         resource_map = counts_by_day(Resource.objects.all(), "created_at")
         user_map = counts_by_day(User.objects.all(), "created_at")
 
         attendee_map = {
-            row["day"].isoformat(): row["count"]
-            for row in Session.attendees.through.objects.filter(
+            day.isoformat(): count
+            for day, count in Session.attendees.through.objects.filter(
                 session__date__gte=start_date
             )
-            .annotate(day=TruncDate("session__date"))
-            .values("day")
+            .values_list("session__date")
             .annotate(count=Count("user_id", distinct=True))
         }
 

@@ -32,8 +32,8 @@ sequenceDiagram
 - Section templates render whatever subset the admin chose; e.g. the "Upcoming
   Activities" grid iterates `upcomingEvents`, the sliders iterate
   `majorEvents`/`projects`/`resources`/`whatwedos`.
-- `/events/`, `/resource/`, `/announcement/` are routed but their templates do
-  not exist yet — they're planned public landing pages.
+- `/events/` and `/resource/` are public landing pages (lists of live `Event`/`Resource`
+  rows); the `/announcement/` route was removed.
 
 ---
 
