@@ -1,6 +1,7 @@
 # Git
 .git
 .gitignore
+.github/
 
 # Python
 __pycache__/
@@ -43,3 +44,10 @@ docker-compose.yml
 # Docs
 docs/
 *.md
+
+# AI stuff
+.opencode
+.codegraph
+plan
+AGENTS.md
+opencode.jsonc

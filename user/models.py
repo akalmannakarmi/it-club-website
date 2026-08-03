@@ -63,8 +63,15 @@ class User(AbstractUser, BaseModel):
 
     @property
     def full_name(self):
-        return self.first_name + " " + self.last_name
+        name = f"{self.first_name} {self.last_name}".strip()
+        return name or self.email
+
+    @property
+    def group_names(self):
+        if "_group_names" not in self.__dict__:
+            self._group_names = set(self.groups.all().values_list("name", flat=True))
+        return self._group_names
 
     @property
     def is_admin_group(self):
-        return self.groups.filter(name="Admin").exists()
+        return "Admin" in self.group_names

@@ -1,0 +1,8 @@
+# Dev-only override: hot-reload by mounting the repo over the image's /app.
+# This is merged automatically by `docker compose up` and is NOT used for the
+# shipped image (which keeps USER 1000 and no bind mount). On Linux, ensure the
+# host UID owns the repo so media/ and db.sqlite3 stay writable.
+services:
+  web:
+    volumes:
+      - .:/app

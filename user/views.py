@@ -73,13 +73,7 @@ class LoginView(FormView):
         email = form.cleaned_data["email"]
         password = form.cleaned_data["password"]
 
-        try:
-            user_obj = User.objects.get(email=email)
-        except User.DoesNotExist:
-            messages.error(self.request, "Invalid email or password")
-            return self.form_invalid(form)
-
-        user = authenticate(self.request, email=user_obj.email, password=password)
+        user = authenticate(self.request, email=email, password=password)
 
         if user is not None:
             login(self.request, user)
@@ -117,7 +111,7 @@ class UsersListView(AdminRequiredMixin, ListView):
     ordering = ["-date_joined"]
 
     def get_queryset(self):
-        return User.objects.select_related().prefetch_related("groups")
+        return User.objects.prefetch_related("groups")
 
 
 class PasswordResetView(auth_views.PasswordResetView):

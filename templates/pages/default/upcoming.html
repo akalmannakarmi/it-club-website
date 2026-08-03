@@ -1,22 +1,41 @@
 {% load math_filters %}
-<section class="py-28 bg-white">
-  <div class="max-w-7xl mx-auto px-6">
-    <h2 class="text-3xl font-bold mb-12">Upcoming Activities</h2>
-    <div class="grid md:grid-cols-3 gap-8">
-      {% for event in upcomingEvents %}
-      <div class="flex items-start gap-4 bg-slate-50 p-6 rounded-2xl shadow mt-{{ forloop.counter0|multiply:8 }}">
-        <div class="text-indigo-600 font-bold text-xl">{{ event.date|date:"M j" }}</div>
-        <div>
-          <h4 class="font-semibold mb-1">{{event.title}}</h4>
-          <p class="text-slate-600 text-sm">{{event.caption}}</p>
-        </div>
+<section class="bg-white py-24 lg:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-wrap items-end justify-between gap-4" data-aos="fade-up">
+      <div>
+        <span class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-600">
+          <span class="h-px w-8 bg-accent-500"></span>
+          What's next
+        </span>
+        <h2 class="mt-4 font-heading text-3xl font-bold tracking-tight text-ink sm:text-4xl">Upcoming Activities</h2>
       </div>
-      {% endfor %}
-    </div>
-    <div class="text-center mt-6">
-      <a href="#" class="text-indigo-600 font-semibold hover:underline">
-        View Full Calendar →
+      <a href="{% url 'events' %}" class="inline-flex h-11 items-center gap-2 rounded-xl border border-line bg-white px-5 text-sm font-semibold text-brand-600 transition-colors duration-150 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700">
+        View all events
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
+    </div>
+
+    <div class="mt-12 grid gap-6 md:grid-cols-3">
+      {% for event in upcomingEvents %}
+      <a href="{% url 'event_detail' event.pk %}" class="group flex items-start gap-4 rounded-2xl border border-line bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-brand-300 hover:shadow-lg hover:shadow-brand-600/10">
+        <div class="shrink-0 rounded-xl bg-brand-50 px-4 py-3 text-center ring-1 ring-brand-100">
+          <div class="text-[11px] font-bold uppercase tracking-widest text-accent-600">{{ event.date|date:"M" }}</div>
+          <div class="font-heading text-3xl font-bold leading-tight text-brand-800">{{ event.date|date:"j" }}</div>
+        </div>
+        <div class="min-w-0">
+          <h3 class="font-heading text-lg font-semibold tracking-tight text-ink group-hover:text-brand-700 transition-colors duration-150">{{ event.title }}</h3>
+          {% if event.caption %}
+            <p class="mt-1 line-clamp-2 text-sm text-slate-600">{{ event.caption }}</p>
+          {% endif %}
+          <span class="mt-3 inline-flex items-center gap-1 text-sm font-semibold text-brand-600">
+            Details
+            <svg class="h-3.5 w-3.5 transition-transform duration-150 group-hover:translate-x-1" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </span>
+        </div>
+      </a>
+      {% empty %}
+      <p class="col-span-full rounded-2xl border border-line bg-white p-8 text-center text-slate-500">No upcoming activities yet.</p>
+      {% endfor %}
     </div>
   </div>
 </section>

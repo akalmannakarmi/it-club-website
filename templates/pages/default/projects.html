@@ -1,31 +1,70 @@
-<section id="projects" class="py-28 bg-slate-50">
-  <div class="max-w-7xl mx-auto px-6">
-    <h2 class="text-3xl font-bold mb-12">Projects</h2>
+{% load math_filters %}
+{% load static %}
+<section id="projects" class="bg-brand-50 py-24 lg:py-28">
+  <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <div class="flex flex-wrap items-end justify-between gap-4" data-aos="fade-up">
+      <div class="max-w-2xl">
+        <span class="inline-flex items-center gap-2 text-[11px] font-bold uppercase tracking-[0.2em] text-brand-600">
+          <span class="h-px w-8 bg-accent-500"></span>
+          Our work
+        </span>
+        <h2 class="mt-4 font-heading text-3xl font-bold tracking-tight text-ink sm:text-4xl">Projects</h2>
+        <p class="mt-4 text-slate-600">Real products and experiments our members have built together.</p>
+      </div>
+      <a href="{% url 'projects' %}" class="inline-flex h-11 items-center gap-2 rounded-xl border border-line bg-white px-5 text-sm font-semibold text-brand-600 transition-colors duration-150 hover:border-brand-300 hover:bg-brand-50 hover:text-brand-700">
+        View all projects
+        <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
 
-    <div class="swiper projectsSwiper" data-aos="fade-up">
+    <div class="swiper projectsSwiper mt-12" data-aos="fade-up">
       <div class="swiper-wrapper w-full p-4">
         {% for project in projects %}
-        <div class="swiper-slide bg-white rounded-3xl shadow-lg overflow-hidden">
-          {% if project.image %}
-          <img src="{{project.image.url}}" class="h-64 w-full object-cover">
-          {% endif %}
-          <div class="p-6">
-            <h3 class="font-semibold text-xl mb-2">{{project.title}}</h3>
-            <p class="text-slate-600 mb-2">{{project.caption}}</p>
-            <a href="#" class="text-indigo-600 font-semibold">View Project →</a>
+        <div class="swiper-slide group h-full">
+          <div class="flex h-full flex-col overflow-hidden rounded-3xl border border-line bg-white shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-xl hover:shadow-brand-600/10">
+            <img
+              src="{% if project.image %}{{ project.image.url }}{% else %}{% static 'image/project-default.png' %}{% endif %}"
+              onerror="this.onerror=null;this.src='{% static 'image/project-default.png' %}'"
+              alt="{{ project.title }}"
+              class="h-52 w-full object-cover"
+            >
+            <div class="flex flex-1 flex-col p-6">
+              <a href="{% url 'project_detail' project.pk %}">
+                <h3 class="font-heading text-xl font-semibold tracking-tight text-ink group-hover:text-brand-700 transition-colors duration-150">{{ project.title }}</h3>
+              </a>
+              {% if project.caption %}
+                <p class="mt-2 line-clamp-2 text-sm text-slate-600">{{ project.caption }}</p>
+              {% endif %}
+              {% if project.technology_stack %}
+                <div class="mt-4 flex flex-wrap gap-2">
+                  {% for tech in project.technology_stack|split:"," %}
+                    <span class="rounded-full bg-accent-50 px-3 py-1 text-xs font-medium text-accent-700 ring-1 ring-accent-200">{{ tech }}</span>
+                  {% endfor %}
+                </div>
+              {% endif %}
+              <div class="mt-auto pt-5">
+                {% if project.link %}
+                  <a href="{{ project.link }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition-colors duration-150 hover:text-brand-700">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6M15 3h6v6M10 14L21 3"/></svg>
+                    View Project
+                  </a>
+                {% elif project.repo_link %}
+                  <a href="{{ project.repo_link }}" target="_blank" rel="noopener" class="inline-flex items-center gap-1.5 text-sm font-semibold text-brand-600 transition-colors duration-150 hover:text-brand-700">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+                    Source Code
+                  </a>
+                {% endif %}
+              </div>
+            </div>
           </div>
         </div>
+        {% empty %}
+        <p class="swiper-slide rounded-3xl border border-line bg-white p-8 text-center text-slate-500">No projects yet.</p>
         {% endfor %}
       </div>
 
-      <div class="swiper-button-next"></div>
-      <div class="swiper-button-prev"></div>
-    </div>
-
-    <div class="text-center mt-6">
-      <a href="#" class="text-indigo-600 font-semibold hover:underline">
-        View All Projects →
-      </a>
+      <div class="swiper-button-next hidden lg:flex"></div>
+      <div class="swiper-button-prev hidden lg:flex"></div>
     </div>
   </div>
 </section>

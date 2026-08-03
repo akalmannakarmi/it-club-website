@@ -32,10 +32,14 @@ You can either use Docker (recommended) or run it directly using Django.
    ```
 
 5. The `entrypoint.sh` script will automatically:
+   - Collect static files (only when `DEBUG` is not `true`)
    - Run database migrations
-   - Collect static files
    - Seed initial data (if configured)
-   - Start the application using Gunicorn
+   - Start the application using Gunicorn (or `runserver` when `DEBUG=TRUE`)
+
+   The image runs as UID `1000`. In dev, `docker-compose.override.yml`
+   additionally bind-mounts the repo over `/app` for hot-reload; on Linux make
+   sure the host UID owns the repo so `media/` and `db.sqlite3` stay writable.
 
 6. Open the application:
    ```
@@ -49,7 +53,6 @@ You can either use Docker (recommended) or run it directly using Django.
 ### Prerequisites
 - Python 3.14
 - pip
-- Redis (for Celery)
 
 Virtual environments (venv, virtualenv, Conda/Miniforge) are optional but recommended.
 
@@ -80,15 +83,6 @@ Virtual environments (venv, virtualenv, Conda/Miniforge) are optional but recomm
 5. Start the development server:
    ```bash
    python manage.py runserver
-   ```
-
-6. (Optional) Start Celery worker in another terminal:
-   ```bash
-   celery -A config worker -l info
-
-7. (Optional) Start Celery beat in another terminal:
-   ```bash
-   celery -A config beat -l info
    ```
 
 ---
